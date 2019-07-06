@@ -1,0 +1,78 @@
+
+<div class="entry-section">
+<?php
+$script='<script type="text/javascript">
+    $().ready(function() {
+
+	$(".pick-date").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			dateFormat:"yy-mm-dd",
+			beforeShow: function() {$("#ui-datepicker-div").maxZIndex(); },
+			showOn: "button",
+			buttonImage: "/../images/icons/calendar.gif",
+			buttonImageOnly: true,
+			buttonText:"Date Picker"
+		});
+                });
+                
+                 $(function(){
+	$(".cancel").click(function(){
+	  self.location="'.$this->url.'";
+	});
+      });
+        </script>';
+echo $script;
+?>
+<?php
+
+if($this->textSuccess)
+{
+  echo "<div class='successbox'>";
+     $this->successMessage($this->textSuccess);
+  echo "</div>";
+}
+if($this->optionsErrors || $this->textErrors )
+{ 
+	 echo "<div class='errorbox'>";
+		echo "<b>".$this->messages['termination']."</b><br><br>";
+		if($this->optionsErrors)
+			$this->selectMessage($this->optionsErrors);	
+		if($this->textErrors )
+			$this->textMessage($this->textErrors);
+	 echo '</div>';
+} ?>
+
+<div class="add-section">
+	<img src="<?= $this->images['calendar']; ?>" class="icons" > &nbsp;&nbsp;<?php echo $this->labels['addSectionLabel'] ?>
+</div>
+<form name="add_user" method="POST" enctype='multipart/form-data' >
+<table class="zebra">
+	<tr>
+	   <td><b><?php echo $this->labels['strtDt']; ?></b></td>		
+	   <td><input type="text" name="startDate" value="<?php echo $this->param[0]; ?>" class="pick-date" size="25"></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->labels['endDt']; ?></b></td>		
+	   <td><input type="text" name="endDate" value="<?php echo $this->param[1]; ?>" class="pick-date" size="25"></td>
+	</tr>
+        <tr>
+	   <td><b><?php echo $this->labels['desc']; ?></b></td>		
+	   <td colspan=3><textarea name="desc" rows=7 cols=30><?php echo $this->paaram[2]; ?></textarea></td>
+	</tr>
+	<tr>
+	   <td></td>		
+	    <td></td>
+	</tr>
+	<tr>
+	   <td></td>
+	   <td>
+	      <input type="submit" value="<?php echo $this->labels['save']; ?>" id="submit" class="submit_data">
+	      <input type="reset" value="<?php echo $this->labels['reset']; ?>" id="submit">
+	      <input type="button" value="<?php echo $this->labels['cancel']; ?>" id="submit" class="cancel">
+	   </td>
+	</tr>
+</table>
+</form>
+</div>
+

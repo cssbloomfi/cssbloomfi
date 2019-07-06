@@ -1,0 +1,99 @@
+<?php
+
+if($this->textErrors)
+{ 
+	echo "<div class='errorbox'>";
+	echo "<b>".$this->viewlabels['termination']."</b><br><br>";
+			$this->textMessage($this->textErrors);
+	echo '</div>';
+}
+if($this->textSuccess){
+	echo "<div class='successbox'>";
+		$this->successMessage($this->textSuccess);
+	echo "</div>";
+
+	if ($this->addPageRequest)
+	{
+	$script='<script language="JavaScript">
+		return_url="/trn/receive/adddetails";
+		delayRedirect(return_url);
+	</script>';
+	echo $script;
+	}
+	else{
+	$script='<script language="JavaScript">
+		return_url="'.$this->url.'";
+		delayRedirect(return_url);
+	</script>';
+	echo $script;
+	} 
+	
+}
+else
+{
+	if(!empty($this->customer)){ 
+	$script='<script language="JavaScript">'.
+			"multiAjaxCaller(array('".$this->customer."','custtrninfo','".$this->paths['urlTransInfo']."'),array('".$this->customer."','trnidresult','".$this->paths['urlTransInfoOnId']."'));
+		</script>";
+	echo $script;
+	}
+
+?>
+	<div class="entry-section">
+	<div id="custtrninfo"></div>
+	<div id="trnidresult"></div>	
+	<br>
+	<form name="receive" method="POST">
+	<input type="hidden" value=<?php echo $this->trnDetailId; ?> name="detailid" id="detailid">
+		<table class="zebra">
+			<tr>
+			     <td><b><?php echo $this->receiveFormHeader['customer']; ?></b></td>
+			     <td><input type="text" name="customer" id="customer" value="<?= $this->customer; ?>" onBlur="multiAjaxCaller(array(this.value,'vchr','<?=$this->paths['urlVoucher'];?>'),array(this.value,'custtrninfo','<?=$this->paths['urlTransInfo'];?>'),array(this.value,'trnidresult','<?=$this->paths['urlTransInfoOnId'];?>'));"></td>
+			</tr>
+		<!--	<tr>
+			    <td><b><?php// echo $this->receiveFormHeader['voucherNo']; ?></b></td>
+			    <td><div id="vchr"><?php //echo $this->trnSummary; ?></div></td>
+			</tr> -->
+			<tr>
+			    <td><b><?php echo $this->receiveFormHeader['memo']; ?></b></td>
+			    <td><input type="text" name="memo" size="30" value="<?php echo $this->memo; ?>" id="memo" /></td>
+			</tr> 
+			<tr>
+			    <td><b><?php echo $this->receiveFormHeader['receiptAmount']; ?></b></td>
+			    <td><input type="text" name="amount" size="30" value="<?php echo $this->amount; ?>" id="amount"/></td>
+			</tr>
+			<tr> 
+			    <td><b><?php echo $this->receiveFormHeader['receiptType']; ?></b></td>
+			    <td><?php echo $this->receiveType; ?></td>
+			</tr>
+			<tr> 
+			    <td><b><?php echo $this->receiveFormHeader['receiptDate'].' ('.$this->receiveFormHeader['dateFormat'].')'; ?></b></td>
+			    <td><input type="text" name="date" size="30" value="<?php echo $this->rdate; ?>" id="pick-date1"/></td>
+			</tr>
+			<tr>
+			     <td><b><?php echo $this->receiveFormHeader['employee']; ?></b></td>
+			     <td><input type="text" name="employee" size="30" value="<?php echo $this->employee;?>" id="employee"  /></td>
+			</tr>
+			<tr> 
+			    <td><b><?php echo $this->receiveFormHeader['remarks']; ?></b></td>
+			    <td><textarea name="remarks" cols=30 rows=3 id="remarks"> <?php echo $this->remarks;?> </textarea></td>
+			</tr>
+			<tr> 
+				<td>  </td> 
+				<td>  </td>
+			</tr>
+			<tr>
+			   <td>  </td>	
+			   <td>
+			   <input type="submit" value="<?php echo $this->receiveFormHeader['edit']; ?>" id="submit">
+			   <input type="reset" value="<?php echo $this->receiveFormHeader['reset']; ?>" id="submit">
+			   <input type="button" value="<?php echo $this->receiveFormHeader['cancel']; ?>" id="submit" onclick="cancel()">
+			   </td>
+			</tr>	
+		</table> 
+		
+	</form>
+	</div>
+
+<?php } ?>
+

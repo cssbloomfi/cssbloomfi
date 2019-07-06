@@ -1,0 +1,16 @@
+<?php 
+if($this->locations)
+{
+      if($this->id)
+	foreach ( $this->locations as $location ){
+		echo $location->LOCATION_NAME . " , ". $location->LOCATION_ID . "\n";
+	}
+      else
+       foreach ( $this->locations as $location ){
+		echo $location->LOCATION_NAME. "\n";
+	}
+}
+else
+echo 'No Location Found';
+
+?>

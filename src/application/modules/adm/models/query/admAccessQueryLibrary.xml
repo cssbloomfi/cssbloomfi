@@ -1,0 +1,1050 @@
+<?xml version="1.0"?>
+
+<querylibrary>
+
+	<query id="StartTransaction">
+		<title>Start Transaction</title>
+		<content>
+			START TRANSACTION
+		</content>
+	</query>
+
+	<query id="SavepointTransaction">
+		<title>Savepoint Transaction</title>
+		<content>
+			SAVEPOINT :savePoint
+		</content>
+		<params>
+			<param>:savePoint</param>
+		</params>
+	</query>
+
+	<query id="CommitTransaction">
+		<title>Commit Transaction</title>
+		<content>
+			COMMIT
+		</content>
+	</query>
+
+	<query id="RollbackTransaction">
+		<title>Rollback Transaction</title>
+		<content>
+			ROLLBACK TO SAVEPOINT :savePoint
+		</content>
+		<params>
+			<param>:savePoint</param>
+		</params>
+	</query>
+
+	<query id="isLockSummaryTbl">
+		<title>Transaction Summary Table Lock Status</title>
+		<content>
+			SELECT IS_FREE_LOCK('ltr_trn_summary')  'LOCK'
+		</content>
+	</query>
+
+	<query id="getLockSummaryTbl">
+		<title>Transaction Summary Table Get Lock</title>
+		<content>
+			SELECT GET_LOCK('ltr_trn_summary',100) 'LOCK'
+		</content>
+	</query>
+
+	<query id="releaseLockSummaryTbl">
+		<title>Transaction Summary Table Release Lock</title>
+		<content>
+			SELECT RELEASE_LOCK('ltr_trn_summary') 'LOCK'
+		</content>
+	</query>
+
+	<query id="isExistScreenNameQuery">
+		<title>Is screen name is exist or not</title>
+		<content>
+			SELECT * FROM ref_mst_disp_comp_group
+			WHERE COMP_DISPLAY_GROUP_NAME LIKE ':scrnNm'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:scrnNm</param>
+		</params>
+	</query>
+
+	<query id="isExistScreenNameExceptMeQuery">
+		<title>Is screen name exist except me</title>
+		<content>
+			SELECT * FROM ref_mst_disp_comp_group
+			WHERE COMP_DISPLAY_GROUP_NAME LIKE ':scrnNm'
+			AND ID NOT IN (:id)
+		</content>
+		<params>
+			<param>:scrnNm</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="isExistScreenCodeQuery">
+		<title>Is screen code is exist or not</title>
+		<content>
+			SELECT * FROM ref_mst_disp_comp_group
+			WHERE COMP_DISPLAY_GROUP_ID LIKE ':scrnId'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:scrnId</param>
+		</params>
+	</query>
+
+	<query id="isExistScreenCodeExceptMeQuery">
+		<title>Is screen code is exist or not</title>
+		<content>
+			SELECT * FROM ref_mst_disp_comp_group
+			WHERE COMP_DISPLAY_GROUP_ID LIKE ':scrnId' 
+			AND ID != :id
+			LIMIT 1
+		</content>
+		<params>
+			<param>:scrnId</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="isExistRoleIdQuery">
+		<title>Is Role code is exist or not</title>
+		<content>
+			SELECT * FROM ref_mst_access_role
+			WHERE ACCESS_ROLE_ID LIKE ':roleId'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:roleId</param>
+		</params>
+	</query>
+
+	<query id="isExistRoleIdExceptMeQuery">
+		<title>Is Role code is exist or not</title>
+		<content>
+			SELECT * FROM ref_mst_access_role
+			WHERE ACCESS_ROLE_ID LIKE ':roleId' AND ID != :id
+			LIMIT 1
+		</content>
+		<params>
+			<param>:roleId</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="isExistUserIdQuery">
+		<title>Is user code is exist or not</title>
+		<content>
+			SELECT * FROM ref_mst_user
+			WHERE USER_ID = ':userid' AND STATUS='NORMAL'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:userid</param>
+		</params>
+	</query>
+
+	<query id="isExistUserIdExceptMeQuery">
+		<title>Is User code is exist or not</title>
+		<content>
+			SELECT * FROM ref_mst_user
+			WHERE USER_ID = ':userid' AND ID != :id AND STATUS='NORMAL'
+			LIMIT 1 
+		</content>
+		<params>
+			<param>:userid</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="userOnSrchQuery">
+		<title>user information all/basis on  search</title>
+		<content>
+			SELECT ID,USER_ID,USER_NAME,USER_TYPE,CREATION_DATE
+			FROM ref_mst_user
+			WHERE 1=1 AND STATUS='NORMAL' AND
+			USER_ID LIKE ':uid%'
+			LIMIT :start, :rows
+		</content>
+		<params>
+			<param>:uid</param>
+			<param>:start</param>
+			<param>:rows</param>
+		</params>
+	</query>
+
+	<query id="userInfoByIdQuery">
+		<title>Get user information By Id</title>
+		<content>
+			SELECT * FROM ref_mst_user
+			WHERE ID=:id AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="userInfoByUserIdQuery">
+		<title>Get user information By User Id</title>
+		<content>
+			SELECT ID,USER_NAME,USER_ID,USER_PASSWORD FROM ref_mst_user
+			WHERE USER_ID=':uid' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:uid</param>
+		</params>
+	</query>
+
+	<query id="compGroupInfoOnIdQuery">
+		<title>Get component group information on id</title>
+		<content>
+			SELECT comp.ID, comp.COMP_DISPLAY_GROUP_ID,comp.COMP_DISPLAY_GROUP_NAME,comp.DISPLAY_NAME,
+			comp.ASSOC_SCREEN_ID,comp.SCREEN_POSITION FROM ref_mst_disp_comp_group as comp
+			WHERE comp.COMP_DISPLAY_GROUP_ID=( SELECT COMP_DISPLAY_GROUP_ID FROM ref_mst_disp_comp_group
+			WHERE ID=:id )
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="compGroupCompsOnGrpIdQuery">
+		<title>Get component information on group id</title>
+		<content>
+			SELECT comp.ID, comp.COMP_DISPLAY_GROUP_ID,comp.COMP_DISPLAY_GROUP_NAME,comp.DISPLAY_NAME,
+			comp.SCREEN_POSITION, jcomp.COMP_ID FROM ref_mst_disp_comp_group as comp
+			INNER JOIN ref_join_comp_dispcomp AS jcomp
+			ON comp.COMP_DISPLAY_GROUP_ID = jcomp.COMP_DISPLAY_GROUP_ID
+			WHERE comp.COMP_DISPLAY_GROUP_ID=':id'
+			GROUP BY COMP_DISPLAY_GROUP_ID, COMP_ID
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="userRoleInfoByMapIdQuery">
+		<title>Get user role information By Id of user table</title>
+		<content>
+			SELECT map.ID,map.USER_ID AS 'MAP_USER_ID',map.ACCESS_ROLE_ID AS 'MAP_ROLE_ID', 
+			usr.USER_ID, role.ACCESS_ROLE_ID, role.ACCESS_ROLE_DESC,
+			usr.USER_NAME, usr.USER_TYPE,role.ACCESS_ROLE_TYPE
+			FROM ref_join_access_role_user AS map
+			LEFT OUTER JOIN ref_mst_user AS usr
+			ON map.USER_ID=usr.USER_ID
+			LEFT OUTER JOIN ref_mst_access_role AS role
+			ON map.ACCESS_ROLE_ID = role.ACCESS_ROLE_ID
+			WHERE 1=1 AND map.STATUS='NORMAL'  
+			AND  map.USER_ID = ':mapId' 
+		</content>
+		<params>
+			<param>:mapId</param>
+		</params>
+	</query>
+
+	<query id="roleInfoByIdQuery">
+		<title>Get role information By Id</title>
+		<content>
+			SELECT ID, ACCESS_ROLE_ID,ACCESS_ROLE_DESC,ACCESS_ROLE_TYPE FROM ref_mst_access_role 
+			WHERE ID=:id AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="allCompScreenPositionQuery">
+		<title>Get all component screen's position</title>
+		<content>
+			SELECT VALUE_ID AS POSITION_ID, VALUE_NAME AS POSITION_NAME
+			FROM ref_sta_key_value 
+			WHERE STATUS='NORMAL' AND KEY_ID='ScreenPosition'
+			ORDER BY DISPLAY_SEQUENCE
+		</content>
+	</query>
+
+	<query id="allCompGroupInfoQuery">
+		<title>Get all component group info</title>
+		<content>
+			SELECT  COMP_DISPLAY_GROUP_ID,COMP_DISPLAY_GROUP_NAME,DISPLAY_NAME,
+			ASSOC_SCREEN_ID, SCREEN_POSITION FROM ref_mst_disp_comp_group
+			GROUP BY COMP_DISPLAY_GROUP_ID
+		</content>
+	</query>
+
+	<query id="allRolesQuery">
+		<title>Get all user roles</title>
+		<content>
+			SELECT ID, ACCESS_ROLE_ID FROM ref_mst_access_role
+			WHERE STATUS='NORMAL'
+		</content>
+	</query>
+
+	<query id="userRoleOnSrchQuery">
+		<title>User role information all/basis on search</title>
+		<content>
+			SELECT map.ID,map.USER_ID AS MAP_USER_ID,TRIM(GROUP_CONCAT(' ',map.ACCESS_ROLE_ID)) AS 'MAP_ROLE_ID',usr.USER_ID, role.ACCESS_ROLE_ID,
+			usr.USER_NAME, usr.USER_TYPE
+			FROM ref_join_access_role_user AS map
+			LEFT OUTER JOIN ref_mst_user AS usr
+			ON map.USER_ID=usr.USER_ID
+			LEFT OUTER JOIN ref_mst_access_role AS role
+			ON map.ACCESS_ROLE_ID = role.ACCESS_ROLE_ID
+			WHERE 1=1 AND map.STATUS='NORMAL'  
+			AND  usr.USER_ID LIKE ':uId%' AND role.ACCESS_ROLE_ID LIKE ':roleId%' 
+			GROUP BY map.USER_ID
+			ORDER BY map.ID
+			LIMIT :start, :rows
+		</content>
+		<params>
+			<param>:uId</param>
+			<param>:roleId</param>
+			<param>:start</param>
+			<param>:rows</param>
+		</params>
+	</query>
+
+	<query id="roleMenuInfoByMapIdQuery">
+		<title>Get role menu information By role id </title>
+		<content>
+			SELECT arar.ACCESS_ROLE_ID, res.RESOURCE_NAME, res.RESOURCE_MASTER_ID
+			FROM ref_join_access_role_appln_resource AS arar
+			LEFT OUTER JOIN ref_mst_application_resource AS res
+			ON arar.APPLICATION_RESOURCE_ID = res.RESOURCE_MASTER_ID 
+			WHERE 1=1 AND (res.RESOURCE_NAME IS NOT NULL OR res.RESOURCE_NAME NOT LIKE '')
+			AND arar.ACCESS_ROLE_ID = ':mapId'
+		</content>
+		<params>
+			<param>:mapId</param>
+		</params>
+	</query>
+
+	<query id="roleMenuOnSrchQuery">
+		<title>Menus of a role information all/basis on search</title>
+		<content>
+			SELECT arar.ACCESS_ROLE_ID, GROUP_CONCAT(res.RESOURCE_NAME SEPARATOR '@BR@') AS RESOURCE_NAME, arar.CREATED_BY 
+			FROM ref_join_access_role_appln_resource AS arar
+			LEFT OUTER JOIN ref_mst_application_resource AS res
+			ON arar.APPLICATION_RESOURCE_ID = res.RESOURCE_MASTER_ID 
+			WHERE 1=1 AND (res.RESOURCE_NAME IS NOT NULL OR res.RESOURCE_NAME NOT LIKE '')
+			AND arar.ACCESS_ROLE_ID LIKE ':roleId%' AND res.RESOURCE_NAME LIKE ':resName%'
+			GROUP BY arar.ACCESS_ROLE_ID
+			ORDER BY arar.ACCESS_ROLE_ID DESC, res.RESOURCE_NAME ASC
+			LIMIT :start, :rows
+		</content>
+		<params>
+			<param>:resName</param>
+			<param>:roleId</param>
+			<param>:start</param>
+			<param>:rows</param>
+		</params>
+	</query>
+
+	<query id="allScreenInfoQuery">
+		<title>All Screen information</title>
+		<content>
+			SELECT a.ID, a.COMP_DISPLAY_GROUP_ID, a.COMP_DISPLAY_GROUP_NAME, 
+			a.DISPLAY_NAME, GROUP_CONCAT(CONCAT(c.RESOURCE_NAME)) AS ASSOC_SCREEN_ID, a.SCREEN_POSITION 
+			FROM ref_mst_disp_comp_group AS a
+			INNER JOIN (
+			SELECT VALUE_ID AS POSITION_ID, VALUE_NAME AS POSITION_NAME FROM ref_sta_key_value 
+			WHERE STATUS='NORMAL' AND KEY_ID='ScreenPosition' ) AS b
+			ON b.POSITION_ID = a.SCREEN_POSITION 
+			INNER JOIN ref_mst_application_resource as c
+			ON c.RESOURCE_ID=a.ASSOC_SCREEN_ID 
+			WHERE a.COMP_DISPLAY_GROUP_NAME LIKE ':param1%'
+			AND a.ASSOC_SCREEN_ID LIKE '%:param2%'
+			GROUP BY a.COMP_DISPLAY_GROUP_ID
+			LIMIT :start, :rows
+		</content>
+		<params>
+			<param>:param1</param>
+			<param>:param2</param>
+			<param>:start</param>
+			<param>:rows</param>
+		</params>
+	</query>
+
+	<query id="allComponentGroupQuery">
+		<title>All Component group information</title>
+		<content>
+			SELECT a.ID, c.ACCESS_ROLE_ID, a.COMP_DISPLAY_GROUP_ID, a.COMP_DISPLAY_GROUP_NAME, 
+			a.DISPLAY_NAME, GROUP_CONCAT(DISTINCT(d.RESOURCE_NAME)) AS ASSOC_SCREEN_ID, 
+			a.SCREEN_POSITION 
+			FROM ref_mst_disp_comp_group AS a
+			INNER JOIN (
+			SELECT VALUE_ID AS POSITION_ID, VALUE_NAME AS POSITION_NAME FROM ref_sta_key_value 
+			WHERE STATUS='NORMAL' AND KEY_ID='ScreenPosition' ) AS b
+			ON b.POSITION_ID = a.SCREEN_POSITION
+			INNER JOIN ( SELECT ROLE_ID AS ACCESS_ROLE_ID, COMP_DISPLAY_GROUP_ID FROM ref_join_dispcomp_role ) AS c
+			ON c.COMP_DISPLAY_GROUP_ID = a.COMP_DISPLAY_GROUP_ID 
+			INNER JOIN ref_mst_application_resource as d
+			ON d.RESOURCE_ID=a.ASSOC_SCREEN_ID
+			WHERE  c.ACCESS_ROLE_ID LIKE ':roleId%'
+			GROUP BY c.ACCESS_ROLE_ID
+			LIMIT :start, :rows
+		</content>
+		<params>
+			<param>:roleId</param>
+			<param>:start</param>
+			<param>:rows</param>
+		</params>
+	</query>
+
+	<query id="componentGroupOnIdQuery">
+		<title>Component group information on id</title>
+		<content>
+			SELECT ACCESS_ROLE_ID AS 'ROLE' , '' AS 'GROUP_ID', '' AS 'ASSOC_SCREEN_POSITION' 
+			FROM ref_join_access_role_appln_resource
+			INNER JOIN ref_mst_disp_comp_group
+			ON COMP_DISPLAY_GROUP_ID=APPLICATION_RESOURCE_ID
+			GROUP BY ACCESS_ROLE_ID
+			UNION ALL
+			SELECT '' AS 'ROLE' , COMP_DISPLAY_GROUP_ID AS 'GROUP_ID' ,
+			CONCAT(ASSOC_SCREEN_ID,'_',SCREEN_POSITION) AS ASSOC_SCREEN_POSITION
+			FROM ref_join_access_role_appln_resource
+			INNER JOIN ref_mst_disp_comp_group
+			ON COMP_DISPLAY_GROUP_ID=APPLICATION_RESOURCE_ID
+			GROUP BY COMP_DISPLAY_GROUP_ID 
+		</content>
+	</query>
+
+	<query id="roleCompGroupInfoQuery">
+		<title>Component group information on id</title>
+		<content>
+			SELECT  a.ROLE_ID AS 'ACCESS_ROLE_ID' , a.COMP_DISPLAY_GROUP_ID , 
+			b.ASSOC_SCREEN_ID , b.SCREEN_POSITION
+			FROM ref_join_dispcomp_role AS a
+			INNER JOIN ref_mst_disp_comp_group AS b
+			ON b.COMP_DISPLAY_GROUP_ID = a.COMP_DISPLAY_GROUP_ID 
+		</content>
+	</query>
+
+	<query id="compGroupNameOnCompGroupIdQuery">
+		<title>Component group information on group id</title>
+		<content>
+			SELECT COMP_DISPLAY_GROUP_ID,COMP_DISPLAY_GROUP_NAME,DISPLAY_NAME,ASSOC_SCREEN_ID,
+			SCREEN_POSITION
+			FROM ref_mst_disp_comp_group 
+			WHERE COMP_DISPLAY_GROUP_ID=':gid'
+		</content>
+		<params>
+			<param>:gid</param>
+		</params>
+	</query>
+
+	<query id="screenInfoOnScrnIdQuery">
+		<title>Screen information on screen Id</title>
+		<content>
+			SELECT * FROM ref_mst_comp_resource_screen
+			WHERE MASTER_APPL_SCREEN_ID =':scrnId'
+		</content>
+		<params>
+			<param>:scrnId</param>
+		</params>
+	</query>
+
+	<query id="roleFromRolAppResQuery">
+		<title>Get role id from 'ref_join_access_role_appln_resource'</title>
+		<content>
+			SELECT ACCESS_ROLE_ID AS ROLE_ID FROM ref_join_access_role_appln_resource 
+			WHERE ACCESS_ROLE_ID=':roleId'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:roleId</param>
+		</params>
+	</query>
+
+	<query id="allResourceMenuQuery">
+		<title>Get all resource menu</title>
+		<content>
+			SELECT RESOURCE_MASTER_ID, RESOURCE_NAME FROM ref_mst_application_resource
+			WHERE 1=1 AND RESOURCE_TYPE ='menu'
+		</content>
+	</query>
+
+	<query id="allRoleInfoOnSrchQuery">
+		<title>Get all role information on search/all</title>
+		<content>
+			SELECT ID,ACCESS_ROLE_ID,ACCESS_ROLE_DESC,ACCESS_ROLE_TYPE,CREATED_BY 
+			FROM ref_mst_access_role
+			WHERE 1=1 AND ACCESS_ROLE_ID LIKE ':roleId%' AND STATUS = 'NORMAL'
+			LIMIT :start, :rows
+		</content>
+		<params>
+			<param>:roleId</param>
+			<param>:start</param>
+			<param>:rows</param>
+		</params>
+	</query>
+
+	<query id="allComponentGroupListQuery">
+		<title>Get all component groups</title>
+		<content>
+			SELECT a.COMP_DISPLAY_GROUP_ID, 
+			a.DISPLAY_NAME, CONCAT(a.ASSOC_SCREEN_ID,'_',a.SCREEN_POSITION) AS POSITION, 
+			GROUP_CONCAT(CONCAT(c.COMP_GROUP_ID,'/compThumbs/',c.COMP_NAME,':',c.COMP_SCREEN_NAME)) AS IMAGE_PATH ,
+			GROUP_CONCAT(DISTINCT(CONCAT(' ',e.RESOURCE_NAME,' ( Positon:',a.SCREEN_POSITION,')'))) AS ASSOC_SCREEN_LOCATIONS 
+			FROM ref_mst_disp_comp_group as a
+			INNER JOIN ref_join_comp_dispcomp as b
+			ON a.COMP_DISPLAY_GROUP_ID = b.COMP_DISPLAY_GROUP_ID
+			INNER JOIN ref_mst_component_resource as c
+			ON b.COMP_ID=c.COMP_ID
+			LEFT OUTER JOIN (SELECT RESOURCE_ID, RESOURCE_NAME, RESOURCE_TYPE FROM ref_mst_application_resource  
+			WHERE RESOURCE_TYPE='screen' ) AS e
+			ON e.RESOURCE_ID=a.ASSOC_SCREEN_ID
+			GROUP BY COMP_DISPLAY_GROUP_ID
+		</content>
+	</query>
+
+	<query id="allComponentNameQuery">
+		<title>Get all component name</title>
+		<content>
+			SELECT COMP_ID, COMP_SCREEN_NAME
+			FROM ref_mst_component_resource
+		</content>
+	</query>
+
+	<query id="allApplicationScreensQuery">
+		<title>Get all application screen ids</title>
+		<content>
+			SELECT RESOURCE_ID,RESOURCE_NAME FROM ref_mst_application_resource
+			WHERE RESOURCE_TYPE='screen'
+		</content>
+	</query>
+
+	<query id="roleInfoOnIdQuery">
+		<title>Get Role Information on Id</title>
+		<content>
+			SELECT * FROM ref_mst_access_role
+			WHERE ID=:id
+			LIMIT 1
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="insertUserInfoDML">
+		<title>insert user information</title>
+		<content>
+			INSERT INTO ref_mst_user(USER_NAME,USER_ID,USER_PASSWORD,USER_TYPE, CREATED_BY) 
+			VALUES (':uNm',':uId',':pwd',':typ',':cBy')
+		</content>
+		<params>
+			<param>:uNm</param>
+			<param>:uId</param>
+			<param>:pwd</param>
+			<param>:typ</param>
+			<param>:cBy</param>
+		</params>
+	</query>
+
+	<query id="insertUserRoleInfoDML">
+		<title>insert user information</title>
+		<content>
+			INSERT INTO ref_join_access_role_user(ACCESS_ROLE_ID, USER_ID, CREATED_BY) 
+			VALUES (':rId',':uId',':cBy')
+		</content>
+		<params>
+			<param>:rId</param>
+			<param>:uId</param>
+			<param>:cBy</param>
+		</params>
+	</query>
+
+	<query id="insertMenuRoleInfoDML">
+		<title>insert user information</title>
+		<content>
+			INSERT INTO ref_join_access_role_appln_resource(ACCESS_ROLE_ID, APPLICATION_RESOURCE_ID, CREATED_BY) 
+			VALUES (':rId',':appId',':cBy')
+		</content>
+		<params>
+			<param>:rId</param>
+			<param>:appId</param>
+			<param>:cBy</param>
+		</params>
+	</query>
+
+	<query id="insertRoleInfoDML">
+		<title>insert role information</title>
+		<content>
+			INSERT INTO ref_mst_access_role(ACCESS_ROLE_ID,ACCESS_ROLE_TYPE,ACCESS_ROLE_DESC,CREATED_BY) 
+			VALUES (':rId',':rType',':rDesc',':cBy')
+		</content>
+		<params>
+			<param>:rId</param>
+			<param>:rType</param>
+			<param>:rDesc</param>
+			<param>:cBy</param>
+		</params>
+	</query>
+
+	<query id="insertComponentAccessDML">
+		<title>insert Component Access information</title>
+		<content>
+			INSERT INTO ref_join_dispcomp_role(ROLE_ID, COMP_DISPLAY_GROUP_ID) 
+			VALUES (':rId',':resId')
+		</content>
+		<params>
+			<param>:rId</param>
+			<param>:resId</param>
+		</params>
+	</query>
+
+	<query id="insertComponentScreenDML">
+		<title>insert Component Access information</title>
+		<content>
+			INSERT INTO ref_join_comp_dispcomp
+			( COMP_DISPLAY_GROUP_ID, COMP_ID ) 
+			VALUES (':grpId',':cId')
+		</content>
+		<params>
+			<param>:grpId</param>
+			<param>:cId</param>
+		</params>
+	</query>
+
+	<query id="insertComponentScreenBasicInfoDML">
+		<title>insert component screen's Basic information</title>
+		<content>
+			INSERT INTO ref_mst_disp_comp_group
+			( COMP_DISPLAY_GROUP_ID, COMP_DISPLAY_GROUP_NAME, DISPLAY_NAME, ASSOC_SCREEN_ID, 
+			SCREEN_POSITION ) 
+			VALUES (':param1',':param2',':param3',':param4',':param5')
+		</content>
+		<params>
+			<param>:param1</param>
+			<param>:param2</param>
+			<param>:param3</param>
+			<param>:param4</param>
+			<param>:param5</param>
+		</params>
+	</query>
+
+	<query id="updateComponentScreenBasicInfoDML">
+		<title>update component screen's Basic information</title>
+		<content>
+			UPDATE ref_mst_disp_comp_group
+			SET COMP_DISPLAY_GROUP_ID=':param1', COMP_DISPLAY_GROUP_NAME=':param2',
+			DISPLAY_NAME=':param3', ASSOC_SCREEN_ID=':param4', 
+			SCREEN_POSITION=':param5'
+			WHERE ID=:param6
+		</content>
+		<params>
+			<param>:param1</param>
+			<param>:param2</param>
+			<param>:param3</param>
+			<param>:param4</param>
+			<param>:param5</param>
+			<param>:param6</param>
+		</params>
+	</query>
+
+	<query id="updateRoleIdInResJoinDML">
+		<title>update role information in join access role</title>
+		<content>
+			UPDATE ref_join_access_role_appln_resource
+			SET ACCESS_ROLE_ID=':neRoleId'
+			WHERE ACCESS_ROLE_ID=':oldRoleId'
+		</content>
+		<params>
+			<param>:neRoleId</param>
+			<param>:oldRoleId</param>
+		</params>
+	</query>
+
+	<query id="updateComponentsRoleIdDML">
+		<title>update role information of components</title>
+		<content>
+			UPDATE ref_join_dispcomp_role
+			SET ROLE_ID=':neRoleId'
+			WHERE ROLE_ID=':oldRoleId'
+		</content>
+		<params>
+			<param>:neRoleId</param>
+			<param>:oldRoleId</param>
+		</params>
+	</query>
+
+	<query id="updateRoleIdInUserJoinDML">
+		<title>update role information of user</title>
+		<content>
+			UPDATE ref_join_access_role_user
+			SET ACCESS_ROLE_ID=':neRoleId'
+			WHERE ACCESS_ROLE_ID=':oldRoleId'
+		</content>
+		<params>
+			<param>:neRoleId</param>
+			<param>:oldRoleId</param>
+		</params>
+	</query>
+
+
+	<query id="updateGroupIdRoleInfoDML">
+		<title>update component group id role</title>
+		<content>
+			UPDATE ref_join_access_role_appln_resource
+			SET APPLICATION_RESOURCE_ID=':param1'
+			WHERE APPLICATION_RESOURCE_ID=':param2'
+		</content>
+		<params>
+			<param>:param1</param>
+			<param>:param2</param>
+		</params>
+	</query>
+
+	<query id="updateUserInfoDML">
+		<title>Update user information</title>
+		<content>
+			UPDATE ref_mst_user
+			SET USER_NAME=':uNm' , USER_ID=':uId' , USER_PASSWORD=':pwd' , USER_TYPE=':typ', UPDATED_BY=':uBy' 
+			WHERE ID=:id AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:uNm</param>
+			<param>:uId</param>
+			<param>:pwd</param>
+			<param>:typ</param>
+			<param>:uBy</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="updateUserIdForRole">
+		<title>Update user information in role table</title>
+		<content>
+			UPDATE ref_join_access_role_user
+			SET USER_ID=':uId'
+			WHERE USER_ID = ( SELECT USER_ID FROM ref_mst_user
+			WHERE ID = :id ) AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:uId</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="deleteUserInfoDML">
+		<title>Delete user information</title>
+		<content>
+			UPDATE ref_mst_user
+			SET STATUS='CANCEL'
+			WHERE USER_ID=':uid'
+		</content>
+		<params>
+			<param>:uid</param>
+		</params>
+	</query>
+
+	<query id="deleteRoleInfoDML">
+		<title>Delete role information</title>
+		<content>
+			DELETE FROM ref_mst_access_role
+			WHERE ACCESS_ROLE_ID=':accroleid'
+		</content>
+		<params>
+			<param>:accroleid</param>
+		</params>
+	</query>
+
+	<query id="deleteUserRoleDML">
+		<title>Delete user role information</title>
+		<content>
+			DELETE FROM ref_join_access_role_user
+			WHERE USER_ID=':uid' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:uid</param>
+		</params>
+	</query>
+
+	<query id="updateRoleInfoDML">
+		<title>Update role information</title>
+		<content>
+			UPDATE ref_mst_access_role
+			SET ACCESS_ROLE_ID=':rid' , ACCESS_ROLE_DESC=':rDesc' , ACCESS_ROLE_TYPE=':rType' , UPDATED_BY=':uBy' 
+			WHERE ID=:id AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:rid</param>
+			<param>:rDesc</param>
+			<param>:rType</param>
+			<param>:uBy</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="deleteRoleMenuInfoDML">
+		<title>Delete user role information</title>
+		<content>
+			DELETE FROM ref_join_access_role_appln_resource
+			WHERE ACCESS_ROLE_ID=':roleId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:roleId</param>
+		</params>
+	</query>
+
+	<query id="deleteRoleComponentDML">
+		<title>Delete role component</title>
+		<content>
+			DELETE FROM ref_join_dispcomp_role
+			WHERE ROLE_ID=':rId' AND COMP_DISPLAY_GROUP_ID=':resId'
+		</content>
+		<params>
+			<param>:rId</param>
+			<param>:resId</param>
+		</params>
+	</query>
+
+	<query id="deleteAllComponentOnRoleDML">
+		<title>Delete all role component</title>
+		<content>
+			DELETE FROM ref_join_dispcomp_role
+			WHERE ROLE_ID=':rId'
+		</content>
+		<params>
+			<param>:rId</param>
+		</params>
+	</query>
+
+	<query id="deleteScreenCompListDML">
+		<title>Deletecomponent</title>
+		<content>
+			DELETE FROM ref_mst_comp_resource_screen
+			WHERE MASTER_APPL_SCREEN_ID=':appId', 
+			COMP_APPLICATION_RESOURCE_SCREEN_NAME=':appNm',
+			COMP_ID=':compId' , SCREEN_ID=':srcId'
+		</content>
+		<params>
+			<param>:appId</param>
+			<param>:appNm</param>
+			<param>:compId</param>
+			<param>:srcId</param>
+		</params>
+	</query>
+
+	<query id="deleteCompGroupCompInfoOngrpIdDML">
+		<title>Deletecomponent</title>
+		<content>
+			DELETE FROM ref_join_comp_dispcomp
+			WHERE COMP_DISPLAY_GROUP_ID = ':grpId'
+		</content>
+		<params>
+			<param>:grpId</param>
+		</params>
+	</query>
+
+	<query id="deleteCompGroupGrpIdDML">
+		<title>Delete component group</title>
+		<content>
+			DELETE FROM ref_mst_disp_comp_group
+			WHERE COMP_DISPLAY_GROUP_ID = ':grpId'
+		</content>
+		<params>
+			<param>:grpId</param>
+		</params>
+	</query>
+
+	<query id="deleteUserRoleOnUserIdInfoDML">
+		<title>Delete roles on user id group</title>
+		<content>
+			DELETE FROM ref_join_access_role_user
+			WHERE USER_ID = ':userid'
+		</content>
+		<params>
+			<param>:userid</param>
+		</params>
+	</query>
+
+	<query id="deleteRoleMenuOnRoleIdInfoDML">
+		<title>Delete menus of a role</title>
+		<content>
+			DELETE FROM ref_join_access_role_appln_resource
+			WHERE ACCESS_ROLE_ID = ':roleid'
+		</content>
+		<params>
+			<param>:roleid</param>
+		</params>
+	</query>
+
+	<query id="deleteAllRoleOnCompGroupIdDML">
+		<title>Delete component group's role</title>
+		<content>
+			DELETE FROM ref_join_dispcomp_role
+			WHERE COMP_DISPLAY_GROUP_ID = ':grpId'
+		</content>
+		<params>
+			<param>:grpId</param>
+		</params>
+	</query>
+
+	<query id="SuggestUserIdQuery">
+		<title>Suggect User Id</title>
+		<content>
+			SELECT ID, USER_ID FROM ref_mst_user 
+			WHERE USER_ID LIKE ':usrId%' AND STATUS='NORMAL' LIMIT 15
+		</content>
+		<params>
+			<param>:usrId</param>
+		</params>
+	</query>
+	
+	
+	<query id="finYearInfoOnSrchQuery">
+		<title>financial year information all/basis on  search</title>
+		<content>
+			SELECT ID, concat(FIN_YEAR_START,'-',FIN_YEAR_START_MONTH,'-',FIN_YEAR_START_DAY) AS 'START_DATE'
+			,concat(FIN_YEAR_END,'-',FIN_YEAR_END_MONTH,'-',FIN_YEAR_END_DAY) AS 'END_DATE', DESCRIPTION,ACTIVE_STATUS
+			FROM ref_mst_fin_year_info
+			WHERE 1=1 AND STATUS='NORMAL' AND
+			DATE(concat(FIN_YEAR_START,'-',FIN_YEAR_START_MONTH,'-',FIN_YEAR_START_DAY)) LIKE IF(':startDt'='','%',DATE(':startDt'))
+			AND DATE(concat(FIN_YEAR_END,'-',FIN_YEAR_END_MONTH,'-',FIN_YEAR_END_DAY)) LIKE IF(':endDt'='','%',DATE(':endDt'))
+			LIMIT :start, :rows
+		</content>
+		<params>
+			<param>:startDt</param>
+			<param>:endDt</param>
+			<param>:start</param>
+			<param>:rows</param>
+		</params>
+	</query>
+	
+	<query id="finYearInfoById">
+		<title>financial year information on id</title>
+		<content>
+			SELECT ID, concat(FIN_YEAR_START,'-',FIN_YEAR_START_MONTH,'-',FIN_YEAR_START_DAY) AS 'START_DATE'
+			,concat(FIN_YEAR_END,'-',FIN_YEAR_END_MONTH,'-',FIN_YEAR_END_DAY) AS 'END_DATE',DESCRIPTION
+			FROM ref_mst_fin_year_info
+			WHERE 1=1 AND STATUS='NORMAL' 
+			AND ID=:id
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+	
+	<query id="updateFinYearInfoDML">
+		<title>update financial year information on id</title>
+		<content>
+			UPDATE ref_mst_fin_year_info 
+			SET FIN_YEAR_START_DAY=':stday',FIN_YEAR_START_MONTH=':stMnth',FIN_YEAR_START=':stYr',FIN_YEAR_END_DAY=':endDay',
+			FIN_YEAR_END_MONTH=':endMnth',FIN_YEAR_END=':endYr',DESCRIPTION=':desc'
+			WHERE ID=':id'
+
+		</content>
+		<params>
+			<param>:stday</param>
+			<param>:stMnth</param>
+			<param>:stYr</param>
+			<param>:endDay</param>
+			<param>:endMnth</param>
+			<param>:endYr</param>
+			<param>:desc</param>
+			<param>:id</param>
+		</params>
+	</query>
+	
+	<query id="deactivateAllFinancialYearQuery">
+		<title>Deactivate all financial year information on id</title>
+		<content>
+			update ref_mst_fin_year_info
+			set ACTIVE_STATUS="DEACTIVE"
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+	
+	<query id="activateFinancialYearQuery">
+		<title>activate financial year information on id</title>
+		<content>
+			update ref_mst_fin_year_info
+			set ACTIVE_STATUS="ACTIVE"
+			where ID=:id
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+
+	
+	<query id="isExistFinYearExceptMeQuery">
+		<title>Get financial year on id query</title>
+		<content>
+			select concat(FIN_YEAR_START,'-',FIN_YEAR_START_MONTH,'-',FIN_YEAR_START_DAY) as 'START_DATE',
+			concat(FIN_YEAR_END,'-',FIN_YEAR_END_MONTH,'-',FIN_YEAR_END_DAY) as 'END_DATE'
+			from ref_mst_fin_year_info
+			where STATUS='NORMAL' and date(':stdt')= date(concat(FIN_YEAR_START,'-',FIN_YEAR_START_MONTH,'-',FIN_YEAR_START_DAY))
+			and date(':enddt')=date(concat(FIN_YEAR_END,'-',FIN_YEAR_END_MONTH,'-',FIN_YEAR_END_DAY)) and ID!=':id'
+		</content>
+		<params>
+			<param>:stdt</param>
+			<param>:enddt</param>
+			<param>:id</param>
+		</params>
+	</query>
+	
+	<query id="isExistFinYearQuery">
+		<title>Get role id from 'ref_join_access_role_appln_resource'</title>
+		<content>
+			select concat(FIN_YEAR_START,'-',FIN_YEAR_START_MONTH,'-',FIN_YEAR_START_DAY) as 'START_DATE',
+			concat(FIN_YEAR_END,'-',FIN_YEAR_END_MONTH,'-',FIN_YEAR_END_DAY) as 'END_DATE'
+			from ref_mst_fin_year_info
+			where STATUS='NORMAL' and date(':stdt')= date(concat(FIN_YEAR_START,'-',FIN_YEAR_START_MONTH,'-',FIN_YEAR_START_DAY))
+			and date(':enddt')=date(concat(FIN_YEAR_END,'-',FIN_YEAR_END_MONTH,'-',FIN_YEAR_END_DAY))
+		</content>
+		<params>
+			<param>:stdt</param>
+			<param>:enddt</param>
+		</params>
+	</query>
+
+	<query id="checkActiveFinYearQuery">
+		<title>Check active financial year on Id</title>
+		<content>
+			SELECT * FROM ref_mst_fin_year_info
+			WHERE ID=:id and ACTIVE_STATUS='ACTIVE'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+	
+	
+	<query id="insertFinYearInfoDML">
+		<title>insert financial year  information</title>
+		<content>
+			INSERT INTO ref_mst_fin_year_info(FIN_YEAR_START_DAY, FIN_YEAR_START_MONTH, FIN_YEAR_START,
+			FIN_YEAR_END_DAY, FIN_YEAR_END_MONTH, FIN_YEAR_END, DESCRIPTION)VALUES
+			(':stdy', ':stmnth', ':styr', ':enddy', ':endmn', ':endyr',':desc')
+		</content>
+		<params>
+			<param>:stdy</param>
+			<param>:stmnth</param>
+			<param>:styr</param>
+			<param>:enddy</param>
+			<param>:endmn</param>
+			<param>:endyr</param>
+			<param>:desc</param>
+		</params>
+	</query>
+	
+		
+	<query id="deleteFinYearInfoDML">
+		<title>Delete fin year information</title>
+		<content>
+			UPDATE ref_mst_fin_year_info
+			SET STATUS='CANCEL'
+			WHERE ID=:id
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+
+</querylibrary>

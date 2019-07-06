@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="collSchmLocPar">
+     <title>Collector Project Location Par Reports</title>
+     <result>
+		<externalTableFormat>y</externalTableFormat>
+         <tableheader>
+            <label>Collector Code</label>
+			<label>Project</label>
+			<label>Location Code</label>
+			<label>Days</label>
+			<label>Total Beneficiary</label>
+			<label>Loan</label>
+			<label>Principal</label>
+			<label>Due</label>
+         </tableheader>
+
+         <queryheader>
+             <item>EMPLOYEE_ID</item>
+             <item>SCHEME_ID</item>
+             <item>LOCATION_ID</item>
+             <item>DAYS</item>
+			 <item>TOTAL_CUSTOMER</item>
+			 <item>LOAN</item>
+			 <item>PRINCIPAL</item>
+			 <item>DUE</item>
+         </queryheader>
+
+         <sqlcontent>
+            SELECT smry.EMPLOYEE_ID, smry.SCHEME_ID, ent.LOCATION_ID, '30-60' AS DAYS , COUNT(smry.CUSTOMER_ID) AS TOTAL_CUSTOMER,
+			SUM(TOTAL_PAYMENT_PRINCIPAL) AS LOAN, SUM(TOTAL_RECEIPT_PRINCIPAL) AS PRINCIPAL,
+			SUM(TOTAL_RECEIPT_DUE_PRINCIPAL) AS DUE
+			FROM ltr_trn_summary AS smry, ref_mst_entity AS ent
+			WHERE DATEDIFF(CURDATE(),START_DATE) @GREATEREQUAL@ 30 AND DATEDIFF(CURDATE(),START_DATE) @LESSEQUAL@ 60
+			AND smry.STATUS='NORMAL' AND ent.ENTITY_ID=smry.CUSTOMER_ID
+			GROUP BY smry.EMPLOYEE_ID, smry.SCHEME_ID, ent.LOCATION_ID, DAYS
+			UNION
+			SELECT smry.EMPLOYEE_ID, smry.SCHEME_ID, ent.LOCATION_ID, '61-90' AS DAYS , COUNT(smry.CUSTOMER_ID) AS TOTAL_CUSTOMER,
+			SUM(TOTAL_PAYMENT_PRINCIPAL) AS LOAN, SUM(TOTAL_RECEIPT_PRINCIPAL) AS PRINCIPAL,
+			SUM(TOTAL_RECEIPT_DUE_PRINCIPAL) AS DUE
+			FROM ltr_trn_summary AS smry, ref_mst_entity AS ent
+			WHERE DATEDIFF(CURDATE(),START_DATE) @GREATEREQUAL@ 61 AND DATEDIFF(CURDATE(),START_DATE) @LESSEQUAL@ 90
+			AND smry.STATUS='NORMAL' AND ent.ENTITY_ID=smry.CUSTOMER_ID
+			GROUP BY smry.EMPLOYEE_ID, smry.SCHEME_ID, ent.LOCATION_ID, DAYS
+			UNION
+			SELECT smry.EMPLOYEE_ID, smry.SCHEME_ID, ent.LOCATION_ID, '91-120' AS DAYS , COUNT(smry.CUSTOMER_ID) AS TOTAL_CUSTOMER,
+			SUM(TOTAL_PAYMENT_PRINCIPAL) AS LOAN, SUM(TOTAL_RECEIPT_PRINCIPAL) AS PRINCIPAL,
+			SUM(TOTAL_RECEIPT_DUE_PRINCIPAL) AS DUE
+			FROM ltr_trn_summary AS smry, ref_mst_entity AS ent
+			WHERE DATEDIFF(CURDATE(),START_DATE) @GREATEREQUAL@ 91 AND DATEDIFF(CURDATE(),START_DATE) @LESSEQUAL@ 120
+			AND smry.STATUS='NORMAL' AND ent.ENTITY_ID=smry.CUSTOMER_ID
+			GROUP BY smry.EMPLOYEE_ID, smry.SCHEME_ID, ent.LOCATION_ID, DAYS
+			UNION
+			SELECT smry.EMPLOYEE_ID, smry.SCHEME_ID, ent.LOCATION_ID, '121-150' AS DAYS , COUNT(smry.CUSTOMER_ID) AS TOTAL_CUSTOMER,
+			SUM(TOTAL_PAYMENT_PRINCIPAL) AS LOAN, SUM(TOTAL_RECEIPT_PRINCIPAL) AS PRINCIPAL,
+			SUM(TOTAL_RECEIPT_DUE_PRINCIPAL) AS DUE
+			FROM ltr_trn_summary AS smry, ref_mst_entity AS ent
+			WHERE DATEDIFF(CURDATE(),START_DATE) @GREATEREQUAL@ 121 AND DATEDIFF(CURDATE(),START_DATE) @LESSEQUAL@ 150
+			AND smry.STATUS='NORMAL' AND ent.ENTITY_ID=smry.CUSTOMER_ID
+			GROUP BY smry.EMPLOYEE_ID, smry.SCHEME_ID, ent.LOCATION_ID, DAYS
+			UNION
+			SELECT smry.EMPLOYEE_ID, smry.SCHEME_ID, ent.LOCATION_ID, '151-180' AS DAYS , COUNT(smry.CUSTOMER_ID) AS TOTAL_CUSTOMER,
+			SUM(TOTAL_PAYMENT_PRINCIPAL) AS LOAN, SUM(TOTAL_RECEIPT_PRINCIPAL) AS PRINCIPAL,
+			SUM(TOTAL_RECEIPT_DUE_PRINCIPAL) AS DUE
+			FROM ltr_trn_summary AS smry, ref_mst_entity AS ent
+			WHERE DATEDIFF(CURDATE(),START_DATE) @GREATEREQUAL@ 151 AND DATEDIFF(CURDATE(),START_DATE) @LESSEQUAL@ 180
+			AND smry.STATUS='NORMAL' AND ent.ENTITY_ID=smry.CUSTOMER_ID
+			GROUP BY smry.EMPLOYEE_ID, smry.SCHEME_ID, ent.LOCATION_ID, DAYS
+			UNION
+			SELECT smry.EMPLOYEE_ID, smry.SCHEME_ID, ent.LOCATION_ID, '181-360' AS DAYS , COUNT(smry.CUSTOMER_ID) AS TOTAL_CUSTOMER,
+			SUM(TOTAL_PAYMENT_PRINCIPAL) AS LOAN, SUM(TOTAL_RECEIPT_PRINCIPAL) AS PRINCIPAL,
+			SUM(TOTAL_RECEIPT_DUE_PRINCIPAL) AS DUE
+			FROM ltr_trn_summary AS smry, ref_mst_entity AS ent
+			WHERE DATEDIFF(CURDATE(),START_DATE) @GREATEREQUAL@ 181 AND DATEDIFF(CURDATE(),START_DATE) @LESSEQUAL@ 360
+			AND smry.STATUS='NORMAL' AND ent.ENTITY_ID=smry.CUSTOMER_ID
+			GROUP BY smry.EMPLOYEE_ID, smry.SCHEME_ID, ent.LOCATION_ID, DAYS
+			UNION
+			SELECT smry.EMPLOYEE_ID, smry.SCHEME_ID, ent.LOCATION_ID, '360 >' AS DAYS , COUNT(smry.CUSTOMER_ID) AS TOTAL_CUSTOMER,
+			SUM(TOTAL_PAYMENT_PRINCIPAL) AS LOAN, SUM(TOTAL_RECEIPT_PRINCIPAL) AS PRINCIPAL,
+			SUM(TOTAL_RECEIPT_DUE_PRINCIPAL) AS DUE
+			FROM ltr_trn_summary AS smry, ref_mst_entity AS ent
+			WHERE DATEDIFF(CURDATE(),START_DATE) @GREATER@ 360 AND DATEDIFF(CURDATE(),START_DATE) @LESSEQUAL@ 180
+			AND smry.STATUS='NORMAL' AND ent.ENTITY_ID=smry.CUSTOMER_ID
+			GROUP BY smry.EMPLOYEE_ID, smry.SCHEME_ID, ent.LOCATION_ID, DAYS
+
+
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+            
+            <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>empid</name>
+				 <class>employee_id</class>
+                 <columnvalue>EMPLOYEE_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Collector Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>schmid</name>
+				 <class>scheme_id</class>
+                 <columnvalue>SCHEME_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Project</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>locationid</name>
+				 <class>location</class>
+                 <columnvalue>LOCATION_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Location</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>3</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>days</name>
+                 <columnvalue>DAYS</columnvalue>
+				  <conditiontype>@LIKE@</conditiontype>
+                 <label>Days Outstanding</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>4</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>DROPDOWN</displaytype>
+				 <values>
+					<label>ALL</label>
+					<value>%</value>
+
+					<label>30-60</label>
+					<value>30-60</value>
+
+					<label>61-90</label>
+					<value>61-90</value>
+
+					<label>91-120</label>
+					<value>91-120</value>
+
+					<label>121-150</label>
+					<value>121-150</value>
+
+					<label>151-180</label>
+					<value>151-180</value>
+
+					<label>181-360</label>
+					<value>181-360</value>
+
+					<label>360-above</label>
+					<value>360 ></value>
+				</values>
+         </searchitem>
+
+			 <searchitem>
+                 <isdisplay>Y</isdisplay>
+                 <order>5</order>
+                 <displaytype>BLANK</displaytype>
+             </searchitem>
+
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>6</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

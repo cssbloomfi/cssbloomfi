@@ -1,0 +1,81 @@
+
+<div class="entry-section">
+<?php
+if($this->insert==1)
+ {  
+    if($this->textSuccess)
+      {
+          echo "<div class='successbox'>";
+	     $this->successMessage($this->textSuccess);
+	  echo "</div>";
+      }
+ }
+else
+if( $this->textErrors )
+{ 
+  echo "<div class='errorbox'>";
+  	echo "<b>Operation Terminated</b><br><br>";
+	
+	if($this->textErrors )
+		$this->textMessage($this->textErrors);
+  echo '</div>';
+}
+?>
+
+<div class="add-section">
+	<img src="/../images/icons/add_employee_icon.png" class="icons" > &nbsp;&nbsp;<?php echo $this->formLabel['addSectionLabel'] ?>
+</div>
+<form method="POST" enctype='multipart/form-data'>
+<table class="zebra">
+	<tr>
+	   <td><b><?php echo $this->formLabel['employeeId']; ?></b></td>		
+	   <td><input type="text" name="empId" id="empId" class="element-text" value="<?php echo $this->empId; ?>" size="30" ><div id="checkemp"></div></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['name']; ?></b></td>		
+	   <td><input type="text" name="name" value="<?php echo $this->name; ?>" size="30" /></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['age']; ?></b></td>		
+	   <td><input type="text" name="age" value="<?php echo $this->age; ?>" size="2"/></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['sex']; ?></b></td>		
+	   <td><?php echo $this->sex; ?></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['addr']; ?></b></td>		
+	   <td><textarea name="address" rows="3" cols="30"><?php echo $this->address; ?></textarea></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['desg']; ?></b></td>		
+	   <td><textarea  name="designation"  id="desg" rows="2" cols="30" ><?php echo $this->desg; ?></textarea></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['joindt']; ?></b></td>		
+	   <td><input type="text" name="joindate" size="10" value="<?php echo $this->joinDt; ?>" id="pick-date"/></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['desc']; ?></b></td>		
+	   <td><textarea name="description" rows="4" cols="30"><?php echo $this->desc; ?></textarea></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['image']; ?></b></td>		
+	   <td><input type="file" name="file" id="file" value=""></td>
+	</tr>
+	<tr>
+	   <td></td>
+	   <td></td>
+	</tr>
+	<tr>
+	   <td></td>
+	   <td>
+	      <input type="submit" value="<?php echo $this->formLabel['submit']; ?>" id="submit" class="submit_data" >
+	      <input type="reset" value="<?php echo $this->formLabel['reset']; ?>" id="submit">
+	      <input type="button" value="<?php echo $this->formLabel['cancel']; ?>" id="submit" class="cancel">
+	   </td>
+	</tr>
+</table>
+</form>
+</div>
+

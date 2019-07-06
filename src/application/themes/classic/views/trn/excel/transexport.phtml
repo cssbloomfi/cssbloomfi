@@ -1,0 +1,90 @@
+
+<?php
+$this->showXlsDownloadSection($this->xlsResults);
+?>
+
+<script>
+	$( function(){ 
+$("table.zebra tr:even").addClass("even"); 
+$("table.zebra tr:odd").addClass("odd"); 
+});
+
+$( function(){ 
+$("table.zebra3 tr:even").addClass("even"); 
+$("table.zebra3 tr:odd").addClass("odd"); 
+});
+</script>
+
+
+<div class="entry-section">
+	<fieldset>
+	<legend>
+		<img src="/../images/icons/search.png" class="icons" > 
+		<?=  $this->viewLabels['search']; ?> 
+	</legend>
+	<form name="trans" method="POST">
+		<input type="hidden" name="REQUEST" value="search" >
+		<table class="zebra">
+			<tr>
+				<td><b><?=  $this->formLabels['custId']; ?></b></td>
+				<td><input type="text" name="custId" value="" ></td>
+				<td><b><?=  $this->formLabels['empId']; ?></b></td>
+				<td><input type="text" name="empId" value="" ></td>
+			</tr>
+			<tr>
+				<td><b><?=  $this->formLabels['schemeId']; ?></b></td>
+				<td><input type="text" name="schemeId" value="" ></td>
+				<td>  </td>
+				<td>  </td>
+			</tr>
+				<td colspan=3></td>
+				<td><input type="submit" value="<?=  $this->formLabels['search']; ?>" id="submit"/></td>
+			</tr>
+		</table>
+	</form>
+	</fieldset>
+</div>
+
+
+<div class="table-section">
+<fieldset>
+<?php
+if($this->result){ 
+?>
+<fieldset class="export_section">
+<legend><?=  $this->viewLabels['export']; ?> </legend>
+	<form method="POST">
+		<input type="hidden" name="REQUEST" value="export" />
+		<?php
+			$strPattern=new Bloomfi_App_Ulibrary_StrPattern;
+			$strPattern->clearPattern();
+			$strPattern->setPattern(null,'/');
+			foreach($this->params as $param)
+			   $strPattern->insertDataToPattern($param);
+		?>
+		<input type="hidden" name="params" value="<?= $strPattern->getPatternString()?>" />
+		<input type="submit" id="xlss" name="export" value="" />
+		<?php unset($strPattern);?>
+	</form>
+</fieldset>
+
+<?php
+}
+if($this->result){ 
+?>
+	<div class="pagination"><?php echo $this->paginationControl($this->result['paginator'],
+										'Sliding',
+										'/partials/my_pagination_control.phtml',$this->pagiParams ); ?></div>
+<?php } 
+
+ $table=new Bloomfi_QueryFramework_GenerateTable;
+ echo $table->generateDataTable($this->tableHeader,$this->result['data'],'zebra');
+ 
+
+if($this->result){ ?>
+	<div class="pagination"><?php echo $this->paginationControl($this->result['paginator'],
+										'Sliding',
+										'/partials/my_pagination_control.phtml',$this->pagiParams); ?></div>
+<?php } ?>
+</fieldset>
+</div>

@@ -1,0 +1,191 @@
+
+<?php
+$this->showXlsDownloadSection($this->xlsResults);
+function initializeString($arr,$searchFormLabel)
+	{
+		$strObj=new Bloomfi_App_Ulibrary_StrPattern;
+		$strObj->setPattern(null, ' and ');
+		$strObj->setDataEmptyValidation();
+		if(!empty($arr['nm']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['name']."</b> '".$arr['nm']."'");
+		if(!empty($arr['id']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['id']."</b> '".$arr['id']."'");
+		if(!empty($arr['sx']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['sex']."</b> '".$arr['sx']."'");
+		if(!empty($arr['edt']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['entryDate']."</b> '".$arr['edt']."'");
+		if(!empty($arr['loc']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['location']."</b> '".$arr['loc']."'");
+		if(!empty($arr['eid']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['employeeId']."</b> '".$arr['eid']."'");
+		$string=$strObj->isExistPatternString();
+		if($string) $strObj->preAddToStringDirect("The Search Result is based on ");
+		else $strObj->preAddToStringDirect("The Search Result is based on no params");
+		$string=$strObj->getPatternString();
+		unset($strObj);
+		return $string;
+	}
+
+
+if($this->delete==3)
+ {  
+    if($this->textSuccess)
+      {
+          echo "<div class='successbox'>";
+	     $this->successMessage($this->textSuccess);
+	  echo "</div>";
+      }
+ }
+else
+if( $this->textErrors )
+{ 
+  echo "<div class='errorbox'>";
+  	echo "<b>".$this->viewlabels['termination']."</b><br>";
+		$this->textMessage($this->textErrors);
+  echo '</div>';
+}
+
+?>
+<div class="entry-section">
+<fieldset>
+<legend class="icon-div">
+	<img src="<?php echo $this->images['search']; ?>" class="icons" > 
+	<?php echo $this->searchFormLabel['searchSectionHead']; ?>
+</legend>
+<div class="add-link-section">
+	<a href="/ref/customer/adduser" class="btn add"><?php echo $this->links['adduser']; ?></a>	
+</div>
+
+<div class="search-section">
+	<form method="post" autocomplete="off">
+	<input name="REQUEST" type="hidden" value="Search">
+	       <table class="zebra">
+			<tr> 
+				<td> <b><?php echo $this->escape($this->searchFormLabel['name']); ?></b>  </td>
+				<td> <input type="text" value="<?=$this->cnm?>" name="customer_name" id="customer_name" value="<?= $this->cnm; ?>"//>  </td>
+				<td> <b><?php echo $this->escape($this->searchFormLabel['id']); ?></b>  </td>
+				<td> <input type="text" value="<?=$this->cid?>" name="customer_code" id="customer_id" value="<?= $this->cid; ?>"//> </td>  
+			</tr>
+			<tr> 
+				<td> <b><?php echo $this->escape($this->searchFormLabel['sex']); ?></b>  </td>
+				<td> <?php echo $this->sex;?>  </td>
+				<td> <b><?php echo $this->escape($this->searchFormLabel['entryDate']); ?></b>  </td>
+				<td> <input type="text" name="entry_date" id="pick-date" value="<?= $this->edt; ?>"/> </td>
+			</tr>
+			<tr> 
+				<td> <b><?php echo $this->escape($this->searchFormLabel['location']); ?></b> </td>
+				<td> <?php echo $this->location;?>  </td>
+				<td> <b><?php echo $this->escape($this->searchFormLabel['employeeId']); ?></b>  </td>
+				<td> <input type="text" name="employee_code" id="employee_id"  value="<?= $this->eid; ?>"/> </td>  
+			</tr>
+			<tr> 
+				<td colspan=4> <input type="submit" value="<?php echo $this->searchFormLabel['submit']; ?>" id="submit_1"/>  </td> 
+			</tr>
+		</table>
+	</form>
+
+</div>
+
+</fieldset>
+</div>
+
+
+<fieldset>
+	<legend><?php /*echo $this->viewlabels['totalvaluepre'].'&nbsp;&nbsp; ' . $this->escape($this->totalCustomers).' '.$this->viewlabels['totalvaluepost']; */ ?></legend>
+<?php
+if($this->srch){
+$searchResultString=initializeString( array('nm'=>$this->cnm,'id'=>$this->cid,'sx'=>$this->sx,
+					  'edt'=>$this->edt,'loc'=>$this->loc,'eid'=>$this->eid), $this->searchFormLabel ); ?>
+<div class="search-result-string"><img src="<?= $this->images['searchResult'] ?>" class="search-result-icons"  > <?= $searchResultString; ?></div>
+<?php
+  }
+  if($this->paginator['paginator'])
+  {
+?>
+
+<fieldset class="export_section">
+
+<legend><?= $this->viewlabels['excelExport'] ?></legend>
+	<form method="POST">
+		<input name="searchparams" type="hidden" value="<?php echo $this->searchparams; ?>" >
+		<input name="arrayparams" type="hidden" value="<?php echo $this->arrayparams; ?>" >
+		<input name="search" type="hidden" value="<?= $this->srch; ?>" >
+		<input name='REQUEST' type='hidden' id='REQUEST' >
+		<input type="submit" id="pdf" name="exportPdf" value="" > 
+		<input type="submit" id="xlss" name="export" value="" >
+	</form>
+</fieldset>
+
+<div class="pagination"><?php echo $this->paginationControl($this->paginator['paginator'],
+                                    'Sliding',
+                                    '/partials/my_pagination_control.phtml',
+				    array('search'=>$this->srch,'nm'=>$this->cnm,'id'=>$this->cid,'sx'=>$this->sx,
+					  'edt'=>$this->edt,'loc'=>$this->loc,'eid'=>$this->eid)); ?></div>
+<?php } ?>
+
+<form name="deleteForm" METHOD="POST" >
+<?php if ( $this->srch ) {?>
+<input name="params" type="hidden" value="<?php echo $this->cnm."/".$this->cid."/".$this->sx."/".$this->edt."/".$this->loc."/".$this->eid; ?>" >
+<?php } 
+?>
+<input name="REQUEST" type="hidden" value="Delete"> 
+<?php
+	 $table_head = '<table class="zebra"> <tr>
+			    <th>'.$this->customerTableHeader['picture']."</th>
+			    <th>".$this->customerTableHeader['id']."</th>
+			    <th>".$this->customerTableHeader['name']."</th>
+			    <th>".$this->customerTableHeader['empId']."</th>
+			    <th>".$this->customerTableHeader['age']."</th>
+			    <th>".$this->customerTableHeader['sex']."</th>
+			    <th>".$this->customerTableHeader['addr']."</th>
+			    <th>".$this->customerTableHeader['location']."</th>
+			    <th>".$this->customerTableHeader['description']."</th>
+			    <th>".$this->customerTableHeader['entrydt']."</th>
+			    <th>".$this->customerTableHeader['edit']."</th>
+			    <th>".'<input type="checkbox" name="checkall" value=0 onclick="SetAllCheckBoxes'."('deleteForm','custid','checkall')".';"/><input type="submit" class="delete" name="delete" id="delete_icon" value="">'.$this->customerTableHeader['delete'].'</th>
+			</tr> ';
+
+	echo $table_head;
+
+	if ($this->paginator['data']): 
+	$i=0;
+	foreach ($this->paginator['data'] as $row ): 	
+		if($row->IMAGE) $customer_img=$row->IMAGE;
+		else{
+			if($row->SEX==$this->genders[1]->VALUE_ID) $customer_img='FEMALE.jpg';
+			else $customer_img='MALE.jpg';
+		}
+		echo "<tr>";
+		echo '<td><img src="/../images/entity/customer/'.$customer_img.'"> </td>';
+		echo "<td>$row->CUSTOMER_ID</td>";
+		echo "<td>$row->ENTITY_NAME</td>";
+		echo "<td>$row->EMPLOYEE_CODE</td>";
+		echo "<td class='ct'> $row->AGE </td>";
+		echo "<td class='ct'> $row->SEX </td>";
+		echo "<td class='ct'> $row->ADDRESS </td>";
+		echo "<td> $row->LOCATION_ID</td>";
+		echo "<td> $row->ENTITY_DESC</td>";
+		echo "<td class='ct'> $row->CUSTOMER_ENTRY_DATE</td>"; 
+		echo '<td class="ct"><a href="/ref/customer/edituser/id/'.$row->ID.'" id="edit_icon"></a></td>';
+		echo '<td class="ct"><input type="checkbox" name="custid['.$i.']"   id="custid" value="'.$row->CUSTOMER_ID.'" /></td>';
+		echo "</tr>";
+		$i++;
+		      
+	endforeach; 
+	endif; 
+
+?>
+</table>
+<input type="hidden" name="ttlfields" id="ttlfields" value="<?= $i;?>">
+</form>
+
+<?php  
+
+if($this->paginator['paginator'])
+{
+?>
+
+<div class="pagination"><?php echo $this->paginationControl($this->paginator['paginator'],
+                                    'Sliding',
+                                    '/partials/my_pagination_control.phtml',
+				    array('search'=>$this->srch,'nm'=>$this->cnm,'id'=>$this->cid,'sx'=>$this->sx,
+					  'edt'=>$this->edt,'loc'=>$this->loc,'eid'=>$this->eid)); ?></div>
+</div>
+
+<?php } ?>
+
+</fieldset>

@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+  <querylibrary>
+   <query id="AllMenuQuery~~~~~~~~~~">
+     <title>Menu Items</title>
+     <content>SELECT * FROM ref_mst_application_resource where RESOURCE_TYPE = 'menu' ORDER BY RESOURCE_MASTER_PARENT_ID, DISPLAY_SEQUENCE </content>
+     <params></params>
+   </query>
+
+    <query id="AllMenuQuery">
+     <title>Menu Items on role</title>
+     <content>
+	SELECT * FROM ref_mst_application_resource  as a
+	left outer join ref_join_access_role_appln_resource as b
+	on a.RESOURCE_MASTER_ID=b.APPLICATION_RESOURCE_ID
+	where a.RESOURCE_TYPE = 'menu' AND b.ACCESS_ROLE_ID LIKE ':roleId'
+	GROUP BY a.ID
+	ORDER BY a.RESOURCE_MASTER_PARENT_ID, a.DISPLAY_SEQUENCE
+     </content>
+     <params>
+	<param>:roleId</param>
+     </params>
+   </query>
+
+	<query id="allMenuResourceQuery">
+     <title>Menu Items</title>
+     <content>
+		SELECT * FROM ref_mst_application_resource 
+		WHERE RESOURCE_TYPE = 'menu'
+		ORDER BY RESOURCE_MASTER_PARENT_ID, DISPLAY_SEQUENCE
+     </content>
+   </query>
+
+	<query id="DbdMenuQuery">
+     <title>Dashboard Menu</title>
+     <content>SELECT RESOURCE_NAME,RESOURCE_URL FROM ref_mst_application_resource WHERE RESOURCE_TYPE = 'menu' and RESOURCE_MASTER_PARENT_ID = ( SELECT RESOURCE_MASTER_ID FROM ref_mst_application_resource WHERE RESOURCE_NAME = 'Dashboard' and RESOURCE_TYPE = 'menu' ) ORDER BY RESOURCE_MASTER_PARENT_ID, DISPLAY_SEQUENCE
+	</content>
+     <params></params>
+   </query>
+   <query id="RefMenuQuery">
+     <title>Reference Menu</title>
+     <content>SELECT RESOURCE_NAME,RESOURCE_URL FROM ref_mst_application_resource WHERE RESOURCE_TYPE = 'menu' and  RESOURCE_MASTER_PARENT_ID = ( SELECT RESOURCE_MASTER_ID FROM ref_mst_application_resource WHERE RESOURCE_NAME = 'Reference' and RESOURCE_TYPE = 'menu' ) ORDER BY RESOURCE_MASTER_PARENT_ID, DISPLAY_SEQUENCE
+	</content>
+     <params></params>
+   </query>
+   <query id="RptMenuQuery">
+     <title>Reports Menu</title>
+     <content>SELECT RESOURCE_NAME,RESOURCE_URL FROM ref_mst_application_resource WHERE  RESOURCE_TYPE = 'menu' and RESOURCE_MASTER_PARENT_ID = ( SELECT RESOURCE_MASTER_ID FROM ref_mst_application_resource WHERE RESOURCE_NAME = 'Reports' and RESOURCE_TYPE = 'menu' ) ORDER BY RESOURCE_MASTER_PARENT_ID, DISPLAY_SEQUENCE
+	 </content>
+     <params></params>
+    </query>
+	<query id="TrnMenuQuery">
+		 <title>Transaction Menu</title>
+		 <content>
+			SELECT RESOURCE_NAME,RESOURCE_URL FROM ref_mst_application_resource WHERE  RESOURCE_TYPE = 'menu' and RESOURCE_MASTER_PARENT_ID = ( SELECT RESOURCE_MASTER_ID FROM ref_mst_application_resource WHERE RESOURCE_NAME = 'Transaction' and RESOURCE_TYPE = 'menu' ) ORDER BY RESOURCE_MASTER_PARENT_ID, DISPLAY_SEQUENCE
+		</content>
+		 <params></params>
+	 </query>
+     <query id="AdmMenuQuery">
+     <title>Admin Menu</title>
+     <content>SELECT RESOURCE_NAME,RESOURCE_URL FROM ref_mst_application_resource WHERE  RESOURCE_TYPE = 'menu' and RESOURCE_MASTER_PARENT_ID = ( SELECT RESOURCE_MASTER_ID FROM ref_mst_application_resource WHERE RESOURCE_NAME = 'Admin' and RESOURCE_TYPE = 'menu' ) ORDER BY RESOURCE_MASTER_PARENT_ID, DISPLAY_SEQUENCE
+	</content>
+     <params></params>
+   </query>
+
+   <query id="AllNodeMenuQuery">
+     <title>Menu Node Items</title>
+     <content>SELECT RESOURCE_URL , RESOURCE_NAME FROM (SELECT RESOURCE_URL , RESOURCE_NAME , RESOURCE_URL REGEXP '^[/].*[/]$' IS_GROUP FROM ref_mst_application_resource WHERE RESOURCE_TYPE = 'menu' ORDER BY RESOURCE_NAME )  RMM WHERE IS_GROUP = 0 </content>
+     <params></params>
+   </query>
+
+   <query id="AllGroupMenuQuery">
+     <title>Menu Group Items</title>
+     <content>SELECT RESOURCE_URL , RESOURCE_NAME FROM (SELECT RESOURCE_URL , RESOURCE_NAME , RESOURCE_URL REGEXP '^[/].*[/]$' IS_GROUP FROM ref_mst_application_resource WHERE RESOURCE_TYPE = 'menu' ORDER BY RESOURCE_NAME )  RMM WHERE IS_GROUP = 1 </content>
+     <params></params>
+   </query>
+
+     <query id="excelUploadingMenuQuery">
+     <title>Excel Uploading Menu</title>
+     <content>
+		SELECT RESOURCE_NAME,RESOURCE_URL FROM ref_mst_application_resource 
+		WHERE RESOURCE_TYPE = 'menu' and  
+		RESOURCE_MASTER_PARENT_ID = 
+		( SELECT RESOURCE_MASTER_ID FROM ref_mst_application_resource WHERE RESOURCE_NAME = 'Import/Export' and RESOURCE_TYPE = 'menu' ) 
+		ORDER BY RESOURCE_MASTER_PARENT_ID, DISPLAY_SEQUENCE
+     </content>
+   </query>
+
+    <query id="chartComponentOfScreenId">
+     <title>Components on screen id</title>
+     <content>
+		SELECT c.ROLE_ID AS 'ACCESS_ROLE_ID', e.COMP_SCREEN_NAME, b.COMP_DISPLAY_GROUP_ID, d.ASSOC_SCREEN_ID, d.SCREEN_POSITION, a.MODULE, 
+		a.RESOURCE_TYPE, a.COMP_GROUP_ID, a.COMP_NAME, a.CALLER_MODULE_ID, a.CALLER_ACTION_ID, 
+		a.MODULE_CONTROLLER , a.ACTION ,a.PARAMETERS , a.STATUS 
+FROM ref_mst_component_resource AS a
+		
+INNER JOIN	
+		ref_join_comp_dispcomp AS b
+		ON a.COMP_ID=b.COMP_ID
+		INNER JOIN ref_join_dispcomp_role AS c
+		ON b.COMP_DISPLAY_GROUP_ID=c.COMP_DISPLAY_GROUP_ID
+		INNER JOIN ref_mst_disp_comp_group AS d
+		ON d.COMP_DISPLAY_GROUP_ID=b.COMP_DISPLAY_GROUP_ID
+		INNER JOIN ref_mst_component_resource AS e
+		ON e.COMP_ID = a.COMP_ID
+		WHERE d.ASSOC_SCREEN_ID=':module' AND d.SCREEN_POSITION=':pos'
+		AND c.ROLE_ID = ':roleId'
+		GROUP BY a.COMP_GROUP_ID, a.COMP_NAME
+     </content>
+	 <params>
+		<param>:roleId</param>
+		<param>:module</param>
+		<param>:pos</param>
+	 </params>
+   </query>
+
+   <query id='componentAccessQuery'>
+	<title>to get all components</title>
+	<content>
+		SELECT '' AS ROLE_ID, '' AS COMP_GROUP_ID, '' AS COMP_SCREEN_NAME, '' AS COMP_NAME, 
+		'' AS RESOURCE_TYPE, 
+		GROUP_CONCAT(DISTINCT(a.COMP_GROUP_ID)) AS SECTION, '1' AS 'COMP_GROUP'
+		FROM ref_mst_component_resource as a
+		INNER JOIN ref_join_comp_dispcomp as b
+		ON b.COMP_ID = a.COMP_ID
+		RIGHT OUTER JOIN ref_join_dispcomp_role as c
+		ON c.COMP_DISPLAY_GROUP_ID = b.COMP_DISPLAY_GROUP_ID
+		WHERE a.STATUS='NORMAL' AND c.ROLE_ID=':roleId' AND a.RESOURCE_TYPE!='AJAX'
+		GROUP BY COMP_GROUP
+		UNION ALL
+		SELECT c.ROLE_ID, a.COMP_GROUP_ID, a.COMP_SCREEN_NAME, a.COMP_NAME, a.RESOURCE_TYPE, 
+		'' AS SECTION, '' AS 'COMP_GROUP'
+		FROM ref_mst_component_resource as a
+		INNER JOIN ref_join_comp_dispcomp as b
+		ON b.COMP_ID = a.COMP_ID
+		RIGHT OUTER JOIN ref_join_dispcomp_role as c
+		ON c.COMP_DISPLAY_GROUP_ID = b.COMP_DISPLAY_GROUP_ID
+		WHERE a.STATUS='NORMAL' AND c.ROLE_ID=':roleId' AND a.RESOURCE_TYPE!='AJAX'
+		GROUP BY ROLE_ID, COMP_GROUP_ID,COMP_SCREEN_NAME, COMP_NAME
+	</content>
+	<params>
+		<param>:roleId</param>
+	</params>
+   </query>
+
+   <query id="userComponentAccessQuery">
+	<title>to get distinct user component</title>
+	<content>
+		SELECT DISTINCT parent.COMP_GROUP_ID FROM (
+		SELECT c.ROLE_ID, a.COMP_GROUP_ID, a.COMP_NAME, a.RESOURCE_TYPE
+		FROM ref_mst_component_resource as a
+		INNER JOIN ref_join_comp_dispcomp as b
+		ON b.COMP_ID = a.COMP_ID
+		RIGHT OUTER JOIN ref_join_dispcomp_role as c
+		ON c.COMP_DISPLAY_GROUP_ID = b.COMP_DISPLAY_GROUP_ID
+		WHERE a.STATUS='NORMAL' AND c.ROLE_ID=':roleId' AND a.RESOURCE_TYPE='CHART' 
+		) parent
+	</content>
+	<params>
+		<param>:roleId</param>
+	</params>
+   </query>
+
+   <query id="userRoleOnUserId">
+	     <title>User role</title>
+	     <content>
+		SELECT ACCESS_ROLE_ID, USER_ID FROM
+		ref_join_access_role_user
+		WHERE USER_ID=':roleId'
+	     </content>
+	     <params>
+		<param>:roleId</param>
+	     </params>
+   </query>
+
+  </querylibrary> 

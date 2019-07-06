@@ -1,0 +1,290 @@
+<script type="text/javascript">
+	$(function() {
+		$("#accordion").accordion({
+			
+			active: false,
+			alwaysOpen: false,
+			collapsible: true,
+		});
+	});
+</script>
+
+<?php
+$file_empty=$this->messages['fileEmpty'];
+$file_format=$this->messages['fileFormat'];
+$upload_process_msg = $this->messages['uploadingProcess'];
+$validation_process_msg = $this->messages['validationProcess'];
+$script=<<<SCRIPT
+<script type="text/javascript">
+
+	$.fx.speeds._default = 500;
+	$(function() {
+		$(".dialog").dialog({
+			autoOpen:false,
+			bgiframe: true,
+			show:'clip',	
+			modal: true,
+			width:250,
+			closeOnEscape: false,
+			resizable:false,
+			open: function(event, ui) { 
+			$(".ui-dialog-titlebar-close").hide();
+			$(".ui-corner-all").hide();
+			}
+		});
+	});
+	$(function() {
+		$('#submitupload').click(function() {
+			var file=document.getElementById('doc_path_upload');
+			var filelength=file.value.length;
+			var i=0;
+
+			if(filelength!=0){
+			if(!/(\.xls)$/i.test(file.value)) {
+			alert("$file_format");
+			file.form.reset();
+			file.focus();
+			return false;
+			}
+			document.getElementById("wrap").innerHTML = "$upload_process_msg";	
+			$('.dialog').dialog('open');
+			return true;}
+			else{
+			alert("$file_empty");
+			file.focus();
+			return false; }
+		});
+	});
+
+	$(function() {
+		$('#submitvalid').click(function() {
+			var file=document.getElementById('doc_path_validate');
+			var filelength=file.value.length;
+			var i;
+			if(filelength!=0){
+			if(!/(\.xls)$/i.test(file.value)) {
+			alert("$file_format");
+			file.form.reset();
+			file.focus();
+			return false;
+			}
+			document.getElementById("wrap").innerHTML = "$validation_process_msg";	
+			$('.dialog').dialog('open');	
+			return true;}
+			else{
+			alert("$file_empty");
+			file.focus();
+			return false; }
+		});
+	});
+</script>
+SCRIPT;
+echo $script;
+?>
+
+<div class="dialog">
+	<br><div id="wrap"></div><br>
+	<IMG SRC="/../images/jpg/loader-bar.gif" ALT="Working">
+</div>
+
+
+<script>
+	$( function(){ 
+$("table.zebra tr:even").addClass("even"); 
+$("table.zebra tr:odd").addClass("odd"); 
+});
+
+$( function(){ 
+$("table.zebra3 tr:even").addClass("even"); 
+$("table.zebra3 tr:odd").addClass("odd"); 
+});
+</script>
+
+
+
+
+<div class="left-section-1">
+<div class="upload-header">
+	<h1 style="text-aling:left;"><?= $this->formLabels['heading'] ?></h1>
+</div>
+
+<div class="format-download">
+	<a href="/Docs/CustPayFormatEmpty.xls" class="xls1" ><?php echo $this->hyperlinks['xlsFormat']; ?></a>
+	<a href="/Docs/CustPayFormatSample.xls" class="xls1"><?php echo $this->hyperlinks['xlsSample']; ?></a>
+</div>
+</div>
+<div class="left-section-1">
+	<div id="accordion" >
+		<h3><img src="/../images/icons/upload.png" class="bar-icons" ><a href="#"> <?php echo $this->viewlabels['uploadSectionHeader']; ?></a></h3>
+		<div>
+			<?php 
+
+			if($this->textErrors )
+			{ 
+				echo "<div class='errorbox'>";
+					$this->textMessage($this->textErrors);
+				echo '</div>';
+				echo "<br>";
+			}
+			if($this->textSuccess){
+				echo "<div class='successbox'>";
+					$this->successMessage($this->textSuccess);
+				echo "</div>";
+				echo "<br>";
+			} 
+			if($this->textInfo )
+			{	
+				echo "<div class='ibox'>";	
+				$this->infoMessage($this->textInfo);
+				echo "</div>";
+				echo "<br>";
+			}
+
+			?>
+			<form name="xlsFile" enctype="multipart/form-data" method="POST">
+			<table class="zebra">
+				<tr> 
+					<td> <b><?php echo $this->formLabels['file']; ?></b> </td>
+					<td><input type="file" size="42" name="doc_path" id="doc_path_upload">  </td>
+				</tr>
+				<tr> 
+					<td>  </td>
+					<td> <input type="submit" name="submit" id="submitupload" value="<?php echo $this->formLabels['upload']; ?>"> </td>
+				</tr>
+			</table>
+			</form>
+			
+			<div class="log-files">	
+				<?php	echo $this->viewlabels['uploadLogSectionHeader'];  ?>
+			 </div>
+		
+			 <table class="zebra3">
+			 <tr>
+				<th width=12%><?php echo $this->logTable['id']; ?></th>
+				<th width=24%><?php echo $this->logTable['accessTime']; ?></th>
+				<th width=31%><?php echo $this->logTable['uploadLog']; ?></th>
+				<th><?php echo $this->logTable['uploadData']; ?></th>
+			 </tr>
+			 </table>
+			  <div class="table-fix-area-xls">
+				<table class="zebra3">
+				<?php
+				$id=1;
+				if($this->custXlsUploadLogs){
+				foreach($this->custXlsUploadLogs as $key => $file){
+
+				 $file_name=$this->GetNameFromFile(ROOT_DIR.'/tmp/logs/xlslogs/upload_logs/'.$file['filename']);
+				 $log_name = $file_name.".log";
+				 $html_name = $file_name.".html";
+
+				 echo '<tr>';
+				 echo '<td width=12%>'.$id.'</td><td width=25%>'.$file['lstatime'].'</td>';
+				 echo '<td width=32%><a href="/tmp/logs/xlslogs/upload_logs/'.$file['filename'].'" target="_blank">'.$log_name.'</a></td>';	
+				 echo '<td><a href="/tmp/logs/xlslogs/upload_logs/'.$this->custXlsUploadDatas[$key]['filename'].'" target="_blank">'.$html_name.'</a></td>';
+				 echo '</tr>';
+				 $id++;
+				}}
+				?>
+				</table>
+			   </div>
+		</div>	
+
+
+
+		<h3><img src="/../images/icons/validate.png" class="bar-icons" ><a href="#"><?php echo $this->viewlabels['validationSectionHeader']; ?></a></h3>
+		<div >
+		<?php 
+		if($this->textErrorsValidation )
+			{ 
+				echo "<div class='errorbox'>";
+					$this->textMessage($this->textErrorsValidation);
+				echo '</div><br>';
+			}
+		if($this->textSuccessValidate){
+				echo "<div class='successbox'>";
+					$this->successMessage($this->textSuccessValidate);
+				echo "</div><br>";
+			} 
+		?>
+		
+		<form name="document" enctype="multipart/form-data" method="POST">
+		<input type="hidden" name="REQUEST" value="VALIDATE">
+		<table class="zebra">
+			<tr> 
+				<td> <b><?php echo $this->formLabels['file']; ?></b> </td>
+				<td><input type="file" size="42" name="doc_path" id="doc_path_validate">  </td>
+			</tr>
+			<tr> 
+				<td></td>
+				<td> <input type="submit" name="submit" id="submitvalid" value="<?php echo $this->formLabels['validate']; ?>"> </td>
+			</tr>
+		</table>
+		</form>
+		<div class="log-files">	
+			<?php echo $this->viewlabels['validationLogSectionHeader']; ?>
+		</div>
+		 <table class="zebra3">
+		 <tr>
+			<th width=13%><?php echo $this->logTable['id']; ?></th>
+			<th width=25%><?php echo $this->logTable['accessTime']; ?></th>
+			<th width=31%><?php echo $this->logTable['validationLog']; ?></th>
+			<th><?php echo $this->logTable['validationData']; ?></th>
+		 </tr>
+		 </table>
+		 <div class="table-fix-area-xls">
+			<table class="zebra3">
+			<?php
+			$id=1;
+			if($this->custXlsValidationLogs){
+			foreach($this->custXlsValidationLogs as $key => $file){
+			 $file_name=$this->GetNameFromFile(ROOT_DIR.'/tmp/logs/xlslogs/validation_logs/'.$file['filename']);
+			 $log_name = $file_name.".log";
+		         $html_name = $file_name.".html";
+			 echo '<tr>';
+			 echo '<td width=13%>'.$id.'</td><td width=26%>'.$file['lstatime'].'</td>';
+			 echo '<td width=32%><a href="/tmp/logs/xlslogs/validation_logs/'.$file['filename'].'" target="_blank">'.$log_name.'</a></td>';
+			 echo '<td><a href="/tmp/logs/xlslogs/validation_logs/'.$this->custXlsValidationDatas[$key]['filename'].'" target="_blank">'.$html_name.'</a></td>';
+			 echo '</tr>';
+			 $id++;
+			}}
+			?>
+			</table>
+		  </div>
+		  </div>
+	</div>
+
+
+</div>
+
+<div class="left-section-1">
+<fieldset class="validation-message">
+<legend><?php echo $this->logDetailsHeader; ?></legend>
+<br>
+			<table class="zebra">
+			    <tr>
+				<th width=10%><?php echo $this->logTable['id']; ?></th>
+				<th width=10%><?php echo $this->logTable['errorRow']; ?></th>
+				<th width=25%><?php echo $this->logTable['errorColumn']; ?></th>
+				<th width=55%><?php echo $this->logTable['errorMessage']; ?></th>
+                            </tr>
+			 </table>
+			 <div class="table-fix-area">
+			 <table class="zebra">
+			    <?php
+			       $id=1;
+			       if( $this->validationError ){
+			        $datas = $this->validationError;
+				foreach ( $datas as $row ) {
+				   foreach ( $row as $error ) {
+				     echo "<tr><td width=10%>".$id."</td><td width=10%>".key($datas)."</td><td width=26%>".key($row)."</td><td>".$error."</td></tr>";
+				     $id++;
+				     next($row);
+				     }
+				  next($datas);	
+				}}
+			    ?>
+			</table>
+			</div>
+</fieldset>
+</div>
+

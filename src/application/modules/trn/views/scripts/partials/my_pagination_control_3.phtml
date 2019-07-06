@@ -1,0 +1,51 @@
+<?php if ($this->pageCount): 
+$params=null;
+$lib=new Bloomfi_App_Ulibrary;
+//$params=$lib->mergeValueToArray(null,'td',$this->ts);
+?>
+
+<div class="paginationControl">
+<!-- Previous page link -->
+<?php if (isset($this->previous)): 
+$previous=$lib->mergeValueToArray(null,'page',$this->previous);
+$previous=$lib->mergeValueToArray($previous,$params);
+?>
+  <a class="prev" href="<?php echo $this->url( $previous ); ?>">
+    &laquo;
+  </a>
+<?php else: ?>
+  <span class="prev">&laquo;</span> 
+<?php endif; ?>
+
+<!-- Numbered page links -->
+<?php foreach ($this->pagesInRange as $page): ?>
+  <?php if ($page != $this->current): 
+  $page_url=$lib->mergeValueToArray(null,'page',$page);
+  $page_url=$lib->mergeValueToArray($page_url,$params);
+  ?>
+    <a class="numbers" href="<?php echo $this->url( $page_url ); ?>">
+        <?php echo $page; ?>
+    </a> 
+  <?php else: ?>
+    <?php echo "<a class='current' >$page</a>"; ?> 
+  <?php endif; ?>
+<?php endforeach; ?>
+
+<!-- Next page link -->
+<?php if (isset($this->next)): 
+$next=$lib->mergeValueToArray(null,'page',$this->next);
+$next=$lib->mergeValueToArray($next,$params);
+?>
+  <a class="next" href="<?php echo $this->url( $next ); ?>">
+    &raquo;
+  </a>
+<?php else: ?>
+  <span class="next">&raquo;</span>
+<?php endif; ?>
+</div>
+<?php endif; ?>
+
+
+
+
+

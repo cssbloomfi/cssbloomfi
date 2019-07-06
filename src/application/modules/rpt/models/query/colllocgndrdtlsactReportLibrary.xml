@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="collLocGndrDtlsAct">
+     <title>Collector Location Gender Details Activity Reports</title>
+     <result>
+         <tableheader>
+            <label>Collector</label>
+            <label>Project</label>
+			<label>Location</label>
+			<label>Beneficiary</label>
+            <label>Gender</label>
+			<label>Date</label>
+			<label>Loan</label>
+			<label>Donation</label>
+			<label>Principal</label>
+			<label>Dues</label>
+         </tableheader>
+
+         <queryheader>
+             <item>EMPLOYEE_ID</item>
+             <item>SCHEME_ID</item>
+			 <item>LOCATION_ID</item>
+			 <item>CUSTOMER_ID</item>
+			 <item>SEX</item>
+			 <item>TRANSACTION_DATE</item>
+			 <item>TOTAL_PAYMENT_PRINCIPAL</item>
+             <item>TOTAL_RECEIPT_DONATION</item>
+			 <item>TOTAL_RECEIPT_PRINCIPAL</item>
+             <item>TOTAL_PAYMENT_DUE_PRINCIPAL</item>
+         </queryheader>
+  
+         <sqlcontent>
+            SELECT smry.EMPLOYEE_ID, smry.SCHEME_ID, smry.CUSTOMER_ID, 
+			ent.LOCATION_ID, dtl.CUSTOM_COMMENT2 SEX, dtl.TRANSACTION_DATE, smry.TOTAL_PAYMENT_PRINCIPAL,
+			smry.TOTAL_RECEIPT_DONATION, smry.TOTAL_RECEIPT_PRINCIPAL, smry.TOTAL_PAYMENT_DUE_PRINCIPAL
+			FROM ltr_trn_summary AS smry
+			LEFT OUTER JOIN (SELECT TRAN_SUMMARY_ID, TRANSACTION_DATE, CUSTOM_COMMENT2 FROM ltr_trn_details
+			WHERE PAYMENT_TYPE='CAPITAL_PAID' AND STATUS='NORMAL' 
+			) AS dtl
+			ON smry.TRAN_SUMMARY_ID=dtl.TRAN_SUMMARY_ID
+			LEFT OUTER JOIN (SELECT ENTITY_ID, LOCATION_ID FROM ref_mst_entity
+			WHERE ENTITY_TYPE='Customer' AND STATUS='NORMAL' 
+			) AS ent
+			ON smry.CUSTOMER_ID=ent.ENTITY_ID
+			WHERE STATUS='NORMAL'
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+            
+            <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>empid</name>
+				 <class>employee_id</class>
+                 <columnvalue>EMPLOYEE_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Collector Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>schmid</name>
+				 <class>scheme_id</class>
+                 <columnvalue>SCHEME_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Project Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>startdate</name>
+                 <columnvalue>LATEST_DATE</columnvalue>
+                 <conditiontype>@GREATEREQUAL@</conditiontype>
+				 <class>pick-date</class>
+                 <label>Start Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>3</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			  <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>enddate</name>
+                 <columnvalue>LATEST_DATE</columnvalue>
+                 <conditiontype>@LESSEQUAL@</conditiontype>
+				 <class>pick-date</class>
+                 <label>End Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>4</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>locationid</name>
+				 <class>location</class>
+                 <columnvalue>LOCATION_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Location Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>5</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			  <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>customer_id</name>
+				 <class>customer_id</class>
+                 <columnvalue>CUSTOMER_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Beneficiary Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>6</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>gender</name>
+                 <columnvalue>SEX</columnvalue>
+				 <conditiontype>@EQUAL@</conditiontype>
+                 <label>Gender</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>7</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>RADIO</displaytype>
+				 <sqlbundle>
+					<sqlcontent>
+						SELECT VALUE_ID,VALUE_NAME FROM ref_sta_key_value
+						WHERE KEY_ID ='Gender'
+					</sqlcontent>
+					<label>VALUE_NAME</label>
+					<value>VALUE_ID</value>
+				 </sqlbundle>
+             </searchitem>
+
+			 
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>9</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

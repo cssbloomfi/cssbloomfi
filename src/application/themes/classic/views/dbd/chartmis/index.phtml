@@ -1,0 +1,48 @@
+<script type="text/javascript">
+	$(function() {
+		$(".accordion").accordion({			
+			active: false,
+			alwaysOpen: false,
+			collapsible: true,
+		});
+	});
+</script>
+
+
+<div class="mis-left-section">
+
+<?php
+	$groups = explode(',',$this->result[0]->SECTION);
+	
+	$id=1;
+	foreach( $groups as $grp )
+	{
+		//$id='accordion'.$id;
+		echo "<div class='mis-component-section'><div class='comp-top'>";
+
+		echo "<h3>".strtoupper($grp)."</h3>";
+		echo '</div><div class="accordion" style="margin:10px 0 20px 0;">';
+		
+		foreach($this->result as $row)
+		{
+			if($row->COMP_GROUP_ID==$grp && $row->RESOURCE_TYPE=='CHART' )
+			{
+				$class='modules_com_'.$row->COMP_GROUP_ID.'_'.$row->COMP_NAME;
+				$obj=new $class;
+				$mod=$row->COMP_NAME;
+				$comp= $obj->$mod($mod,600,350);
+				echo '<h3><img src="'.$this->images['chart'].'" class="bar-icons" ><a href="#">'.$comp['title'].'</a></h3>
+				<div>';
+				echo $comp['component'];
+				echo '</div>';
+			}
+		}  
+
+		echo "</div></div>";
+	}
+?>
+
+</div>
+
+
+

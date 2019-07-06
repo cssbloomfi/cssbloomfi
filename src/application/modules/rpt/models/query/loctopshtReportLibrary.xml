@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="locTopSht">
+     <title>Location Top Sheet Report</title>
+     <result>
+         <tableheader>
+            <label>Location</label>
+            <label>Month</label>
+			<label>Total Male</label>
+			<label>Total Female</label>
+            <label>Total Loan</label>
+			<label>Total Donation</label>
+			<label>Principal</label>
+         </tableheader>
+
+         <queryheader>
+             <item>LOCATION_ID</item>
+             <item>MONTH</item>
+			 <item>MALE</item>
+			 <item>FEMALE</item>
+			 <item>LOAN</item>
+			 <item>DONATION</item>
+			 <item>PRICIPAL</item>
+         </queryheader>
+  
+         <sqlcontent>
+           SELECT ent.LOCATION_ID,CONCAT(YEAR(smry.START_DATE),'/',MONTHNAME(smry.START_DATE)) AS MONTH, Count(smry.EMPLOYEE_ID) AS COLLECTOR,
+			SUM(IF(ent.SEX='M',1,0)) AS MALE,smry.START_DATE AS DATE,
+			SUM(IF(ent.SEX='F',1,0)) AS FEMALE, SUM(smry.TOTAL_PAYMENT_PRINCIPAL) AS LOAN,
+			SUM(smry.TOTAL_RECEIPT_DONATION) AS DONATION, SUM(smry.TOTAL_RECEIPT_PRINCIPAL) AS PRICIPAL
+			FROM ltr_trn_summary AS smry
+			RIGHT OUTER JOIN 
+			( SELECT LOCATION_ID, ENTITY_ID, SEX FROM ref_mst_entity WHERE ENTITY_TYPE='Customer' ) AS ent
+			ON ent.ENTITY_ID = smry.CUSTOMER_ID
+			WHERE smry.STATUS = 'NORMAL'
+			GROUP BY ent.LOCATION_ID, MONTH(smry.START_DATE),ent.SEX
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+            
+            <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>location</name>
+				 <class>location</class>
+                 <columnvalue>LOCATION_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Location</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>startdate</name>
+                 <columnvalue>DATE</columnvalue>
+				 <class>pick-date</class>
+                 <conditiontype>@GREATEREQUAL@</conditiontype>
+                 <label>Start Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			  <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>enddate</name>
+                 <columnvalue>DATE</columnvalue>
+				 <class>pick-date</class>
+                 <conditiontype>@LESSEQUAL@</conditiontype>
+                 <label>End Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>3</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>4</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

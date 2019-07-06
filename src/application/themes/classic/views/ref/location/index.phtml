@@ -1,0 +1,163 @@
+<?php
+$this->showXlsDownloadSection($this->xlsResults);
+
+function initializeString($arr,$searchFormLabel)
+	{
+		$strObj=new Bloomfi_App_Ulibrary_StrPattern;
+		$strObj->setPattern(null, ' and ');
+		$strObj->setDataEmptyValidation();
+		if(!empty($arr['loc']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['locationName']."</b> '".$arr['loc']."'");
+		if(!empty($arr['ploc']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['parent_location']."</b> '".$arr['ploc']."'");
+		if(!empty($arr['typ']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['type']."</b> '".$arr['typ']."'");
+		if(!empty($arr['lvl']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['level']."</b> '".$arr['lvl']."'");
+		$string=$strObj->isExistPatternString();
+		if($string) $strObj->preAddToStringDirect("The Search Result is based on ");
+		else $strObj->preAddToStringDirect("The Search Result is based on no params");
+		$string=$strObj->getPatternString();
+		unset($strObj);
+		return $string;
+	}
+
+if($this->delete==3)
+ {  
+    if($this->textSuccess)
+      {
+          echo "<div class='successbox'>";
+	     $this->successMessage($this->textSuccess);
+	  echo "</div>";
+      }
+ }
+else
+if( $this->textErrors )
+{ 
+  echo "<div class='errorbox'>";
+  	echo "<b>".$this->viewlabels['termination']."</b><br>";
+		$this->textMessage($this->textErrors);
+  echo '</div>';
+}
+?>
+
+
+<div class="entry-section"> 
+		   <fieldset>
+		   <legend class="icon-div"> <img src="<?= $this->images['search']; ?>" class="icons" > <?php echo $this->locationSearchForm['searchSectionHead']; ?></legend>
+		   <div class="add-link-section">
+			<a href="/ref/location/add" class="btn add"><?php echo $this->links['add']; ?></a>
+		   </div>
+		   <div class="search-section">
+		  <form name="search" method="POST">
+		   <input name="REQUEST" type="hidden" value="Search">
+		   <table class="zebra">	
+			<tr> 
+				<td> <b><?php echo $this->locationSearchForm['locationName']; ?></b>  </td>
+				<td> <input name="loc_name" type="text" id="location" value="<?= $this->loc; ?>"> </td>
+				<td> <b><?php echo $this->locationSearchForm['parent_location']; ?></b>  </td>
+				<td> <input name="parent_loc_name" type="text" id="parent_location" value="<?= $this->ploc; ?>"> </td>
+			</tr>
+			<tr> 
+				<td> <b><?php echo $this->locationSearchForm['type']; ?></b>  </td>
+				<td> <?php echo $this->location_types; ?> </td>
+				<td> <b><?php echo $this->locationSearchForm['level']; ?></b> </td>
+				<td> <?php echo $this->location_levels; ?> </td>
+			</tr>
+			<tr> 
+				<td colspan=4> <input name="submit" type="submit" id="submit_1" value="<?php echo $this->locationSearchForm['submit']; ?>"> </td> 
+			</tr>
+			</table>
+		   </form>
+		   </div>
+		   </fieldset>	
+</div>
+
+
+
+<fieldset>
+
+<?php
+if($this->srch){
+$searchResultString=initializeString( array('loc'=>$this->loc,'ploc'=>$this->ploc,
+				          'typ'=>$this->typ,'lvl'=>$this->lvl), $this->locationSearchForm ); ?>
+<div class="search-result-string"><img src="<?= $this->images['searchResult']; ?>" class="search-result-icons"  > <?= $searchResultString; ?></div>
+
+
+<?php
+}
+if($this->paginator['paginator'])
+  {
+?>
+<div class="pagination"><?php echo $this->paginationControl($this->paginator['paginator'],
+							    'Sliding',
+							    '/partials/my_pagination_control.phtml',
+							    array('search'=>$this->srch,'loc'=>$this->loc,'ploc'=>$this->ploc,'typ'=>$this->typ,'levl'=>$this->lvl)); ?></div>
+<fieldset class="export_section">
+<legend><?= $this->viewlabels['excelExport'] ?></legend>
+	<form method="POST">
+		<input name="searchparams" type="hidden" value="<?php echo $this->searchparams; ?>" >
+		<input name="arrayparams" type="hidden" value="<?php echo $this->arrayparams; ?>" >
+		<input name="search" type="hidden" value=<?= $this->srch; ?>>
+		<input type="submit" id="xlss" name="export" value="" />
+	</form>
+</fieldset>
+
+<?php } ?>
+
+
+
+<form name="deleteForm" METHOD="POST">
+<?php if ( $this->srch ) {?>
+<input name="params" type="hidden" value=<?php echo $this->loc."/".$this->ploc."/".$this->typ."/".$this->lvl; ?> >
+<?php } ?>
+<input name="REQUEST" type="hidden" value="Delete"> 
+
+<?php
+	 $table_head = ' <table class="zebra"><tr>
+			    <th>'.$this->locationTableHeaders['id']."</th>
+			    <th>".$this->locationTableHeaders['name']."</th>
+			    <th>".$this->locationTableHeaders['type']."</th>
+			    <th>".$this->locationTableHeaders['parent']."</th>
+			    <th>".$this->locationTableHeaders['level']."</th>
+			    <th>".$this->locationTableHeaders['edit']."</th>
+			     <th>".'<input type="checkbox" name="checkall" value=0 onclick="SetAllCheckBoxes'."('deleteForm','locid','checkall')".';"/>
+			     <input type="submit" class="delete" name="delete" id="delete_icon" value="">'.$this->locationTableHeaders['delete'].'</th>
+			</tr> ';
+
+	echo $table_head;
+	
+	if($this->paginator['data'])
+	{
+	$i=0;
+	foreach ($this->paginator['data'] as $row ): 	
+			   echo "<tr>";
+			   echo "<td>".$row->LOCATION_ID."</td>";
+			   echo "<td>".$row->LOCATION_NAME."</td>";
+			   echo "<td>".$row->LOCATION_TYPE."</td>";
+			   echo "<td>".$row->PARENT_LOCATION_NAME."</td>";
+			   echo "<td>".$row->LOCATION_LEVEl."</td>";
+			   echo '<td class="ct"><a href="/ref/location/edit/id/'.$row->ID.'" id="edit_icon"></a></td>';
+			    echo '<td class="ct"><input type="checkbox" name="locid['.$i.']" id="locid" value="'.$row->LOCATION_ID.'" /></td>';
+			   echo "</tr>";
+			   $i++;	
+	endforeach; 
+	}
+
+?>
+</table>
+<input type="hidden" name="ttlfields" id="ttlfields" value="<?= $i;?>">
+</form>
+	
+<?php  
+if($this->paginator['paginator'])
+{
+?>
+
+<div class="pagination">
+<?php 
+	  echo $this->paginationControl($this->paginator['paginator'], 
+					 'Sliding',
+					 '/partials/my_pagination_control.phtml',
+					 array('search'=>$this->srch,'loc'=>$this->loc,'ploc'=>$this->ploc,'typ'=>$this->typ,'levl'=>$this->lvl)); 
+?>
+</div>
+
+<?php } ?>
+</fieldset>

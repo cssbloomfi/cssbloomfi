@@ -1,0 +1,123 @@
+<?php
+require_once(ROOT_DIR.'/library/thirdParty/utilityFunctions.php');
+
+class Adm_BkuprecovrController extends modules_adm_controllers_AdminController
+{
+	protected $_messages=null;
+	protected $_sqlBackupPath='/backup';
+	protected $_currOs=null;
+	protected $_osSupport=false;
+	protected $_availableOs=array('Windows XP','Linux');
+	protected $_bkupExt='sql';
+	protected $_localhost=null;
+	protected $_user=null;
+	protected $_password=null;
+	protected $_dbname=null;
+	protected $_registry=null;
+	protected $_scriptExt=null;
+	protected $_scriptName=null;
+
+	function preDispatch()
+	{
+		$this->prepare();
+		$this->_currOs = getCurrentOS();
+		if(in_array($this->_currOs,$this->_availableOs )){
+			$this->_osSupport=true;
+		}
+		$this->_registry = Zend_Registry::getInstance();
+		$dbInfo=$this->_registry->configuration;
+		$this->_localhost=$dbInfo->db->host;
+		$this->_user=$dbInfo->db->username;
+		$this->_password=$dbInfo->db->password;
+		$this->_dbname=$dbInfo->db->dbname;
+		$this->_scriptPath=ROOT_DIR.'/scripts';
+		$this->_scriptExt=array('XP'=>'bat','LINUX'=>'sh');
+		$this->_scriptName='dbBackup';
+	}
+
+	function indexAction()
+	{
+	}
+
+	function bkupAction()
+	{
+		//$sections=array('PAY-SUMMARY','PAY-DETAILS','BENEFICIARY');
+		if($this->getRequest()->isPost()){
+			$request=$this->getRequest()->getPost('REQUEST');
+			$i=0;
+			if($request=='BACKUP'){
+				if($this->_osSupport==true){ 
+					if($this->_currOs=='Linux'){
+						//$status=$this->_admModel->waitAndAllow($sections,'test');
+						$status=$this->_admModel->waitAndAllow('DB');
+						if($status==1){
+						//	$backupFile = ROOT_DIR.'/backup/'.$this->_dbname.'_'. date("Y-m-d-H-i-s");
+							$fileName=$this->_dbname.'_'. date("Y-m-d-H-i-s");
+							$args=$this->_localhost." ".$this->_user." ".$this->_password." ".$this->_dbname." ".$fileName."";
+					
+							$scriptFile=$this->_scriptPath.'/'.$this->_scriptName.".".$this->_scriptExt['LINUX'];
+							$result=shell_exec('bash '.$scriptFile.' '.$args);
+							
+							$this->_admModel->releaseLock('DB');
+							//$this->_admModel->unlockAllDbLock('BACKUP');
+						}else {							
+							$this->view->textInfo="Database is using by another section";
+						}
+					}
+					elseif($this->_currOs=='Windows XP'){
+						//$status=$this->_admModel->checkForDbLock($sections,'BACKUP');
+						$status=$this->_admModel->waitAndAllow('DB');
+						if($status==1){
+							$backupFile = 'backup/'.$this->_dbname.'_'. date("Y-m-d-H-i-s");
+							$args=$this->_localhost." ".$this->_user." ".$this->_password." ".$this->_dbname." ".$backupFile;
+							
+							$scriptFile=$this->_scriptPath.'/'.$this->_scriptName.".".$this->_scriptExt['XP'];
+							$result=shell_exec($scriptFile.' '.$args);
+							
+							$this->_admModel->releaseLock('DB');
+							//$this->_admModel->unlockAllDbLock('BACKUP');
+						}else {							
+							$this->view->textInfo="Database is using by another user";
+						}
+					}
+					else{
+						$this->view->textErrors= "This section will work only in Linux and Windows XP";
+					}
+				}
+			}elseif($request=='SQL'){
+				if($this->getRequest()->isPost('appsql'))
+				foreach($this->getRequest()->getPost('appsql') as $appsql){
+					$file=ROOT_DIR.$this->_sqlBackupPath.'/'.$appsql;
+					if( file_exists($file)) { 
+						$result1=unlink($file);
+						$i++; }
+					else break;
+				}
+			}
+		}
+		
+		$this->view->sqlBackups = glob(ROOT_DIR . "/backup/*.sql");
+		$this->view->sqlBackups=$this->_crtHtolSortedFilesInfo($this->view->sqlBackups,'sql');
+	}
+	
+	function recovrAction()
+	{
+		
+	}
+	
+	protected function _crtHtolSortedFilesInfo($files,$fileExtention='log')
+	{
+		$file_no=null;
+		if($files) {
+		$i=0;
+		foreach($files as $filename) {
+		$lstatime = date("d-m-Y H:i:s.", fileatime($filename));
+		$filename=basename($filename);
+		$file_no=$i++;
+		$allfilename[$file_no]['id']=$file_no; 
+		$allfilename[$file_no]['filename']=$filename; 
+		$allfilename[$file_no]['lstatime']=$lstatime;}
+		krsort($allfilename); 
+		return $allfilename; }
+	}
+}

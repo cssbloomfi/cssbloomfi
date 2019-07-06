@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="acntTypTopSht">
+     <title>Account Type Wise Top Sheet Report</title>
+     <result>
+         <tableheader>
+            <label>Project</label>
+			<label>Total Location</label>
+			<label>Total Collector</label>
+			<label>Total Male</label>
+			<label>Total Female</label>
+            <label>Total Loan</label>
+			<label>Total Donation</label>
+			<label>Principal</label>
+         </tableheader>
+
+         <queryheader>
+             <item>SCHEME</item>
+             <item>TOTAL_LOCATION</item>
+			 <item>TOTAL_COLLECTER</item>
+			 <item>MALE</item>
+			 <item>FEMALE</item>
+			 <item>LOAN</item>
+			 <item>DONATION</item>
+			 <item>PRICIPLE</item>
+         </queryheader>
+  
+         <sqlcontent>
+            SELECT rms.SCHEME_TYPE AS SCHEME,
+			COUNT(DISTINCT(ltd.SCHEME_ID)) AS TOTAL_SCHEME, COUNT(DISTINCT(rme.LOCATION_ID)) AS TOTAL_LOCATION,
+			COUNT(DISTINCT(ltd.EMPLOYEE_ID)) AS TOTAL_COLLECTER,
+			SUM(IF(rme.SEX='M',1,0)) AS MALE,SUM(IF(rme.SEX='F',1,0)) AS FEMALE,
+			SUM(IF(PAYMENT_AMOUNT IS NOT NULL OR PAYMENT_TYPE='CAPITAL_PAID',PAYMENT_AMOUNT,0)) AS LOAN,
+			SUM(IF(RECEIPT_TYPE='DONATION_RECEIVED',RECEIPT_AMOUNT,0)) AS DONATION,
+			(PAYMENT_AMOUNT-SUM(IF(RECEIPT_AMOUNT IS NOT NULL OR RECEIPT_TYPE='CAPITAL RECEIVED',RECEIPT_AMOUNT,0)) )
+			AS PRICIPLE
+			FROM ltr_trn_details AS ltd, ref_mst_scheme AS rms, ref_mst_entity AS rme
+			WHERE ltd.CUSTOMER_ID=rme.ENTITY_ID
+			AND rms.SCHEME_ID=ltd.SCHEME_ID
+			AND ltd.STATUS = 'NORMAL'
+			GROUP BY rms.SCHEME_TYPE
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>
+		 
+		    <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>schemetype</name>
+                 <columnvalue>SCHEME</columnvalue>
+				 <conditiontype>@EQUAL@</conditiontype>
+                 <label>Project Type</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>RADIO</displaytype>
+				 <sqlbundle>
+					<sqlcontent>
+						SELECT VALUE_ID,VALUE_NAME FROM ref_sta_key_value
+						WHERE KEY_ID ='SchemeType'
+					</sqlcontent>
+					<label>VALUE_NAME</label>
+					<value>VALUE_ID</value>
+				 </sqlbundle>
+             </searchitem>
+
+            
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>4</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

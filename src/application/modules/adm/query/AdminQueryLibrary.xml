@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+  <querylibrary>
+    <query id="AddUserAdminQuery">
+      <title>Add user Admin Query</title>
+      <content>INSERT INTO REF_ADM_USER_DATA(usr_id,usr_name,usr_address,usr_cnt_no,usr_email_id,usr_acs_typ,usr_grnt_prmsn,usr_acs_mode)VALUES</content>
+      <params></params>
+    </query>
+
+    <query id="UpdateUserAdminQuery">
+      <title>Update user Admin Query</title>
+      <content></content>
+      <params></params>
+    </query>
+
+    <query id="DeleteUserAdminQuery">
+      <title>Delete user Admin Query</title>
+      <content></content>
+      <params></params>
+    </query>
+
+    <query id="SelectUserAdminQuery">
+      <title>Select user Admin Query</title>
+      <content>SELECT usr_id,usr_name,usr_email_id,usr_acs_typ,usr_grnt_prmsn,usr_acs_mode FROM REF_ADM_USER_DATA</content>
+      <params></params>
+    </query>
+  </querylibrary>

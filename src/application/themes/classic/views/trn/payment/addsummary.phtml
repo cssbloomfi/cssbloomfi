@@ -1,0 +1,147 @@
+<?php
+
+if($this->textErrors)
+{ 
+	echo "<div class='errorbox'>";
+	echo "<b>".$this->viewlabels['termination']."</b><br><br>";		
+			$this->textMessage($this->textErrors);
+	echo '</div>';
+}
+
+if($this->textInfo )
+{	
+	echo "<div class='ibox'>";	
+	$this->infoMessage($this->textInfo);
+	echo "</div>";
+}
+
+if($this->textSuccess)
+{
+	echo "<div class='successbox'>";
+		$this->successMessage($this->textSuccess);
+	echo "</div>";
+} 
+
+if(!empty($this->customer))
+{
+	$script='<script type="text/javascript">'."multiAjaxCaller(array('".$this->customer."','custtrninfo','".$this->axpath."'),array('".$this->customer."','trnidresult','pymntdtlsajax'))</script>"; 
+	echo $script;
+}
+?>
+<div class="entry-section">
+<div class="add-section">
+	<img src="<?= $this->images['addPayment']; ?>" class="icons" > &nbsp;&nbsp;<?php echo $this->paymentFormHeader['addSectionLabel'] ?>
+</div>
+
+	<fieldset>
+	<legend><?php echo $this->viewlabels['addSectionHead']; ?></legend>
+	<div id="custtrninfo"></div>
+	<div id="trnidresult"></div>
+	<br>
+	<form name="payment" method="POST">
+		<input type="hidden" value="Insert" name="REQUEST">
+		<input type="hidden" value="<?php echo $this->totalSubmits; ?>" name="totalSubmits" id="totalSubmits">
+		<table class="zebra">
+			<tr>
+			    <?php
+				echo '<td><b>'.$this->paymentFormHeader['customer'].'</b><div id="checkvoucher"></div></td>';
+				echo '<td><input type="text" name="customer" value="'.$this->customer.'"id="customer" onBlur="sendFormValuesForCust('."'$this->axpath'".')"></td>';
+				echo '<td><b>'.$this->paymentFormHeader['employee'].'</b></td>';
+				echo '<td><input type="text" name="employee" value="'.$this->employee.'" id="employee"></td>';
+				?>
+			</tr>	
+			<tr> 
+			<?php
+				echo '<td><b>'.$this->paymentFormHeader['scheme'].'</b></td>';
+				echo '<td>'.$this->scheme.'<div id="checkscheme"></div></td>';
+				echo '<td><b>'.$this->paymentFormHeader['type'].'</b></td>';
+				echo '<td>'.$this->paymentType.'</td>';
+				//echo '<td><b>'.$this->paymentFormHeader['voucher'].'</b></td>';
+				//echo '<td><input type="text" name="voucher" class="element-text" id="voucher" value="'.$this->voucher.'" size=15 ><div id="checkvoucher"></div></td>';
+			?>	 
+			</tr>
+			<tr>
+			    <?php 
+				echo '<td><b>'.$this->paymentFormHeader['amount'].'</b></td>';
+				echo '<td><div id="maxschemeamount"><input type="text" name="amount" value="'.(float)$this->amount.'" size=15 id="amount"></div></td>';
+				echo '<td><b>'.$this->paymentFormHeader['date'].' ('.$this->paymentFormHeader['dateFormat'].')'.'</b></td>';
+				echo '<td><input type="text" name="date" value="'.$this->pdate.'" id="pick-date"></td>';
+			    ?>
+			</tr>
+			<tr>
+			    <?php 
+				echo '<td><b>'.$this->paymentFormHeader['remarks'].'</b></td>';
+				echo '<td  colspan=3><textarea name="remarks" rows="2" cols="60" id="remarks">'.$this->remarks.'</textarea></td>';
+				
+			    ?>
+			</tr>
+			 <tr> 
+			    <td colspan=4 > 
+				<div style="float:right">
+				    <input type="submit" name="submit" value="<?php echo $this->paymentFormHeader['submit']; ?>" id="submit"> 
+				    <input type="button" name="cancel" value="<?php echo $this->paymentFormHeader['cancel']; ?>" id="submit" class="cancel"> 
+				</div>
+			    </td>
+
+			</tr>
+		  </table>	
+	</form>	
+	</fieldset>
+</div>
+<fieldset>
+
+<legend><?php echo $this->viewlabels['recentsubmit']."&nbsp;&nbsp;&nbsp;". count($this->result); ?></legend>
+
+<form name="deleteForm" METHOD="POST">
+<input name="totalSubmits" type="hidden" value="<?php echo count($this->result); ?>">
+<input name="REQUEST" type="hidden" value="Delete"> 
+<?php
+	$table_content_Header='<br><table class="zebra"><tr>'.
+	 '<th>'.$this->summaryTableHeader['voucherNo'].'</th>'.
+	 '<th>'.$this->summaryTableHeader['scheme'].'</th>'.
+	 '<th>'.$this->summaryTableHeader['employee'].'</th>'.
+	 '<th>'.$this->summaryTableHeader['customer'].'</th>'.
+	 '<th>'.$this->summaryTableHeader['paymentAmount'].'</th>'.
+	 '<th>'.$this->summaryTableHeader['paymentType'].'</th>'.
+	 '<th>'.$this->summaryTableHeader['paymentDueAmount'].'</th>'.
+	 '<th>'.$this->summaryTableHeader['receiptAmount'].'</th>'.
+	 '<th>'.$this->summaryTableHeader['receiptDueAmount'].'</th>'.
+	 '<th>'.$this->summaryTableHeader['startDate'].'</th>'.
+	 '<th>'.$this->summaryTableHeader['latestDate'].'</th>'.
+	 '<th>'.$this->summaryTableHeader['recordStatus'].'</th>'.
+	 '<th>'.$this->summaryTableHeader['trns'].'</th>'.
+	 '<th>'.$this->summaryTableHeader['edit'].'</th>'.
+	 '<th><input type="submit" class="delete" name="delete" id="delete_icon" value=""/>'.'<input type="checkbox" name="checkall" value=0 onclick="SetAllCheckBoxes'."('deleteForm','tdid','checkall')".';"/>'.$this->summaryTableHeader['delete'].'</th>'.
+	 '</tr>';
+	
+	echo $table_content_Header;
+if($this->result)
+{
+	$i=0;
+	foreach ($this->result  as $row )
+		{
+		   echo "<tr>";
+		   echo "<td>$row->VOUCHER_NO</td>";
+		   echo "<td>$row->SCHEME_ID</td>";
+		   echo "<td> $row->EMPLOYEE_ID </td>";
+		   echo "<td> $row->CUSTOMER_NAME</td>";
+		   echo "<td class='rt'>".$this->format->numFormat($row->TOTAL_PAYMENT_PRINCIPAL)."</td>";
+		   echo "<td>$row->PAYMENT_TYPE</td>";
+		   echo "<td class='rt'>".$this->format->numFormat($row->TOTAL_PAYMENT_DUE_PRINCIPAL)."</td>";
+		   echo "<td class='rt'>".$this->format->numFormat($row->TOTAL_RECEIPT_PRINCIPAL)."</td>";
+		   echo "<td class='rt'>".$this->format->numFormat($row->TOTAL_RECEIPT_DUE_PRINCIPAL)."</td>";
+		   echo "<td class='ct'>$row->START_DATE</td>";
+		   echo "<td class='ct'>$row->LATEST_DATE</td>";
+		   echo "<td class='ct'>$row->ACTIVE_STATUS</td>";
+		   echo '<td><a href="/trn/payment/dtlsummaryid/id/'.$row->TRAN_SUMMARY_ID.'" title="Detail view of '.$row->TRAN_SUMMARY_ID.'" rel="facebox" id="table_icon"></a></td>';
+		   echo '<td><a href="/trn/payment/editsummary/id/'.$row->TRAN_DETAILS_ID.'/add/1" title="Edit" id="edit_icon"></a></td>'; 
+		   echo '<td class="ct"> <input type="checkbox" name="tdid['.$i.']" id="tdid"  value="'.$row->TRAN_DETAILS_ID.'" /></td></tr>';
+		   $i++;
+		}
+ } 
+ echo "</table>";
+ unset($this->format);
+ ?>
+<input type="hidden" name="ttlfields" id="ttlfields" value="<?= $i;?>">
+</form>
+</fieldset>

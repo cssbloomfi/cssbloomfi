@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="collTopSht">
+     <title>Collector Top Sheet Reports</title>
+     <result>
+         <tableheader>
+            <label>Collector</label>
+            <label>Month</label>
+			<label>Total Male</label>
+			<label>Total Female</label>
+            <label>Loan</label>
+			<label>Donation</label>
+			<label>Principal</label>
+         </tableheader>
+
+         <queryheader>
+             <item>EMPLOYEE_ID</item>
+             <item>MONTH</item>
+			 <item>MALE</item>
+			 <item>FEMALE</item>
+			 <item>TOTAL_PAYMENT_PRINCIPAL</item>
+			 <item>TOTAL_RECEIPT_DONATION</item>
+			 <item>TOTAL_RECEIPT_PRINCIPAL</item>
+         </queryheader>
+  
+         <sqlcontent>
+			select lts.EMPLOYEE_ID as EMPLOYEE_ID,  
+				   CONCAT(YEAR(ltd.TRANSACTION_DATE),' / ' ,MONTHNAME(ltd.TRANSACTION_DATE)) as MONTH, 
+				   SUM(IF(rme.SEX='M',1,0)) as MALE , 
+				   SUM(IF(rme.SEX='F',1,0)) as FEMALE,
+				   SUM(lts.TOTAL_PAYMENT_PRINCIPAL) TOTAL_PAYMENT_PRINCIPAL, 
+				   SUM(IF(ltd.RECEIPT_TYPE='DONATION_RECEIVED',ltd.RECEIPT_AMOUNT,0)) TOTAL_RECEIPT_DONATION,
+				   SUM(IF(ltd.RECEIPT_TYPE='CAPITAL_RECEIVED',ltd.RECEIPT_AMOUNT,0)) TOTAL_RECEIPT_PRINCIPAL       
+			FROM ltr_trn_details AS ltd , 
+				 ltr_trn_summary AS lts ,
+				 ref_mst_entity AS rme
+			WHERE ltd.TRAN_SUMMARY_ID = lts.TRAN_SUMMARY_ID
+			AND   lts.CUSTOMER_ID = rme.ENTITY_ID
+			GROUP BY EMPLOYEE_ID,MONTH(ltd.TRANSACTION_DATE)
+            ORDER BY 2 desc
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+            
+            <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>empid</name>
+				 <class>employee_id</class>
+                 <columnvalue>EMPLOYEE_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Collector Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>startmonth</name>
+                 <columnvalue>MONTH</columnvalue>
+                 <conditiontype>@GREATEREQUAL@</conditiontype>
+                 <label>Start Month</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			  <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>endmonth</name>
+                 <columnvalue>MONTH</columnvalue>
+                 <conditiontype>@LESSEQUAL@</conditiontype>
+                 <label>End Month</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>3</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>5</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

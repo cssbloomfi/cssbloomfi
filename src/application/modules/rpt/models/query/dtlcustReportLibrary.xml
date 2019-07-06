@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="dtlCust">
+     <title>Detailed Beneficiary Reports</title>
+     <result>
+		<externalTableFormat>y</externalTableFormat>
+         <tableheader>
+			 <label>Beneficiary Code</label>
+			 <label>Beneficiary Name</label>
+			  <label>Gender</label>
+            <label>Collector Code</label>
+			 <label>Project</label>
+			 <label>Location Code</label>
+			  <label>Address</label>
+			  <label>Total Payment</label>
+			<label>Total Receipt</label>
+			<label>General Donation</label>
+			<label>BSD Paid</label>
+			<label>BSD Receipt</label>
+			<label>Start Date</label>
+			<label>Last Receipt Date</label>
+			<label>Outstanding Balance</label>
+         </tableheader>
+
+         <queryheader>
+             <item>CUSTOMER_ID</item>
+             <item>CUSTOM_COMMENT1</item>
+             <item>CUSTOM_COMMENT2</item>
+             <item>EMPLOYEE_ID</item>
+			 <item>SCHEME_ID</item>
+			 <item>LOCATION_ID</item>
+			 <item>ADDRESS</item>
+			 <item>LOAN</item>
+			 <item>PRINCIPAL</item>
+			 <item>DONATION</item>
+			 <item>TOTAL_PAYMENT_SECURITY_DEPOSITE</item>
+			 <item>TOTAL_RECEIPT_SECURITY_DEPOSITE</item>
+			 <item>START_DATE</item>
+			 <item>LATEST_DATE</item>
+			 <item>TOTAL_RECEIPT_DUE_PRINCIPAL</item>
+         </queryheader>
+
+         <sqlcontent>
+           SELECT a.CUSTOMER_ID, a.CUSTOM_COMMENT1, a.CUSTOM_COMMENT2, a.SCHEME_ID, a.EMPLOYEE_ID, 
+			d.LOCATION_ID,d.ADDRESS,@principal:=e.TOTAL_PAYMENT_PRINCIPAL LOAN, e.TOTAL_RECEIPT_PRINCIPAL PRINCIPAL,
+			e.TOTAL_RECEIPT_DONATION DONATION, e.TOTAL_PAYMENT_SECURITY_DEPOSITE, e.TOTAL_RECEIPT_SECURITY_DEPOSITE,e.START_DATE,e.LATEST_DATE,e.TOTAL_RECEIPT_DUE_PRINCIPAL
+			FROM ltr_trn_details as a
+			LEFT OUTER JOIN ( 
+			SELECT CUSTOMER_ID, LOCATION_ID, c.ADDRESS FROM ref_mst_entity as b
+			LEFT OUTER JOIN (SELECT ADDRESS_ID,ADDRESS FROM ref_mst_address ) as c
+			ON b.ADDRESS_ID=c.ADDRESS_ID
+			) AS d
+			ON d.CUSTOMER_ID = a.CUSTOMER_ID
+			RIGHT OUTER JOIN ltr_trn_summary as e
+			ON e.TRAN_SUMMARY_ID=a.TRAN_SUMMARY_ID
+			WHERE PAYMENT_TYPE = 'CAPITAL_PAID' 
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+			<searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>custid</name>
+				 <class>customer_id</class>
+                 <columnvalue>CUSTOMER_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Client Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+            
+            <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>empid</name>
+				 <class>employee_id</class>
+                 <columnvalue>EMPLOYEE_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Collector Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>schmid</name>
+				 <class>scheme_id</class>
+                 <columnvalue>SCHEME_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Project</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>6</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

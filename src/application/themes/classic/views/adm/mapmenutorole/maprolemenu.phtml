@@ -1,0 +1,122 @@
+<?php
+if($this->textSuccess)
+{
+  echo "<div class='successbox'>";
+     $this->successMessage($this->textSuccess);
+  echo "</div>";
+}
+
+if( $this->textErrors )
+{ 
+  echo "<div class='errorbox'>";
+  	echo "<b>".$this->viewlabels['termination']."</b><br>";
+		$this->textMessage($this->textErrors);
+  echo '</div>';
+}
+
+
+?>
+
+<div class="entry-section">
+
+<div class="add-section">
+	<img src="/../images/icons/emploc_map_icon.png" class="icons" > &nbsp;&nbsp;<?php echo $this->labels['sectionLabel'] ?>
+</div>
+<form name="emplocmap" method="POST">
+	<table class="zebra">
+	<tr>
+		<td><b><?=  $this->labels['roleId']; ?></b></td><td><?php echo $this->roles; ?></td>
+	</tr>
+	<tr>
+		<td> <b><?=  $this->labels['resourceName']; ?></b> </td>
+		<td> 
+		<?php 
+		$i=0;
+		if($this->resources) { 
+			foreach($this->resources as $val)
+			{ 
+				$select=null;
+				echo '<fieldset class="mlevel-1">';
+				echo '<legend class="mlevel-1-legend">';
+				if($this->result)
+				foreach($this->result as $res){
+					if($res->RESOURCE_MASTER_ID==$val['RESOURCE_ID']){
+					    $select='checked';
+					    break;
+					}
+				}
+				echo '<input type="checkbox" name="menus[]"  value="'.$val['RESOURCE_ID'].'"  '.$select.'>'.$val['RESOURCE']; 
+				echo '</legend><div class="mlevel-internal">';
+				createChildMenuElement($val,$this->result);
+				echo '</div></fieldset>';
+			}	
+		?>
+		<?php } ?>		
+		</td>
+	</tr>
+	
+	<?php  if($this->result){  ?>
+		<tr>
+			<td><b><?=  $this->labels['userMenu']; ?></b></td>
+			<td>
+			<table width=100%>
+					<tr>
+						<th> <?=  $this->labels['roleId']; ?> </th><th> <?=  $this->labels['resourceName']; ?> </th>
+					</tr>
+					<?php foreach($this->result as $result) 
+					{ ?>
+						<tr> 
+							<td><?= $result->ACCESS_ROLE_ID;  ?></td><td><?= $result->RESOURCE_NAME;  ?></td>
+						</tr>
+				
+					<?php } ?> 
+			</table>
+			</td>
+		</tr>
+	<?php } ?>
+		
+	<tr> 
+		<td>  </td> 
+		<td>  
+			<input type="submit" value="<?=  $this->labels['save']; ?>" id="submit"> 
+			<input type="button" value="<?php echo $this->labels['cancel']; ?>" id="submit" class="cancel">
+		</td>
+	</tr>
+	</table>
+</form>
+</div>
+
+<?php
+function createChildMenuElement($val,$result=null)
+{
+	if( !empty($val['CHILD']) )
+	{
+		  foreach($val['CHILD'] as $value )
+		  {
+			$select=null;
+			if($result){
+			foreach($result as $res){
+					if($res->RESOURCE_MASTER_ID==$value['RESOURCE_ID']){
+					    $select='checked';
+					    break;
+					}
+			}}
+			if( !empty($value['CHILD']) )
+			{
+				echo '<fieldset class="mlevel-2">';
+				echo '<legend class="mlevel-2-legend">';
+				echo '<input type="checkbox" name="menus[]"  value="'.$value['RESOURCE_ID'].'" '.$select.'>'.$value['RESOURCE']; 
+				echo '</legend><div class="mlevel-internal">';
+				createChildMenuElement($value,$result);
+				echo '</div></fieldset>';
+			 
+			 }
+			 else{
+				echo '<input type="checkbox" name="menus[]"  value="'.$value['RESOURCE_ID'].'" '.$select.' >'.$value['RESOURCE']; 
+				echo "<br>";
+				createChildMenuElement($value,$result);
+			}
+		  }
+	}  
+}
+?>

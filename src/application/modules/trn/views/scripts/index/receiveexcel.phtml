@@ -1,0 +1,12 @@
+
+<?php
+$header=array($this->tableHeader['memoNo'],$this->tableHeader['voucherNo'],$this->tableHeader['scheme'],$this->tableHeader['schemeType'],
+$this->tableHeader['employee'],$this->tableHeader['customer'],$this->tableHeader['receiptAmount'], 
+$this->tableHeader['receiptType'],$this->tableHeader['transactionDate']);
+
+$selected_col=array('MEMO_NO','VOUCHER_NO','SCHEME_ID','SCHEME_TYPE','EMPLOYEE_ID','CUSTOMER_ID', 'RECEIPT_AMOUNT', 
+'RECEIPT_TYPE','TRANSACTION_DATE');
+
+$filename="receipt_".$this->fileno;
+$this->createExcelReport($filename,$header,$this->result,$selected_col);
+?>

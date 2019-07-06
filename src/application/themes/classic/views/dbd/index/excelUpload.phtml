@@ -1,0 +1,14 @@
+<div class="left-section">
+	<div class="helpimg"></div>
+</div>
+
+<div class="right-section">
+	<ul id="menu1">
+	<?php 
+	echo "<li><a href='#'><div class='li-icon-div'>Excel Uploading</div></a>";
+	echo "<ul>";
+	 foreach($this->menu as $menu) { ?>
+	    <li><a href="<?php echo $this->escape($menu->RESOURCE_URL);?>"><?php echo $this->escape($menu->RESOURCE_NAME);?></a></li>	
+	<?php } ?>
+	</ul>
+</div>

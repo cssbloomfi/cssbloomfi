@@ -1,0 +1,24 @@
+<div class="main-comp-section">
+
+	<div class="comp-section">
+	<?php 
+		$comps=new BinaryBl_ComponentUILoader($this->componentListLeft,'LIST',null,array('class'=>'comp1'),true,false);
+		echo $comps->getComponentUI();
+	?>
+	</div>
+
+	<div class="comp-section">
+	<?php 
+		$comps=new BinaryBl_ComponentUILoader($this->componentListCenter,'LIST',null,array('class'=>'comp1'),true,false);
+		echo $comps->getComponentUI();
+	?>
+	</div>
+
+	<div class="comp-section">
+	<?php 
+		$comps=new BinaryBl_ComponentUILoader($this->componentListRight,'LIST',NULL,array('class'=>'comp1'),true,false);
+		echo $comps->getComponentUI();
+	?>
+	</div>
+</div>
+

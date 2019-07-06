@@ -1,0 +1,138 @@
+
+<?php 
+
+$this->showXlsDownloadSection($this->xlsResults);
+
+ 
+if($this->textSuccess)
+{
+  echo "<div class='successbox'>";
+     $this->successMessage($this->textSuccess);
+  echo "</div>";
+}
+
+if( $this->textErrors )
+{ 
+  echo "<div class='errorbox'>";
+  	echo "<b>".$this->viewlabels['termination']."</b><br>";
+		$this->textMessage($this->textErrors);
+  echo '</div>';
+}
+?>
+
+<div class="entry-section">
+<fieldset>
+<legend class="icon-div">
+	<img src="/../images/icons/search.png" class="icons" > 
+	<?php echo $this->labels['searchSectionHead']; ?>
+</legend>
+<div class="add-link-section">
+	<a href="/adm/rolecreation/addrole" class="btn add"><?php echo $this->labels['addRole']; ?></a>	
+</div>
+
+<div class="search-section">
+	<form method="post" autocomplete="off">
+	<input name="REQUEST" type="hidden" value="Search">
+	       <table class="zebra">
+			<tr> 
+				<td> <b><?php echo $this->escape($this->labels['roleId']); ?></b>  </td>
+				<td> <input type="text" name="param1"  value="<?=$this->param[0]; ?>"/>  </td>
+			</tr>
+			<tr> 
+				<td colspan=2> <input type="submit" value="<?php echo $this->labels['search']; ?>" id="submit_1"/>  </td> 
+			</tr>
+		</table>
+	</form>
+</div>
+
+</fieldset>
+</div>
+
+
+<fieldset>
+	<legend><?php /*echo $this->viewlabels['totalvaluepre'].'&nbsp;&nbsp; ' . $this->escape($this->totalCustomers).' '.$this->viewlabels['totalvaluepost']; */ ?></legend>
+<?php
+if($this->srch){
+$searchResultString=$this->searchString( array('param1'=>$this->param[0]), array('param1'=>$this->labels['roleId'] )); ?>
+<div class="search-result-string"><img src="/../images/icons/searchresult.png" class="search-result-icons"  > <?= $searchResultString; ?></div>
+
+<?php
+  }
+  if($this->paginator['paginator'])
+  {
+?>
+
+
+<fieldset class="export_section">
+<legend><?= $this->viewlabels['excelExport'] ?></legend>
+<form method="POST">
+	<input name="searchparams" type="hidden" value="<?php echo $this->searchparams; ?>" >
+	<input name="arrayparams" type="hidden" value="<?php echo $this->arrayparams; ?>" >
+	<input name="search" type="hidden" value="<?= $this->srch; ?>" >
+	<input type="submit" id="xlss" name="export" value="" />
+</form>
+</fieldset>
+
+<?php
+$pagiParams=array('search'=>$this->srch);
+$pagiParams=array_merge($pagiParams,$this->paginationparams);
+?>
+<div class="pagination"><?php echo $this->paginationControl($this->paginator['paginator'],
+                                    'Sliding',
+                                    '/partials/my_pagination_control.phtml',
+				    $pagiParams); ?></div>
+<?php } ?>
+
+<form name="deleteForm" METHOD="POST" >
+<?php if ( $this->srch ) {?>
+<input name="params" type="hidden" value="<?php echo $this->param1; ?>" >
+<?php } 
+?>
+<input name="REQUEST" type="hidden" value="Delete"> 
+<?php
+	 $table_head = '<table class="zebra"> <tr>
+			    <th>'.$this->labels['roleId'].'</th>
+			    <th>'.$this->labels['roleType'].'</th>
+			    <th>'.$this->labels['roleDesc'].'</th>
+			     <th>'.$this->labels['createdBy'].'</th>
+			    <th>'.$this->labels['edit']."</th>
+			    <th>".'<input type="checkbox" name="checkall" value=0 onclick="SetAllCheckBoxes'."('deleteForm','role','checkall')".';"/><input type="submit" class="delete" name="delete" id="delete_icon" value="">'.$this->labels['delete'].'</th>
+			</tr> ';
+
+	echo $table_head;
+
+	if ($this->paginator['data']): 
+	$i=0;
+	foreach ($this->paginator['data'] as $row ): 	
+		echo "<tr>";
+		echo "<td>$row->ACCESS_ROLE_ID</td>";
+		echo "<td>$row->ACCESS_ROLE_TYPE</td>";
+		echo "<td>$row->ACCESS_ROLE_DESC</td>";
+		echo "<td>$row->CREATED_BY</td>";	
+		echo '<td class="ct"><a href="/adm/rolecreation/editrole/id/'.$row->ID.'" id="edit_icon"></a></td>';
+		echo '<td class="ct"><input type="checkbox" name="role['.$i.']" id="role"  value="'.$row->ACCESS_ROLE_ID.'" /></td>';
+		echo "</tr>";
+		$i++;
+		      
+	endforeach; 
+	endif; 
+
+?>
+</table>
+<input type="hidden" name="ttlfields" id="ttlfields" value="<?= $i;?>">
+</form>
+
+<?php  
+if($this->paginator['paginator'])
+{
+?>
+
+<div class="pagination"><?php echo $this->paginationControl($this->paginator['paginator'],
+                                    'Sliding',
+                                    '/partials/my_pagination_control.phtml',
+				    array('search'=>$this->srch,'param1'=>$this->param1)); ?></div>
+</div>
+
+<?php } ?>
+
+</fieldset>

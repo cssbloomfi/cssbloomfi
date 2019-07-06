@@ -1,0 +1,29 @@
+<div class="sidebar-component">
+	<div class="component-header">
+	Tansaction Information
+	</div>
+	<div class="component-content">
+		<table class="clean-table extend">
+			<tr>
+				<td>Loan</td>
+				<td><?= $this->formatter->numFormat($this->totalTrnInfo->TOTAL_LOAN); ?></td>
+			</tr>
+			<tr>
+				<td>Principal</td>
+				<td><?= $this->formatter->numFormat($this->totalTrnInfo->TOTAL_PRINCIPAL); ?></td>
+			</tr>
+			<tr>
+				<td>Donation</td>
+				<td><?= $this->formatter->numFormat($this->totalTrnInfo->TOTAL_DONATION); ?></td>
+			</tr>
+			<tr>
+				<td>BSD Paid</td>
+				<td><?= $this->formatter->numFormat($this->totalTrnInfo->BSD_PAID); ?></td>
+			</tr>
+			<tr>
+				<td>BSD Received</td>
+				<td><?= $this->formatter->numFormat($this->totalTrnInfo->TOTAL_LOAN); ?></td>
+			</tr>
+		</table>
+	</div>
+</div>

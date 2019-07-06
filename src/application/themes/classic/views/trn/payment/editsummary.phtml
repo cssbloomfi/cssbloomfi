@@ -1,0 +1,102 @@
+<?php
+if($this->textErrors)
+{ 
+	echo "<div class='errorbox'>";
+	echo "<b>".$this->viewlabels['termination']."</b><br><br>";
+			$this->textMessage($this->textErrors);
+	echo '</div>';
+}
+if($this->statusMsg){
+	echo "<div class='successbox'>";
+		$this->successMessage($this->statusMsg);
+	echo "</div>";
+	if ($this->addPageRequest)
+	{
+	$script='<script language="JavaScript">
+		return_url="/trn/payment/addsummary";
+		delayRedirect(return_url);
+	</script>';
+	echo $script;
+	}
+	else{
+	$script='<script language="JavaScript">
+		return_url="'.$this->url.'";
+		delayRedirect(return_url);
+	</script>';
+	echo $script;
+	} 
+}
+else
+{
+
+if(!empty($this->customer))
+{
+	$script='<script type="text/javascript">'."multiAjaxCaller(array('".$this->customer."','custtrninfo','".$this->path['trninfoajax']."'),array('".$this->customer."','trnidresult','".$this->path['pymntdtlsajax']."'))</script>"; 
+	echo $script;
+}
+?>
+<div class="entry-section">
+<div id="custtrninfo"></div>
+<div id="trnidresult"></div>
+<br>
+<form method="POST">
+<input type="hidden" name="trns_id" id="trns_id" value="<?php echo $this->id; ?>" size="30">
+<table class="zebra">
+	<tr>
+	   <td><b><?php echo $this->paymentFormHeader['employee']; ?></b></td>		
+	   <td><input type="text" name="employee" id="employee_name" value="<?php echo $this->employee; ?>" size="30"></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->paymentFormHeader['customer']; ?></b></td>		
+	   <td><input type="text" name="customer" id="customer_name" value="<?php echo $this->customer; ?>" size="30" onBlur=<?='"'."multiAjaxCaller(array(this.value,'custtrninfo','".$this->path['trninfoajax']."'),array(this.value,'trnidresult','".$this->path['pymntdtlsajax']."'))".'"'; ?> ></td>
+	</tr>
+<!--	<tr>
+	   <td><b><?php //echo $this->paymentFormHeader['voucher']; ?></b></td>		
+	   <td><input type="text" name="voucher"  value="<?php// echo $this->voucher; ?>" size="30"></td>
+	</tr>  -->
+	<tr>
+	   <td><b><?php echo $this->paymentFormHeader['scheme']; ?></b></td>	
+	   <td><?php echo $this->scheme; ?><div id="checkscheme"></div></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->paymentFormHeader['type']; ?></b></td>	
+	   <td><?php echo $this->paymentType; ?></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->paymentFormHeader['amount']; ?></b></td>		
+	   <td>
+		<div id="maxschemeamount"><input type="text" id="amount" name="amount" value="<?php echo $this->amount; ?>" size="30"></div>
+		<input type="hidden" name="receipt_amount" value="<?php echo $this->receiptAmount; ?>" >
+	</td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->paymentFormHeader['remarks']; ?></b></td>		
+	   <td><textarea name="remarks" rows=5 cols=30 ><?php echo $this->remarks; ?></textarea></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->paymentFormHeader['date'].' ('.$this->paymentFormHeader['dateFormat'].')'; ?></b></td>		
+	   <td><input type="text" name="date" value="<?php echo $this->date; ?>" size="30" id="pick-date1" ></td>
+	</tr>
+	<?php if($this->accStatusVisibility==true) { ?>
+	<tr>
+	   <td><b><?php echo $this->paymentFormHeader['status']; ?></b></td>		
+	   <td><?= $this->accountStatus; ?></td>
+	</tr>
+	<?php } ?>
+	<tr> 
+		<td>  </td> 
+		<td>  </td>
+	</tr>
+	<tr>
+	   <td>  </td>	
+	   <td>
+	   <input type="submit" value="<?php echo $this->paymentFormHeader['edit']; ?>" id="submit">
+	   <input type="reset" value="<?php echo $this->paymentFormHeader['reset']; ?>" id="submit">
+	   <input type="button" value="<?php echo $this->paymentFormHeader['cancel']; ?>" id="submit" onclick="cancel()">
+	   </td>
+	</tr>
+</table>
+
+</form>
+</div>
+<?php } ?>

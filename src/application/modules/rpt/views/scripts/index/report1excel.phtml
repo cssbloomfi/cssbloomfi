@@ -1,0 +1,11 @@
+
+
+<?php
+$header=array($this->tableHeader['custId'], $this->tableHeader['empId'], $this->tableHeader['schemeId'], 
+$this->tableHeader['transId'], $this->tableHeader['firstPayDt'], $this->tableHeader['lastPayDt'], 
+$this->tableHeader['ageInDays'], $this->tableHeader['totalPayment'],$this->tableHeader['totalReceipt'],
+$this->tableHeader['paymentAmount'], $this->tableHeader['receiptAmount'],$this->tableHeader['dueAmount']);
+
+$filename="report1_".$this->fileno;
+$this->createExcelReport($filename,$header,$this->reports);
+?>

@@ -1,0 +1,64 @@
+
+
+<div class="entry-section">
+
+<?php
+if($this->insert==1)
+ {  
+    if($this->textSuccess)
+      {
+          echo "<div class='successbox'>";
+	     $this->successMessage($this->textSuccess);
+	  echo "</div>";
+      }?>
+<?php }
+else
+if( $this->textErrors )
+{ 
+  echo "<div class='errorbox'>";
+  	echo "<b>Operation Terminated</b><br><br>";
+	if($this->optionsErrors)
+		$this->selectMessage($this->optionsErrors);	
+	if($this->textErrors )
+		$this->textMessage($this->textErrors);
+  echo '</div>';
+}
+?>
+
+
+<div class="add-section">
+	<img src="<?= $this->images['addLocation']; ?>" class="icons" > &nbsp;&nbsp;<?php echo $this->locationForm['addSectionLabel'] ?>
+</div>
+	<form name="location" method="POST">
+		<table class="zebra">
+		    <tr>
+		       <td> <b><?php echo $this->locationForm['locationId']; ?></b> </td>
+		       <td><input type="text" name="location_id" id="locId" value="<?php echo $this->loc; ?>" size=30 class="element-text" ><div id='checkloc'></div></td>
+		    </tr>
+		    <tr>
+		       <td> <b><?php echo $this->locationForm['locationName']; ?></b> </td>
+		       <td><input type="text" name="location_nm"  value="<?php echo $this->locNm; ?>" size=30 ></td>
+		    </tr>
+		    <tr> 
+		       <td><b><?php echo $this->locationForm['type']; ?></b></td>
+		       <td><?php echo $this->location_types; ?></td> 
+		    </tr>
+		    <tr>
+		       <td><b><?php echo $this->locationForm['parent_location']; ?></b></td>
+		       <td colspan=3><input type="text" name="parent_loc" id="parent"  value="<?php echo $this->parent_loc; ?>" size=30 ></td>
+		    </tr>
+		    
+		    <tr>
+		       <td><b> <?php echo $this->locationForm['description']; ?></b> </td>
+		       <td colspan=3><textarea name="description" rows=7 cols=30><?php echo $this->desc; ?></textarea></td>
+		    </tr>
+		    <tr>
+			<td>  </td>
+			   <td colspan=3><input type="submit" value="<?php echo $this->locationForm['submit']; ?>" id="submit">
+			   <input type="reset" value="<?php echo $this->locationForm['reset']; ?>" id="submit">
+			   <input type="button" value="<?php echo $this->locationForm['cancel']; ?>" id="submit" onclick="cancel()"></td>
+			</tr>
+		</table>
+			
+	</form>
+</div>

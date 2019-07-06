@@ -1,0 +1,68 @@
+
+<div class="left-section">
+
+<div class="add-section">
+	<img src="/../images/icons/emploc_map_icon.png" class="icons" > &nbsp;&nbsp;<?php echo $this->formLabel['sectionLabel'] ?>
+</div>
+<form name="emplocmap" method="POST">
+	<input type="hidden" name="entId" value="<?= $this->empId; ?>" >
+	<table class="zebra">
+	<tr>
+		<td><b><?=  $this->formLabel['name']; ?></b></td><td> <?=  $this->empId; ?> </td>
+	</tr>
+	<tr>
+		<td> <b><?=  $this->formLabel['location']; ?></b> </td>
+		<td> 
+			<?php if($this->locations) { ?>
+			<select name="loc[]" multiple="multiple" class="select-locations">
+			  <option value="" ><?= $this->formLabel['noLocation'];  ?></option>
+			  <?php foreach($this->locations as $location) {
+				$select=null;
+				
+			        foreach ($this->result as $employeeLocation){
+				 if($employeeLocation->LOCATION_ID == $location->LOCATION_ID) {
+					$select='selected';
+					break;
+				 }}
+				 ?>	
+				<option value=<?php echo '"'.$location->LOCATION_ID.'" '.$select; ?> ><?= $location->LOCATION_ID;  ?></option>
+			  <?php } ?>	
+			</select> 
+			<?php 
+			}else{   $this->localMessages['noLocation']; 	}
+			?>
+		</td>
+	</tr>
+	<tr>
+		<td><b><?=  $this->formLabel['mapLocation']; ?></b></td>
+		<td>
+		<?php  if($this->result){  ?>
+				<table width=100%>
+					<tr>
+						<th> <?=  $this->formLabel['locationName']; ?></th><th> <?=  $this->formLabel['description']; ?> </th>
+					</tr>
+					<?php foreach($this->result as $result) { ?>
+					<tr> 
+						<td><?= $result->LOCATION_ID;  ?></td><td><?= $result->LOCATION_DESC;  ?></td>
+					</tr>
+				
+			<?php } ?> 
+			</table>
+			<?php } 
+			else { 
+			   echo $this->localMessages['noEmplocation'];
+			} ?>
+		</td>
+	</tr>
+	<tr> 
+		<td>  </td> 
+		<td>  
+			<input type="button" value="<?php echo $this->formLabel['cancel']; ?>" id="submit" onclick="cancel()">
+			<input type="submit" value="<?=  $this->formLabel['submit']; ?>" id="submit"> 
+		</td>
+	</tr>
+	</table>
+</form>
+
+</div>
+

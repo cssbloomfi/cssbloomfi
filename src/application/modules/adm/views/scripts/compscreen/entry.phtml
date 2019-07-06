@@ -1,0 +1,115 @@
+<?php
+
+if($this->textSuccess)
+{
+  echo "<div class='successbox'>";
+     $this->successMessage($this->textSuccess);
+  echo "</div>";
+  
+  if($this->edit==true){
+  ?>
+	  <script language="JavaScript">
+		return_url="/adm/compscreen";
+		setTimeout("window.location='" + return_url + "'",1000);
+	  </script>
+  <?php
+  }
+}
+else
+if( $this->textErrors )
+{ 
+	 echo "<div class='errorbox'>";
+			$this->textMessage($this->textErrors);
+	 echo '</div>';
+} ?>
+
+<div class="add-section">
+	Component-Group Create Section
+</div>
+
+<form name='compRole' method='POST'>
+<input type="hidden" name="id" value="<?= $this->id; ?>">
+	<table class="zebra">
+		<tr>
+			<td>
+				<b>Component Group</b>
+			</td>
+			<td colspan=3>
+				<input type='text' name='compgrpNm' value='<?= $this->compgrpNm; ?>'>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b>Screen Code</b>
+			</td>
+			<td>
+				<div class="comp-panel">
+				<?php
+					foreach($this->appScreenId as $comp)
+					{
+						$check=null;
+						$value=$comp->RESOURCE_ID;
+						
+						if(isset($this->selectedScreens))
+						foreach($this->selectedScreens as $val)
+							if($val==$value){ 
+								$check='checked';
+								break;
+							}
+						echo "<input type='checkbox' name='screenId[]' value='".$value."' $check>";
+						echo $comp->RESOURCE_NAME.'<br>';
+					}
+				?>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b>Screen Location</b>
+			</td>
+			<td>
+				<?= $this->screen; ?>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b>Components</b>
+			</td>
+			<td colspan=3>
+				<div class="comp-panel">
+				<?php
+					foreach($this->components as $comp)
+					{
+						$check=null;
+						$value=$comp->COMP_ID;
+						
+						if(isset($this->selectedComps))
+						foreach($this->selectedComps as $val)
+							if($val==$value){ 
+								$check='checked';
+								break;
+							}
+						echo "<input type='checkbox' name='comp[]' value='".$value."' $check>";
+						echo $comp->COMP_SCREEN_NAME.'<br>';
+					}
+				?>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			</td>
+			<td>
+				<input type="submit" name="save" value="Save" id="submit">
+				<input type="button" value="Cancel" id="submit" onclick="cancel()">
+			</td>
+		</tr>
+	</table>
+</form>
+
+<script type="text/javascript">
+	function cancel()
+	{
+		 self.location="/adm/compscreen";
+	}
+</script>

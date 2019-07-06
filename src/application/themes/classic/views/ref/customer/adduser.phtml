@@ -1,0 +1,105 @@
+
+<div class="entry-section">
+<?php
+if($this->insert==1)
+ {  
+    if($this->textSuccess)
+      {
+          echo "<div class='successbox'>";
+	     $this->successMessage($this->textSuccess);
+	  echo "</div>";
+      }
+}
+else
+if( $this->textErrors )
+{ 
+	 echo "<div class='errorbox'>";
+		echo "<b>".$this->messages['termination']."</b><br><br>";
+		if($this->textErrors )
+			$this->textMessage($this->textErrors);
+	 echo '</div>';
+}elseif($this->textInfo )
+{	
+	echo "<div class='ibox'>";	
+	$this->infoMessage($this->textInfo);
+	echo "</div>";
+}?>
+
+<div class="add-section">
+	<img src="<?= $this->images['addCustomer'] ?>" class="icons" > &nbsp;&nbsp;<?php echo $this->formLabel['addSectionLabel'] ?>
+</div>
+
+<form name="add_customer" method="POST" enctype='multipart/form-data' >
+<table class="zebra">
+	<tr>
+	   <td><b><?php echo $this->formLabel['customerId']; ?></b></td>		
+	   <td><input type="text" name="custId" id="custId" value="<?php echo $this->custId; ?>" size="30" class="element-text"><div id="checkcustid"></div></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['cssId']; ?></b></td>		
+	   <td><input type="text" name="cssId" class="css_id" value="<?php echo $this->cssId; ?>" size="30"></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['name']; ?></b></td>		
+	   <td><input type="text" name="name" value="<?php echo $this->name; ?>" size="30"></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['age']; ?></b></td>		
+	   <td><input type="text" name="age" value="<?php echo $this->age; ?>" size="2"></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['sex']; ?></b></td>		
+	   <td>
+		<?php echo $this->sex; ?>
+	   </td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['location']; ?></b></td>		
+	   <td>
+		<?php echo $this->location; ?>
+	   </td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['addr']; ?></b></td>		
+	   <td><textarea name="address" rows="3" cols="30"><?php echo $this->address; ?></textarea></td>
+	</tr>
+	<tr> 
+	   <td><b><?php echo $this->formLabel['astemp']; ?></b></td>		
+	   <td><input type="text" name="astemp" value="<?php echo $this->astemp; ?>" size="30" id="employee_name" ></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['scheme']; ?></b></td>		
+	   <td>
+		<?php echo $this->scheme; ?>
+	   </td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['appldt']; ?></b></td>		
+	   <td><input type="text" name="appdate" size="10" value="<?php echo $this->appdate; ?>" id="pick-date"></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['desc']; ?></b></td>		
+	   <td><textarea name="description" rows="4" cols="30"><?php echo $this->desc; ?></textarea></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->formLabel['image']; ?></b></td>		
+	   <td><input type="file" name="file" id="file" /> </td>
+	</tr>
+	<tr>
+	   <td></td>		
+	    <td></td>
+	</tr>
+	<tr>
+	   <td></td>
+	   <td>
+	      <input type="submit" value="<?php echo $this->formLabel['submit']; ?>" id="submit" class="submit_data">
+	      <input type="reset" value="<?php echo $this->formLabel['reset']; ?>" id="submit">
+	      <input type="button" value="<?php echo $this->formLabel['cancel']; ?>" id="submit" class="cancel">
+	   </td>
+	</tr>
+</table>
+</form>
+</div>
+
+
+

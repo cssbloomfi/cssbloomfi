@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="schmPymtRecMis">
+     <title>Project Wise Payment Receipt</title>
+     <result>
+		<externalTableFormat>y</externalTableFormat>
+         <tableheader>
+			 <label>Project Code</label>
+			 <label>Total Beneficiary</label>
+			 <label>Total Loan</label>
+			 <label>Total Receipt</label>
+			 <label>Total Donation</label>
+			 <label>Total BSD Receipt</label>
+			 <label>Total BSD Paid</label>
+         </tableheader>
+
+         <queryheader>
+             <item>SCHEME_ID</item>
+             <item>TOTAL_CUSTOMER</item>
+             <item>LOAN</item>
+			 <item>RECEIPT</item>
+			 <item>DONATION</item>
+			 <item>BSD_RECEIPT</item>
+			 <item>BSD_PAID</item>
+         </queryheader>
+
+         <sqlcontent>
+            SELECT 
+			SCHEME_ID, COUNT(CUSTOMER_ID) AS TOTAL_CUSTOMER, 
+			SUM(TOTAL_PAYMENT_PRINCIPAL) AS LOAN, SUM(TOTAL_RECEIPT_PRINCIPAL) AS RECEIPT, 
+			SUM(TOTAL_RECEIPT_DONATION) AS DONATION, SUM(TOTAL_RECEIPT_SECURITY_DEPOSITE) AS BSD_RECEIPT,
+			SUM(TOTAL_PAYMENT_SECURITY_DEPOSITE) AS BSD_PAID
+			FROM ltr_trn_summary
+			WHERE STATUS='NORMAL'
+			GROUP BY SCHEME_ID
+			ORDER BY SCHEME_ID ASC
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>schmid</name>
+				 <class>scheme_id</class>
+                 <columnvalue>SCHEME_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Project</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			  <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

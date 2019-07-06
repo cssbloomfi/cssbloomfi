@@ -1,0 +1,16 @@
+
+<?php
+$header=array($this->tableHeader['custId'], $this->tableHeader['empId'], $this->tableHeader['schemeId'], 
+$this->tableHeader['transId'], $this->tableHeader['dueAmount'],
+$this->tableHeader['paymentAmount'],$this->tableHeader['receiptAmount'], 
+$this->tableHeader['firstPayDt'], $this->tableHeader['lastPayDt'], 
+$this->tableHeader['ageInDays'], $this->tableHeader['totalReceipt']);
+
+$order=array('CUSTOMER_ID', 'EMPLOYEE_ID', 'SCHEME_ID', 'TRANSACTION_ID', 'DUE_AMOUNT', 'PAYMENT_AMOUNT', 
+'RECEIPT_AMOUNT', 'FIRST_PAYMENT_DATE', 'LAST_RECEIPT_DATE', 'AGE_IN_DAYS', 'TOTAL_RECEIPT');
+
+$filename="report5_".$this->fileno;
+$this->createExcelReport($filename,$header,$this->reports,$order);
+
+?>
+

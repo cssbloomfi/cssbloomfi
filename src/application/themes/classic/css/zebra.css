@@ -1,0 +1,140 @@
+/* data formats */
+.zebra{
+	width:100%;
+	background:#F7F7F7;
+	border:1px solid #EBEBEB;
+	border-collapse: collapse;
+	border-spacing:5px;
+	padding:5px;
+	float:left;
+}
+.zebra th{
+	background:url(../images/table/tablehead1.png) repeat-x;
+	height:28px;
+	line-height:26px;
+	text-align:center;
+	padding-left:5px;
+	border-right:1px solid #C0C0C0;
+	font-size:80%;
+}
+.zebra tr td{
+	height:28px;
+	line-height:26px;
+	text-align:left;
+	font-size:80%;
+	
+}
+
+table.zebra tr.even td, table.zebra tr.even { background-color:#FFF;} 
+table.zebra tr.odd td { background-color:#F4F7FB; }
+
+table.zebra tr.even1 td, table.zebra tr.even1 { background-color:#FFF;} 
+table.zebra tr.odd1 td { background-color:#FF0000; }
+
+
+table.zebra tr.even td.rt{
+	text-align:right;
+}
+table.zebra tr.odd td.rt{
+	text-align:right;
+}
+table.zebra tr.even td.ct{
+	text-align:center;
+}
+table.zebra tr.odd td.ct{
+	text-align:center;
+}
+
+table.zebra tr.even td #hi{
+	background:#FFFF00;
+}
+table.zebra tr.odd td #hi{
+	background:#FFFF00;
+}
+
+
+.zebra3{
+	width:100%;
+	background:#F7F7F7;
+	border:1px solid #EBEBEB;
+	border-collapse: collapse;
+	border-spacing:5px;
+	padding:5px;
+}
+.zebra3 th{
+	background:url(../images/table/tablehead2.jpg) repeat-x;
+	height:28px;
+	line-height:26px;
+	text-align:center;
+	padding-left:5px;
+	border-right:1px solid #C0C0C0;
+	font-size:80%;
+}
+.zebra3 tr td{
+	height:28px;
+	line-height:26px;
+	text-align:center;
+	font-size:80%;
+}
+
+table.zebra3 tr.even td, table.zebra tr.even { background-color:#FFF;} 
+table.zebra3 tr.odd td { background-color:#e7fffa; } 
+
+
+table.zebra3 tr.even td.rt{
+	text-align:right;
+}
+table.zebra3 tr.odd td.rt{
+	text-align:right;
+}
+table.zebra3 tr.even td.ct{
+	text-align:center;
+}
+table.zebra3 tr.odd td.ct{
+	text-align:center;
+}
+
+.paginationControl{
+	background:#EEEEEE;
+	border:1px solid #DDDDDD;
+	height:26px;
+	text-align:center;
+	width:98%;
+	margin-top:5px;
+	margin-bottom:5px;
+	line-height:28px;
+}
+.googlenav{
+	height:28px;
+	margin:5px;
+}
+.googlenav a{
+	text-decoration:none;
+	color:#000;
+	font-size:80%;
+}
+.current{
+	background:#DDDDDD;
+	height:28px;
+	margin:5px;
+	width:16px;
+}
+
+.highlight
+{
+	color:#CA2B2F;
+}
+
+.table-fix-area
+{
+	height:273px;
+	width:100%;
+	float:left;
+	overflow:scroll;
+}
+
+.table-fix-area-xls
+{
+	height:150px;
+	overflow:scroll;
+}

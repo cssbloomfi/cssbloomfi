@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="dlyDtlsMemo">
+     <title>Daily Details Memo Report</title>
+     <result>
+         <tableheader>
+            <label>Collector Code</label>
+            <label>Project</label>
+			<label>Beneficiary Code</label>
+			<label>Memo No.</label>
+			<label>Date</label>
+			<label>Week</label>
+			<label>Month</label>
+			<label>Donation</label>
+			<label>Principal</label>
+         </tableheader>
+
+         <queryheader>
+             <item>EMPLOYEE_ID</item>
+             <item>SCHEME_ID</item>
+			 <item>CUSTOMER_ID</item>
+			 <item>MEMO_NO</item>
+             <item>TRANSACTION_DATE</item>
+			 <item>WEEK</item>
+             <item>MONTH</item>
+			 <item>DONATION</item>
+			 <item>PRINCIPAL</item>
+         </queryheader>
+
+         <sqlcontent>
+            SELECT dtl1.EMPLOYEE_ID, dtl1.SCHEME_ID, dtl1.CUSTOMER_ID, dtl1.MEMO_NO,
+			dtl1.TRANSACTION_DATE,
+			CONCAT(YEAR(dtl1.TRANSACTION_DATE),'/',WEEK(dtl1.TRANSACTION_DATE),':',ADDDATE(dtl1.TRANSACTION_DATE,-1 * DAYOFWEEK(dtl1.TRANSACTION_DATE)),' to ',ADDDATE(dtl1.TRANSACTION_DATE,-1 * DAYOFWEEK(dtl1.TRANSACTION_DATE)+6)) AS WEEK,
+			CONCAT(YEAR(dtl1.TRANSACTION_DATE),'/',MONTHNAME(dtl1.TRANSACTION_DATE)) MONTH, 
+			if(dtl2.DONATION,dtl2.DONATION,'0') DONATION , if(dtl3.PRINCIPAL,dtl3.PRINCIPAL,'0') PRINCIPAL
+			FROM ltr_trn_details AS dtl1
+			LEFT OUTER JOIN ( SELECT ID, RECEIPT_AMOUNT AS DONATION FROM ltr_trn_details WHERE STATUS='NORMAL' AND
+			RECEIPT_TYPE='DONATION_RECEIVED') 
+			AS dtl2 ON dtl1.ID = dtl2.ID
+			LEFT OUTER JOIN ( SELECT ID, RECEIPT_AMOUNT AS PRINCIPAL FROM ltr_trn_details WHERE STATUS='NORMAL' AND
+			RECEIPT_TYPE='CAPITAL_RECEIVED' ) AS dtl3
+			ON dtl1.ID = dtl3.ID
+			WHERE dtl1.STATUS='NORMAL' AND RECEIPT_TYPE!='BSD_RECEIVED' AND RECEIPT_TYPE!='PROCESSING_FEES' AND RECEIPT_TYPE IS NOT NULL
+			ORDER BY MEMO_NO ASC
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+            
+            <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>empid</name>
+				 <class>employee_id</class>
+                 <columnvalue>EMPLOYEE_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Collector Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>schmid</name>
+				 <class>scheme_id</class>
+                 <columnvalue>SCHEME_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Project</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>startdate</name>
+                 <columnvalue>TRANSACTION_DATE</columnvalue>
+                 <conditiontype>@GREATEREQUAL@</conditiontype>
+				 <class>pick-date</class>
+                 <label>Start Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>3</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			  <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>enddate</name>
+                 <columnvalue>TRANSACTION_DATE</columnvalue>
+                 <conditiontype>@LESSEQUAL@</conditiontype>
+				 <class>pick-date</class>
+                 <label>End Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>4</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <isdisplay>Y</isdisplay>
+                 <order>5</order>
+                 <displaytype>BLANK</displaytype>
+             </searchitem>
+
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>6</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

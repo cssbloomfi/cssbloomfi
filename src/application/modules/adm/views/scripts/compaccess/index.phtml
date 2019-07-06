@@ -1,0 +1,144 @@
+<?php 
+
+$this->showXlsDownloadSection($this->xlsResults);
+
+if($this->delete==3)
+ {  
+    if($this->textSuccess)
+      {
+          echo "<div class='successbox'>";
+	     $this->successMessage($this->textSuccess);
+	  echo "</div>";
+      }
+ }
+else
+if( $this->textErrors )
+{ 
+  echo "<div class='errorbox'>";
+  	echo "<b>".$this->viewlabels['termination']."</b><br>";
+		$this->textMessage($this->textErrors);
+  echo '</div>';
+}
+?>
+
+<div class="entry-section">
+<fieldset>
+<legend class="icon-div">
+	<img src="/../images/icons/search.png" class="icons" > 
+	<?php //echo $this->labels['searchSectionHead']; ?>
+	<?php echo "Component Group Role Search Section"; ?>
+</legend>
+<div class="add-link-section">
+	<a href="#" class="btn add" id="mapComp" onclick="mapAccess();"><?= $this->mapGroupToRoles['heading']; ?></a>	
+</div>
+
+<div class="search-section">
+	<form method="post" autocomplete="off">
+	<input name="REQUEST" type="hidden" value="Search">
+	       <table class="zebra">
+			<tr> 
+				<td> <b><?= $this->mapGroupToRoles['role']; ?></b>  </td>
+				<td> <?= $this->roles; ?></td>
+			</tr>
+			<tr> 
+				<td colspan=1></td>
+				<td> <input type="submit" value="<?php echo $this->labels['search']; ?>" id="submit_1"/>  </td> 
+			</tr>
+		</table>
+	</form>
+</div>
+
+</fieldset>
+</div>
+
+
+<fieldset>
+	<legend><?php /*echo $this->viewlabels['totalvaluepre'].'&nbsp;&nbsp; ' . $this->escape($this->totalCustomers).' '.$this->viewlabels['totalvaluepost']; */ ?></legend>
+<?php
+if($this->srch){
+$searchResultString=$this->searchString( array('param1'=>$this->param[0]), 
+array('param1'=>'Role')); ?>
+<div class="search-result-string"><img src="/../images/icons/searchresult.png" class="search-result-icons"  > <?= $searchResultString; ?></div>
+
+<?php
+  }
+  if($this->paginator['paginator'])
+  {
+?>
+
+<fieldset class="export_section">
+<legend><?= $this->viewlabels['excelExport'] ?></legend>
+<form method="POST">
+	<input name="searchparams" type="hidden" value="<?php echo $this->searchparams; ?>" >
+	<input name="arrayparams" type="hidden" value="<?php echo $this->arrayparams; ?>" >
+	<input name="search" type="hidden" value="<?= $this->srch; ?>" >
+	<input type="submit" id="xlss" name="export" value="" />
+</form>
+</fieldset>
+
+
+<?php
+$pagiParams=array('search'=>$this->srch);
+$pagiParams=array_merge($pagiParams,$this->paginationparams);
+?>
+<div class="pagination"><?php echo $this->paginationControl($this->paginator['paginator'],
+                                    'Sliding',
+                                    '/partials/my_pagination_control.phtml',
+				    $pagiParams); ?></div>
+<?php } ?>
+
+<form name="deleteForm" METHOD="POST" >
+<?php if ( $this->srch ) {?>
+<input name="params" type="hidden" value="<?php echo $this->param1; ?>" >
+<?php } 
+?>
+<input name="REQUEST" type="hidden" value="Delete"> 
+<?php
+	$table_head = '<table class="zebra"> 
+			<tr>
+			    <th>'.$this->mapGroupToRoles['role'].'</th>	
+			    <th>'.$this->mapGroupToRoles['grpname'].'</th>
+			    <th>'.$this->mapGroupToRoles['screen'].'</th>
+			    <th>'.$this->mapGroupToRoles['position'].'</th>
+			</tr> ';
+
+	echo $table_head;
+
+	if ($this->paginator['data']): 
+	$i=0;
+	foreach ($this->paginator['data'] as $row ): 	
+		echo "<tr>";
+		echo "<td>$row->ACCESS_ROLE_ID</td>";
+		echo "<td>$row->COMP_DISPLAY_GROUP_NAME</td>";
+		echo "<td>$row->ASSOC_SCREEN_ID</td>";
+		echo "<td>$row->SCREEN_POSITION</td>";
+		echo "</tr>";
+		$i++;
+		      
+	endforeach; 
+	endif; 
+?>
+</table>
+</form>
+
+<?php  
+if($this->paginator['paginator'])
+{
+?>
+
+<div class="pagination"><?php echo $this->paginationControl($this->paginator['paginator'],
+                                    'Sliding',
+                                    '/partials/my_pagination_control.phtml',
+				    $pagiParams); ?></div>
+</div>
+
+<?php } ?>
+
+</fieldset>
+
+<script type="text/javascript">
+	function mapAccess()
+	{
+		 self.location="/adm/compaccess/entry/id/1";
+	}
+</script>

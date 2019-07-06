@@ -1,0 +1,11 @@
+
+<?php
+$header=array($this->tableHeader['tranDt'], $this->tableHeader['empId'], $this->tableHeader['custId'],  $this->tableHeader['schemeId'],
+$this->tableHeader['transId'],$this->tableHeader['paymentAmount'], $this->tableHeader['receiptAmount']);
+
+$order=array('TRANSACTION_DATE','EMPLOYEE_ID','CUSTOMER_ID','SCHEME_ID','TRANSACTION_ID','PAYMENT_AMOUNT',
+'RECEIPT_AMOUNT');
+
+$filename="report4_".$this->fileno;
+$this->createExcelReport($filename,$header,$this->reports,$order);
+?>

@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="Report01">
+     <title>Report 1</title>
+     <result>
+		 <externalTableFormat>y</externalTableFormat>
+		 <tableheader>
+			<label>Beneficiary Code</label>
+			<label>Collector Code</label>
+			<label>Project</label>
+			<label>Last Pay. Date </label>
+		 </tableheader>
+		 <queryheader>
+			 <item>CUSTOMER_ID</item>
+			 <item>EMPLOYEE_ID</item>
+			 <item>SCHEME_ID</item>
+			 <item>LAST_RECEIPT_DATE</item>
+		 </queryheader>
+
+         <sqlcontent>
+            SELECT CUSTOMER_ID , EMPLOYEE_ID , SCHEME_ID , TRAN_SUMMARY_ID TRANSACTION_ID, 		
+			 MIN(IF(PAYMENT_AMOUNT=0,null,TRANSACTION_DATE)) FIRST_PAYMENT_DATE, 	
+			 MAX(IF(RECEIPT_AMOUNT=0,null,TRANSACTION_DATE)) LAST_RECEIPT_DATE,
+			 DATEDIFF(MAX(IF(RECEIPT_AMOUNT=0,null,TRANSACTION_DATE)) , MIN(IF(PAYMENT_AMOUNT=0,null,TRANSACTION_DATE))) AGE_IN_DAYS,
+				 SUM(IF(PAYMENT_AMOUNT>0,1,0)) TOTAL_PAYMENT , 
+			 SUM(IF(RECEIPT_AMOUNT>0,1,0)) TOTAL_RECEIPT , 
+			 SUM(PAYMENT_AMOUNT) PAYMENT_AMOUNT , 		
+			 SUM(RECEIPT_AMOUNT) RECEIPT_AMOUNT , 	
+			 SUM(PAYMENT_AMOUNT - RECEIPT_AMOUNT) DUE_AMOUNT 		
+			 FROM ltr_trn_details 		
+			 WHERE TRIM(CUSTOMER_ID) != '' 
+			 GROUP BY CUSTOMER_ID,EMPLOYEE_ID,SCHEME_ID, TRAN_SUMMARY_ID
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+          
+             <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>cust_id</name>
+				 <class>customer_id</class>
+                 <columnvalue>CUSTOMER_ID</columnvalue>
+                 <conditiontype>LIKE</conditiontype>
+                 <label>beneficiary Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+            
+            <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>emp_id</name>
+				 <class>employee_id</class>
+                 <columnvalue>EMPLOYEE_ID</columnvalue>
+                 <conditiontype>LIKE</conditiontype>
+                 <label>Collector Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>schm_id</name>
+				 <class>scheme_id</class>
+                 <columnvalue>SCHEME_ID</columnvalue>
+                 <conditiontype>LIKE</conditiontype>
+                 <label>Project Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>3</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>strt_dt</name>
+				 <class>pick-date</class>
+                 <columnvalue>FIRST_PAYMENT_DATE</columnvalue>
+                 <conditiontype>LIKE</conditiontype>
+                 <label>Last Pay. Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>4</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>latst_dt</name>
+				 <class>pick-date</class>
+                 <columnvalue>LAST_RECEIPT_DATE</columnvalue>
+                 <conditiontype>LIKE</conditiontype>
+                 <label>Last Rec. Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>5</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>5</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

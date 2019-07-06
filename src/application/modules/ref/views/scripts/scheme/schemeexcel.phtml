@@ -1,0 +1,9 @@
+<?php
+$header=array($this->schemeHeader['id'],$this->schemeHeader['name'],$this->schemeHeader['type'],$this->schemeHeader['desc'],
+$this->schemeHeader['limitamount'],$this->schemeHeader['startdt'],$this->schemeHeader['enddt']);
+
+$columns=array('SCHEME_ID','SCHEME_NAME', 'SCHEME_TYPE','SCHEME_DESC','SCHEME_AMT_LIMIT','SCHEME_START_DATE','SCHEME_END_DATE');
+
+$filename="scheme_".$this->fileno;
+$this->createExcelReport($filename,$header,$this->xlsResult,$columns);
+?>

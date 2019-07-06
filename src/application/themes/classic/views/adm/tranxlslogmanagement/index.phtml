@@ -1,0 +1,89 @@
+<script type="text/javascript">
+	$(function() {
+		$("#accordion").accordion({
+			
+			active: false,
+			alwaysOpen: false,
+			collapsible: true,
+		});
+	});
+</script>
+
+
+<div class="left-section-1">
+
+	<div id="accordion">
+		<h3><img src="<?= $this->images['log']; ?>" class="bar-icons" ><a href="#">Transaction Validation Log Section</a></h3>
+		<div>
+		   <form name="transaction_validation_log" method="POST">
+		       <input type="hidden" name="REQUEST" value="Transaction Validation Logs"/>
+			<table class="zebra">
+			 <tr>
+				<th width=10%><?php echo "File Id"; ?></th>
+				<th width=21%><?php echo "Access Time"; ?></th>
+				<th width=57%><?php echo "Upload Log"; ?></th>
+				<th><?php echo '<input type="submit" class="delete" name="delete" id="delete_icon" value="">Delete'; ?></th>
+			 </tr>
+			 </table>
+			 <div class="table-fix-area">
+			     <table class="zebra">
+				<?php
+				$id=1;
+				if($this->trnXlsValidationLogs){
+				foreach($this->trnXlsValidationLogs as $key => $file){
+				  $file_name=$this->GetNameFromFile(ROOT_DIR.'/tmp/logs/xlslogs/validation_logs/'.$file['filename']);
+				 $file_log = $file['filename'];
+				 $html_log = str_replace(".log", ".html" , $file_log);
+				 $log_name = $file_name.".log";
+				 $html_name = $file_name.".html";
+				 echo '<tr>';
+				 echo '<td width=10%>'.$id.'</td><td width=21%>'.$file['lstatime'].'</td>';
+				 echo '<td width=60%><a href="/tmp/logs/xlslogs/validation_logs/'.$file_log.'" target="_blank">'.$log_name.'</a><br><a href="/tmp/logs/xlslogs/validation_logs/'.$html_log.'" target="_blank">'.$html_name.'</a></td>';
+				 echo '<td  ><input type="checkbox" name="trnValidationLog['.$id.']" id="trnValidationLog"  value="'.$file_log.'" /></td>';
+				 echo '</tr>';
+				 $id++;
+				}}
+				?>
+			     </table>
+			  </div>
+		    </form>
+		</div>
+
+		<h3><img src="<?= $this->images['log']; ?>" class="bar-icons" ><a href="#">Transaction Upload Log Section</a></h3>
+		<div>
+		     <form name="transaction_upload_log" method="POST">
+			<input type="hidden" name="REQUEST" value="Transaction Upload Logs"/>
+			 <table class="zebra">
+			 <tr>
+				<th width=10%><?php echo "File Id"; ?></th>
+				<th width=21%><?php echo "Access Time"; ?></th>
+				<th width=57%><?php echo "Upload Log"; ?></th>
+				<th><?php echo '<input type="submit" class="delete" name="delete" id="delete_icon" value="">Delete'; ?></th>
+			 </tr>
+			 </table>
+			 <div class="table-fix-area">
+			     <table class="zebra">
+				<?php
+				$id=1;
+				$path='/tmp/logs/xlslogs/upload_logs/';
+				if($this->trnXlsUploadLogs){
+				foreach($this->trnXlsUploadLogs as $key => $file){
+				  $file_name=$this->GetNameFromFile(ROOT_DIR.'/tmp/logs/xlslogs/upload_logs/'.$file['filename']);
+				 $file_log = $file['filename'];
+				 $html_log = str_replace(".log", ".html" , $file_log);
+				 $log_name = $file_name.".log";
+				 $html_name = $file_name.".html";
+				 echo '<tr>';
+				 echo '<td width=10%>'.$id.'</td><td width=21%>'.$file['lstatime'].'</td>';
+				 echo '<td width=60%><a href="'.$path.$file_log.'" target="_blank">'.$log_name.'</a><br><a href="/tmp/logs/xlslogs/upload_logs/'.$html_log.'" target="_blank">'.$html_name.'</a></td>';
+				 echo '<td><input type="checkbox" name="trnUploadLog['.$id.']" id="trnUploadLog"  value="'.$file_log.'" /></td>';
+				 echo '</tr>';
+				 $id++;
+				}}
+				?>
+			    </table>
+			 </div>
+		     </form>
+		</div>
+	</div>
+</div>

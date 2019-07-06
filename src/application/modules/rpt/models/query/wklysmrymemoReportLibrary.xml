@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="wklySmryMemo">
+     <title>Weekly Summary Memo Report</title>
+     <result>
+         <tableheader>
+            <label>Collector Code</label>
+            <label>Project</label>
+			<label>Week</label>
+			<label>Total Donation Amount</label>
+			<label>Total Receipt Amount</label>
+         </tableheader>
+
+         <queryheader>
+             <item>EMPLOYEE_ID</item>
+             <item>SCHEME_ID</item>
+             <item>WEEK</item>
+             <item>DONATION</item>
+			 <item>PRINCIPAL</item>
+         </queryheader>
+
+         <sqlcontent>
+		SELECT EMPLOYEE_ID,SCHEME_ID,
+		CONCAT(YEAR(START_DATE),'/',WEEK(START_DATE),':',ADDDATE(START_DATE,-1 * DAYOFWEEK(START_DATE)),' to ',ADDDATE(START_DATE,-1 * DAYOFWEEK(START_DATE)+6))  AS WEEK, 
+		START_DATE,
+		SUM(TOTAL_RECEIPT_DONATION) AS DONATION,
+		SUM(TOTAL_RECEIPT_PRINCIPAL) AS PRINCIPAL
+		FROM ltr_trn_summary
+		WHERE STATUS='NORMAL'
+		GROUP BY EMPLOYEE_ID,SCHEME_ID,WEEK(START_DATE)
+		HAVING ( SUM(TOTAL_RECEIPT_DONATION) > 0 OR SUM(TOTAL_RECEIPT_PRINCIPAL) )
+		ORDER BY year(START_DATE) DESC , WEEK(START_DATE) DESC
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+            
+            <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>empid</name>
+				 <class>employee_id</class>
+                 <columnvalue>EMPLOYEE_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Collector Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>schmid</name>
+				 <class>scheme_id</class>
+                 <columnvalue>SCHEME_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Project</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>startweekdate</name>
+				 <class>pick-date</class>
+                  <columnvalue>START_DATE</columnvalue>
+                 <conditiontype>@GREATEREQUAL@</conditiontype>
+                 <label>Start Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>3</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			  <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>endweekdate</name>
+				 <class>pick-date</class>
+                <columnvalue>START_DATE</columnvalue>
+				 <conditiontype>@LESSEQUAL@</conditiontype>
+                 <label>End Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>4</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <isdisplay>Y</isdisplay>
+                 <order>5</order>
+                 <displaytype>BLANK</displaytype>
+             </searchitem>
+
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>6</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

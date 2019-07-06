@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="weekTopSht">
+     <title>Week Top Sheet Reports</title>
+     <result>
+         <tableheader>
+            <label>Week</label>
+            <label>Month</label>
+			<label>Total Collector</label>
+			<label>Total Male</label>
+			<label>Total Female</label>
+            <label>Loan</label>
+			<label>Donation</label>
+			<label>Principal</label>
+         </tableheader>
+
+         <queryheader>
+             <item>WEEK</item>
+             <item>MONTH</item>
+             <item>TOTAL_COLLECTOR</item>
+			 <item>MALE</item>
+			 <item>FEMALE</item>
+			 <item>TOTAL_PAYMENT_PRINCIPAL</item>
+			 <item>TOTAL_RECEIPT_DONATION</item>
+			 <item>TOTAL_RECEIPT_PRINCIPAL</item>
+         </queryheader>
+  
+         <sqlcontent>
+			SELECT
+			CONCAT(YEAR(ltd.TRANSACTION_DATE),'/',WEEK(ltd.TRANSACTION_DATE),':',ADDDATE(ltd.TRANSACTION_DATE,-1 * DAYOFWEEK(ltd.TRANSACTION_DATE)),' to ',ADDDATE(ltd.TRANSACTION_DATE,-1 * DAYOFWEEK(ltd.TRANSACTION_DATE)+6))  AS WEEK,
+			CONCAT(YEAR(ltd.TRANSACTION_DATE),'/',MONTHNAME(ltd.TRANSACTION_DATE)) AS MONTH,
+			ltd.TRANSACTION_DATE AS DATE,
+			COUNT(ltd.EMPLOYEE_ID) AS TOTAL_COLLECTOR,
+			SUM(IF(rme.SEX='M',1,0)) as MALE , 
+			SUM(IF(rme.SEX='F',1,0)) as FEMALE,
+			SUM(lts.TOTAL_PAYMENT_PRINCIPAL) TOTAL_PAYMENT_PRINCIPAL, 
+			SUM(IF(ltd.RECEIPT_TYPE='DONATION_RECEIVED',ltd.RECEIPT_AMOUNT,0)) TOTAL_RECEIPT_DONATION,
+			SUM(IF(ltd.RECEIPT_TYPE='CAPITAL_RECEIVED',ltd.RECEIPT_AMOUNT,0)) TOTAL_RECEIPT_PRINCIPAL 
+			FROM ltr_trn_details AS ltd,ltr_trn_summary AS lts,ref_mst_entity AS rme
+			WHERE ltd.TRAN_SUMMARY_ID = lts.TRAN_SUMMARY_ID
+			AND lts.CUSTOMER_ID = rme.ENTITY_ID
+			GROUP BY WEEK
+			ORDER BY WEEK DESC 
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>startdate</name>
+                 <columnvalue>DATE</columnvalue>
+				 <class>pick-date</class>
+                 <conditiontype>@GREATEREQUAL@</conditiontype>
+                 <label>Start Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			  <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>enddate</name>
+                 <columnvalue>DATE</columnvalue>
+				 <class>pick-date</class>
+                 <conditiontype>@LESSEQUAL@</conditiontype>
+                 <label>End Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			  <searchitem>
+                 <isdisplay>Y</isdisplay>
+                 <order>3</order>
+                 <displaytype>BLANK</displaytype>
+             </searchitem>
+
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>4</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

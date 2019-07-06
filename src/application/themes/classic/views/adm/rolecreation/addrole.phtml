@@ -1,0 +1,55 @@
+
+<div class="entry-section">
+<?php
+
+if($this->textSuccess)
+{
+  echo "<div class='successbox'>";
+     $this->successMessage($this->textSuccess);
+  echo "</div>";
+}
+if($this->optionsErrors || $this->textErrors )
+{ 
+	 echo "<div class='errorbox'>";
+		echo "<b>".$this->messages['termination']."</b><br><br>";
+		if($this->optionsErrors)
+			$this->selectMessage($this->optionsErrors);	
+		if($this->textErrors )
+			$this->textMessage($this->textErrors);
+	 echo '</div>';
+} ?>
+
+<div class="add-section">
+	<img src="/../images/icons/add_user.png" class="icons" > &nbsp;&nbsp;<?php echo $this->labels['addSectionLabel'] ?>
+</div>
+
+<form name="add_role" method="POST" enctype='multipart/form-data' >
+<table class="zebra">
+	<tr>
+	   <td><b><?php echo $this->labels['roleId']; ?></b></td>		
+	   <td><input type="text" name="param1" value="<?php echo $this->param[0]; ?>" size="30"></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->labels['roleType']; ?></b></td>		
+	   <td><input type="Text" name="param2" name="pwd" value="<?php echo $this->param[1]; ?>" size="30"></td>
+	</tr>
+	<tr>
+	   <td><b><?php echo $this->labels['roleDesc']; ?></b></td>		
+	   <td><textarea name="param3" rows="4" cols="30"><?php echo $this->param[2]; ?></textarea></td>
+	</tr>
+	<tr>
+	   <td></td>		
+	    <td></td>
+	</tr>
+	<tr>
+	   <td></td>
+	   <td>
+	      <input type="submit" value="<?php echo $this->labels['save']; ?>" id="submit" class="submit_data">
+	      <input type="reset" value="<?php echo $this->labels['reset']; ?>" id="submit">
+	      <input type="button" value="<?php echo $this->labels['cancel']; ?>" id="submit" class="cancel" onclick="cancel()">
+	   </td>
+	</tr>
+</table>
+</form>
+</div>
+

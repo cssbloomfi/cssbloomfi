@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="collLocSmryAct">
+     <title>Collector Location Summary Activity Reports</title>
+     <result>
+         <tableheader>
+            <label>Collector</label>
+            <label>Project</label>
+			<label>Location</label>
+			<label>Date</label>
+			<label>No Of Loan</label>
+			<label>Loan</label>
+			<label>Donation</label>
+			<label>Principal</label>
+			<label>Dues</label>
+         </tableheader>
+
+         <queryheader>
+             <item>EMPLOYEE_ID</item>
+             <item>SCHEME_ID</item>
+			 <item>LOCATION_ID</item>
+			 <item>TRANSACTION_DATE</item>
+			 <item>NO_OF_LOANS</item>
+             <item>TOTAL_PAYMENT_PRINCIPAL</item>
+			 <item>TOTAL_RECEIPT_DONATION</item>
+             <item>TOTAL_RECEIPT_PRINCIPAL</item>
+			 <item>TOTAL_RECEIPT_DUE_PRINCIPAL</item>
+         </queryheader>
+  
+         <sqlcontent>
+            SELECT a.EMPLOYEE_ID, a.SCHEME_ID, b.LOCATION_ID, a.START_DATE TRANSACTION_DATE, c.NO_OF_LOANS, SUM(a.TOTAL_PAYMENT_PRINCIPAL) TOTAL_PAYMENT_PRINCIPAL, SUM(a.TOTAL_RECEIPT_DONATION) AS TOTAL_RECEIPT_DONATION,
+			SUM(a.TOTAL_RECEIPT_PRINCIPAL) AS TOTAL_RECEIPT_PRINCIPAL, 
+			SUM(a.TOTAL_RECEIPT_DUE_PRINCIPAL) AS TOTAL_RECEIPT_DUE_PRINCIPAL
+			FROM ltr_trn_summary AS a
+			LEFT OUTER JOIN ( SELECT ENTITY_ID, LOCATION_ID
+			FROM ref_join_entity_location) AS b
+			ON a.EMPLOYEE_ID=b.ENTITY_ID
+			RIGHT JOIN ( SELECT EMPLOYEE_ID,SCHEME_ID,COUNT(ID) AS NO_OF_LOANS FROM ltr_trn_summary 
+			WHERE STATUS='NORMAL' GROUP BY EMPLOYEE_ID,SCHEME_ID ,START_DATE)AS c
+			ON a.EMPLOYEE_ID=c.EMPLOYEE_ID AND a.SCHEME_ID=c.SCHEME_ID
+			WHERE a.STATUS='NORMAL' 
+			GROUP BY b.LOCATION_ID,a.SCHEME_ID,a.EMPLOYEE_ID,a.START_DATE
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+            
+            <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>empid</name>
+				 <class>employee_id</class>
+                 <columnvalue>EMPLOYEE_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Collector Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>schmid</name>
+				 <class>scheme_id</class>
+                 <columnvalue>SCHEME_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Project Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>startdate</name>
+                 <columnvalue>LATEST_DATE</columnvalue>
+                 <conditiontype>@GREATEREQUAL@</conditiontype>
+				 <class>pick-date</class>
+                 <label>Start Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>3</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			  <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>enddate</name>
+                 <columnvalue>LATEST_DATE</columnvalue>
+                 <conditiontype>@LESSEQUAL@</conditiontype>
+				 <class>pick-date</class>
+                 <label>End Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>4</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>locationid</name>
+				 <class>location</class>
+                 <columnvalue>LOCATION_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Location Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>5</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>6</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

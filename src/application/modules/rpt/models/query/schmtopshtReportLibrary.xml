@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="schmTopSht">
+     <title>Project Top Sheet Reports</title>
+     <result>
+         <tableheader>
+            <label>Project</label>
+            <label>Month</label>
+			<label>Total Male</label>
+			<label>Total Female</label>
+            <label>Loan</label>
+			<label>Donation</label>
+			<label>Principal</label>
+         </tableheader>
+
+         <queryheader>
+             <item>SCHEME_ID</item>
+             <item>MONTH</item>
+			 <item>MALE</item>
+			 <item>FEMALE</item>
+			 <item>TOTAL_PAYMENT_PRINCIPAL</item>
+			 <item>TOTAL_RECEIPT_DONATION</item>
+			 <item>TOTAL_RECEIPT_PRINCIPAL</item>
+         </queryheader>
+  
+         <sqlcontent>
+            SELECT smry.SCHEME_ID, dtlFinal.EMPLOYEE_ID, CONCAT(YEAR(smry.START_DATE),'/',MONTHNAME(smry.START_DATE)) MONTH, 
+			dtlFinal.MALE,dtlFinal.FEMALE,
+			SUM(smry.TOTAL_PAYMENT_PRINCIPAL) TOTAL_PAYMENT_PRINCIPAL, 
+			SUM(smry.TOTAL_RECEIPT_DONATION) TOTAL_RECEIPT_DONATION,
+			SUM(smry.TOTAL_RECEIPT_PRINCIPAL) TOTAL_RECEIPT_PRINCIPAL
+			FROM ltr_trn_summary AS smry
+			LEFT OUTER JOIN (
+			SELECT dtl.SCHEME_ID , dtl.EMPLOYEE_ID, IF(tbl1.MALE IS NOT NULL,tbl1.MALE,0) AS MALE, 
+			IF(tbl2.FEMALE IS NOT NULL,tbl2.FEMALE,0) AS FEMALE FROM ltr_trn_details as dtl
+			LEFT OUTER JOIN (
+			SELECT SCHEME_ID , EMPLOYEE_ID, COUNT(CUSTOM_COMMENT2) AS MALE FROM ltr_trn_details 
+			WHERE UPPER(CUSTOM_COMMENT2)='M' AND STATUS='NORMAL' 
+			GROUP BY SCHEME_ID, EMPLOYEE_ID, MONTH(TRANSACTION_DATE)
+			) AS tbl1
+			ON tbl1.SCHEME_ID=dtl.SCHEME_ID AND tbl1.EMPLOYEE_ID=dtl.EMPLOYEE_ID
+			LEFT OUTER JOIN (
+			SELECT SCHEME_ID , EMPLOYEE_ID, COUNT(CUSTOM_COMMENT2) AS FEMALE FROM ltr_trn_details 
+			WHERE UPPER(CUSTOM_COMMENT2)='F' AND STATUS='NORMAL' 
+			GROUP BY SCHEME_ID, EMPLOYEE_ID, MONTH(TRANSACTION_DATE)
+			) AS tbl2
+			ON tbl2.SCHEME_ID=dtl.SCHEME_ID AND tbl2.EMPLOYEE_ID=dtl.EMPLOYEE_ID
+			WHERE STATUS='NORMAL' 
+			GROUP BY SCHEME_ID, EMPLOYEE_ID, MONTH(TRANSACTION_DATE)
+			) AS dtlFinal
+			ON dtlFinal.SCHEME_ID = smry.SCHEME_ID
+			WHERE smry.STATUS='NORMAL'
+			GROUP BY smry.SCHEME_ID,MONTH(smry.START_DATE)
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+            
+            <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>schemeid</name>
+				 <class>scheme_id</class>
+                 <columnvalue>SCHEME_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Project Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>startmonth</name>
+                 <columnvalue>MONTH</columnvalue>
+                 <conditiontype>@GREATEREQUAL@</conditiontype>
+                 <label>Start Month</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			  <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>endmonth</name>
+                 <columnvalue>MONTH</columnvalue>
+                 <conditiontype>@LESSEQUAL@</conditiontype>
+                 <label>End Month</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>3</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>5</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

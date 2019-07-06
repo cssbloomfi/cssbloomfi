@@ -1,0 +1,1730 @@
+<?xml version="1.0"?>
+
+<querylibrary>
+
+	<query id="StartTransaction">
+		<title>Start Transaction</title>
+		<content>
+			START TRANSACTION
+		</content>
+	</query>
+
+	<query id="SavepointTransaction">
+		<title>Savepoint Transaction</title>
+		<content>
+			SAVEPOINT :savePoint
+		</content>
+		<params>
+			<param>:savePoint</param>
+		</params>
+	</query>
+
+	<query id="CommitTransaction">
+		<title>Commit Transaction</title>
+		<content>
+			COMMIT
+		</content>
+	</query>
+
+	<query id="RollbackTransaction">
+		<title>Rollback Transaction</title>
+		<content>
+			ROLLBACK TO SAVEPOINT :savePoint
+		</content>
+		<params>
+			<param>:savePoint</param>
+		</params>
+	</query>
+
+	<query id="isLockSummaryTbl">
+		<title>Transaction Summary Table Lock Status</title>
+		<content>
+			SELECT IS_FREE_LOCK('ltr_trn_summary')  'LOCK'
+		</content>
+	</query>
+
+	<query id="getLockSummaryTbl">
+		<title>Transaction Summary Table Get Lock</title>
+		<content>
+			SELECT GET_LOCK('ltr_trn_summary',100) 'LOCK'
+		</content>
+	</query>
+
+	<query id="releaseLockSummaryTbl">
+		<title>Transaction Summary Table Release Lock</title>
+		<content>
+			SELECT RELEASE_LOCK('ltr_trn_summary') 'LOCK'
+		</content>
+	</query>
+
+	<query id="paymentPrePostQuery">
+		<title>Prefix and postfix value of payment section</title>
+		<content>
+			SELECT PREFIX_POSTFIX_ID, PREFIX_VALUE, FETCH_CONDITION
+			FROM ref_rul_prefix_postfix 
+			WHERE PREFIX_POSTFIX_ID = 'RULE4' AND STATUS='NORMAL'
+		</content>
+	</query>
+
+	<query id="receivePrePostQuery">
+		<title>Prefix and postfix value of receive section</title>
+		<content>
+			SELECT PREFIX_POSTFIX_ID, PREFIX_VALUE, FETCH_CONDITION
+			FROM ref_rul_prefix_postfix 
+			WHERE PREFIX_POSTFIX_ID = 'RULE5' AND STATUS='NORMAL'
+		</content>
+	</query>
+
+	<query id="allTrnPrePostQuery">
+		<title>Prefix and postfix value of payment and receive section</title>
+		<content>
+			SELECT PREFIX_POSTFIX_ID, PREFIX_VALUE, FETCH_CONDITION
+			FROM ref_rul_prefix_postfix 
+			WHERE PREFIX_POSTFIX_ID = 'RULE4' OR PREFIX_POSTFIX_ID = 'RULE5' AND STATUS='NORMAL'
+		</content>
+	</query>
+
+	<query id="isExistBSDReceiptTypeQuery">
+		<title>Is exist bsd receipt type</title>
+		<content>
+			SELECT RECEIPT_TYPE FROM ltr_trn_details
+			WHERE CUSTOMER_ID LIKE ':cust' AND 
+			RECEIPT_TYPE LIKE ':typ' AND STATUS='NORMAL'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:cust</param>
+			<param>:typ</param>
+		</params>
+	</query>
+
+	<query id="isExistBSDPaymentTypeQuery">
+		<title>Is exist bsd payment type</title>
+		<content>
+			SELECT PAYMENT_TYPE FROM ltr_trn_details
+			WHERE CUSTOMER_ID LIKE ':cust' AND 
+			PAYMENT_TYPE LIKE ':typ' AND STATUS='NORMAL'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:cust</param>
+			<param>:typ</param>
+		</params>
+	</query>
+
+	<query id="isExistExceptMeBSDReceiptTypeQuery">
+		<title>Is exist bsd receipt type</title>
+		<content>
+			SELECT RECEIPT_TYPE FROM ltr_trn_details
+			WHERE CUSTOMER_ID LIKE ':cust' AND 
+			RECEIPT_TYPE LIKE ':typ' AND STATUS='NORMAL' AND TRAN_DETAILS_ID @NOTEQ@ ':tdid'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:cust</param>
+			<param>:typ</param>
+			<param>:tdid</param>
+		</params>
+	</query>
+
+	<query id="isPaymentTypeQuery">
+		<title>A Payment Type</title>
+		<content>
+			SELECT VALUE_NAME FROM ref_sta_key_value
+			WHERE VALUE_NAME=':pymntTyp' AND KEY_ID='PaymentType' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:pymntTyp</param>
+		</params>
+	</query>
+
+	<query id="isReceiveTypeQuery">
+		<title>A Receive Type</title>
+		<content>
+			SELECT VALUE_NAME FROM ref_sta_key_value
+			WHERE VALUE_NAME=':recvTyp' AND KEY_ID='ReceiveType' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:recvTyp</param>
+		</params>
+	</query>
+
+	<query id="isVoucherNoQuery">
+		<title>A Voucher no</title>
+		<content>
+			SELECT VOUCHER_NO FROM ltr_trn_details USE INDEX (I_LTD_VOUCHER)
+			WHERE VOUCHER_NO LIKE ':voucher' AND ACTIVE_STATUS NOT LIKE 'CLOSE'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:voucher</param>
+		</params>
+	</query>
+
+	<query id="isMemoNoQuery">
+		<title>A memo no</title>
+		<content>
+			SELECT MEMO_NO FROM ltr_trn_details USE INDEX (I_LTD_MEMO)
+			WHERE MEMO_NO = ':memo' AND STATUS = 'NORMAL'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:memo</param>
+		</params>
+	</query>
+
+	<query id="isVoucherNoExceptMeQuery">
+		<title>A Voucher no</title>
+		<content>
+			SELECT  trnDtl.VOUCHER_NO FROM ltr_trn_details AS trnDtl
+			INNER JOIN ( SELECT TRAN_SUMMARY_ID , ACTIVE_STATUS FROM ltr_trn_summary) AS trnSmry	
+			ON trnDtl.TRAN_SUMMARY_ID = trnSmry.TRAN_SUMMARY_ID
+			WHERE trnDtl.VOUCHER_NO = ':voucher' AND trnDtl.TRAN_SUMMARY_ID @NOTEQ@ ':tsId' AND trnDtl.STATUS = 'NORMAL'
+			AND trnDtl.ACTIVE_STATUS @NOTEQ@ 'CLOSE'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:voucher</param>
+			<param>:tsId</param>
+		</params>
+	</query>
+
+	<query id="isMemoNoExceptMeQuery">
+		<title>A Voucher no</title>
+		<content>
+			SELECT  MEMO_NO FROM ltr_trn_details
+			WHERE MEMO_NO = ':momo' AND TRAN_DETAILS_ID @NOTEQ@ ':tdId' AND STATUS = 'NORMAL'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:momo</param>
+			<param>:tdId</param>
+		</params>
+	</query>
+
+	<query id="isExistDetailsQuery">
+		<title>To get transaction details id</title>
+		<content>
+			SELECT ID FROM ltr_trn_details
+			WHERE TRAN_DETAILS_ID=':td' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:td</param>
+		</params>
+	</query>
+
+	<query id="isSchmGivenToCustQuery">
+		<title>Scheme of customer</title>
+		<content>
+			SELECT ID, SCHEME_ID FROM ltr_trn_summary
+			WHERE CUSTOMER_ID=':custId' AND STATUS='NORMAL'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:custId</param>
+		</params>
+	</query>
+
+	<query id="isSchmGivenToCustExceptMeQuery">
+		<title>Scheme of customer</title>
+		<content>
+			SELECT ID FROM ltr_trn_summary
+			WHERE CUSTOMER_ID=':custId' AND TRAN_SUMMARY_ID @NOTEQ@ ':trnsId' AND 
+			STATUS='NORMAL'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:custId</param>
+			<param>:trnsId</param>
+		</params>
+	</query>
+
+	<query id="isSchmGivenToCustExceptMeQuery2">
+		<title>Scheme of customer</title>
+		<content>
+			SELECT ID, SCHEME_ID FROM ltr_trn_details
+			WHERE CUSTOMER_ID=':custId' AND TRAN_DETAILS_ID @NOTEQ@ ':trnsId' AND  STATUS='NORMAL'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:custId</param>
+			<param>:trnsId</param>
+		</params>
+	</query>
+
+	<query id="trnIdByCustomerQuery">
+		<title>trn id of a customer where account is active</title>
+		<content>
+			SELECT TRAN_SUMMARY_ID,SCHEME_ID, TOTAL_RECEIPT_DUE_PRINCIPAL, TOTAL_RECEIPT_SECURITY_DEPOSITE, ACTIVE_STATUS FROM ltr_trn_summary
+			WHERE CUSTOMER_ID=':custId' AND STATUS='NORMAL'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:custId</param>
+		</params>
+	</query>
+
+	<query id="allPaymentTypeQuery">
+		<title>All Payment Types</title>
+		<content>
+			SELECT KEY_ID, VALUE_ID, KEY_NAME, VALUE_NAME FROM ref_sta_key_value 
+			WHERE KEY_ID='PaymentType' AND STATUS='NORMAL'
+		</content>
+	</query>
+
+	<query id="allAccountStatusTypeQuery">
+		<title>All Account Status Types</title>
+		<content>
+			SELECT KEY_ID, VALUE_ID, KEY_NAME, VALUE_NAME FROM ref_sta_key_value 
+			WHERE KEY_ID='AccountStatus' AND STATUS='NORMAL'
+			ORDER BY DISPLAY_SEQUENCE;
+		</content>
+	</query>
+
+	<query id="allReceiveTypeQuery">
+		<title>All Receive Types</title>
+		<content>
+			SELECT KEY_ID, VALUE_ID, KEY_NAME, VALUE_NAME FROM ref_sta_key_value 
+			WHERE KEY_ID='ReceiveType' AND STATUS='NORMAL'
+		</content>
+	</query>
+	
+	<query id="AllSchemeQuery">
+		<title>All Schemes</title>
+		<content>
+			SELECT SCHEME_ID, SCHEME_NAME, SCHEME_AMT_LIMIT FROM ref_mst_scheme
+			WHERE STATUS='NORMAL'
+		</content>
+	</query>
+
+	<query id="SchemeLimitAmountQuery">
+		<title>Limit amount of a scheme</title>
+		<content>
+			SELECT SCHEME_ID, SCHEME_NAME, SCHEME_AMT_LIMIT FROM ref_mst_scheme 
+			WHERE SCHEME_ID =':scheme_id' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:scheme_id</param>
+		</params>
+	</query>
+
+	<query id="totalActiveRowsQuery">
+		<title>Total active rows of a table</title>
+		<content>
+			SELECT TOTAL_ACTIVE_ROWS FROM ref_mst_tbl_rows_count
+			WHERE SECTION_ID=':secId'
+		</content>
+		<params>
+			<param>:secId</param>
+		</params>
+	</query>
+
+	<query id="maxTransactionSummaryIdQuery">
+		<title>Max id of Transaction Summaries</title>
+		<content>
+			SELECT MAX(ID) AS ID FROM ltr_trn_summary
+		</content>
+	</query>
+
+	<query id="maxTransactionDetailIdQuery">
+		<title>Max id of Transaction Summaries details</title>
+		<content>
+			SELECT MAX( ID ) AS ID FROM ltr_trn_details
+		</content>
+	</query>
+
+	<query id="EntityIdQuery">
+		<title>Employee Entity Id</title>
+		<content>
+			SELECT ENTITY_ID  FROM ref_mst_entity WHERE  ENTITY_ID LIKE ':entId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:entId</param>
+		</params>
+	</query>
+
+	<query id="AllCustomersQuery">
+		<title>All Customers</title>
+		<content>
+			SELECT ENTITY_ID, ENTITY_TYPE, PARENT_ENTITY_ID, ENTITY_NAME, NAME, AGE, SEX, 
+			CUSTOMER_ID, CUSTOMER_APPLN_ID, CUSTOMER_UNIQUE_ID, CUSTOMER_ENTRY_DATE, 
+			CUSTOMER_EXIT_DATE, ADDRESS_ID, PERMANENT_ADDRESS_ID, MAIL_ADDRESS_ID, ACTIVE_STATUS
+			FROM ref_mst_entity WHERE ENTITY_TYPE = ':type' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:type</param>
+		</params>
+	</query>
+
+	<query id="AllEmployeeQuery">
+		<title>All Employee</title>
+		<content>
+			SELECT ENTITY_ID, ENTITY_TYPE, ENTITY_NAME, NAME, AGE, SEX, EMPLOYEE_ID, 
+			EMPLOYEE_JOIN_DATE, EMPLOYEE_EXIT_DATE, EMPLOYEE_DESIGNATION, AGENT_ID, 
+			AGENT_JOIN_DATE, AGENT_EXIT_DATE, ADDRESS_ID, PERMANENT_ADDRESS_ID, MAIL_ADDRESS_ID,
+			ACTIVE_STATUS FROM ref_mst_entity WHERE ENTITY_TYPE = ':type' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:type</param>
+		</params>
+	</query>
+
+	<query id="employeeQuery">
+		<title>Employee Entity Id</title>
+		<content>
+			SELECT  ENTITY_ID 
+            FROM ref_mst_entity WHERE ENTITY_TYPE = 'COLLECTOR' AND EMPLOYEE_ID=':empId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:empId</param>
+		</params>
+	</query>
+
+	<query id="customerQuery">
+		<title>Customer Entity Id</title>
+		<content>
+			SELECT  ENTITY_ID 
+            FROM ref_mst_entity WHERE ENTITY_TYPE = 'Customer' AND CUSTOMER_ID=':custId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:custId</param>
+		</params>
+	</query>
+
+	<query id="schemeQuery">
+		<title>Scheme name</title>
+		<content>
+			SELECT  SCHEME_NAME 
+            FROM ref_mst_scheme WHERE  SCHEME_ID=':schmId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:schmId</param>
+		</params>
+	</query>
+
+	<query id="trnSmryIdForXlsDtlQuery">
+		<title>Transaction Summary Id on the basis of Customer and Scheme Id</title>
+		<content>
+			SELECT TRAN_SUMMARY_ID FROM ltr_trn_summary 
+			WHERE CUSTOMER_ID=':custId' AND SCHEME_ID=':schmId'
+		</content>
+		<params>
+			<param>:custId</param>
+			<param>:schmId</param>
+		</params>
+	</query>
+
+	<query id="paymentTrnsIdQuery">
+		<title>Transaction Summaries ID</title>
+		<content>
+			SELECT trnS.TRAN_SUMMARY_ID FROM ltr_trn_summary AS trnS, ltr_trn_details AS trnD
+			WHERE trnS.TRAN_SUMMARY_ID=trnD.TRAN_SUMMARY_ID  AND trnS.CUSTOMER_ID=':custId' 
+			AND trnS.SCHEME_ID=':schmId' AND trnD.PAYMENT_TYPE = ':pymntType' AND trnD.STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:custId</param>
+			<param>:schmId</param>
+			<param>:pymntType</param>
+		</params>
+	</query>
+
+	<query id="TransactionSummaryByCidQuery">
+		<title>Customer Transaction Summaries By Customer ID</title>
+		<content>
+			SELECT TRAN_SUMMARY_ID, SCHEME_ID, CUSTOMER_ID, EMPLOYEE_ID, TOTAL_PAYMENT_PRINCIPAL, 
+			TOTAL_PAYMENT_DUE_PRINCIPAL, TOTAL_RECEIPT_DUE_PRINCIPAL,TOTAL_RECEIPT_PRINCIPAL,
+			ACTIVE_STATUS,LATEST_DATE,TOTAL_DETAILS FROM ltr_trn_summary WHERE CUSTOMER_ID LIKE ':cust_id' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:cust_id</param>
+		</params>
+	</query>
+
+	<query id="getSchemeByCidQuery">
+		<title>Customer Scheme By Customer ID</title>
+		<content>
+			SELECT SCHEME_ID FROM ltr_trn_summary
+			WHERE CUSTOMER_ID = ':cust_id' AND  ACTIVE_STATUS @NOTEQ@ 'CLOSE' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:cust_id</param>
+		</params>
+	</query>
+
+	<query id="TranSummaryTotalByCidQuery">
+		<title>Customer Transaction Summaries By Customer ID</title>
+		<content>
+			SELECT trndl.VOUCHER_NO, trns.TRAN_SUMMARY_ID, SCHEME_ID, CUSTOMER_ID, EMPLOYEE_ID, TOTAL_PAYMENT_PRINCIPAL, 
+			TOTAL_PAYMENT_DUE_PRINCIPAL, TOTAL_RECEIPT_DUE_PRINCIPAL,TOTAL_RECEIPT_PRINCIPAL,
+			ACTIVE_STATUS,LATEST_DATE,TOTAL_DETAILS 
+			FROM ltr_trn_summary AS trns USE INDEX (I_LTS_TRAN_SUMMARY_ID)
+			INNER JOIN ( SELECT TRAN_SUMMARY_ID,VOUCHER_NO FROM ltr_trn_details WHERE PAYMENT_TYPE ='CAPITAL_PAID') AS trndl
+			ON trndl.TRAN_SUMMARY_ID = trns.TRAN_SUMMARY_ID
+			WHERE CUSTOMER_ID = ':cust_id' AND  ACTIVE_STATUS @NOTEQ@ 'CLOSE' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:cust_id</param>
+		</params>
+	</query>
+
+
+	<query id="TransactionSummaryByEidQuery">
+		<title>Customer Transaction Summaries By Employee ID</title>
+		<content>
+			SELECT TRAN_SUMMARY_ID, SCHEME_ID, CUSTOMER_ID, EMPLOYEE_ID, TOTAL_PAYMENT_PRINCIPAL, 
+			TOTAL_PAYMENT_DUE_PRINCIPAL, TOTAL_RECEIPT_DUE_PRINCIPAL,TOTAL_RECEIPT_PRINCIPAL,
+			ACTIVE_STATUS FROM ltr_trn_summary WHERE EMPLOYEE_ID LIKE '%:emp_id%' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:emp_id</param>
+		</params>
+	</query>
+
+	<query id="TransactionSummaryByTidQuery">
+		<title>Customer Transaction Summaries By Transaction ID</title>
+		<content>
+			SELECT TRAN_SUMMARY_ID, SCHEME_ID, CUSTOMER_ID, EMPLOYEE_ID, TOTAL_PAYMENT_PRINCIPAL, 
+			TOTAL_PAYMENT_DUE_PRINCIPAL, TOTAL_RECEIPT_DUE_PRINCIPAL,TOTAL_RECEIPT_PRINCIPAL,
+			ACTIVE_STATUS, TOTAL_DETAILS FROM ltr_trn_summary WHERE TRAN_SUMMARY_ID LIKE ':trns_id' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:trns_id</param>
+		</params>
+	</query>
+
+	<query id="TransactionSummaryBySidQuery">
+		<title>Customer Transaction Summaries By Scheme ID</title>
+		<content>
+			SELECT TRAN_SUMMARY_ID, SCHEME_ID, CUSTOMER_ID, EMPLOYEE_ID, TOTAL_PAYMENT_PRINCIPAL, 
+			TOTAL_PAYMENT_DUE_PRINCIPAL, TOTAL_RECEIPT_DUE_PRINCIPAL,TOTAL_RECEIPT_PRINCIPAL,
+			ACTIVE_STATUS FROM ltr_trn_summary WHERE SCHEME_ID LIKE '%:schm_id%' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:schm_id</param>
+		</params>
+	</query>
+
+	<query id="TransactionSummaryByCNmQuery">
+		<title>Customer Transaction Summaries By Customer Name</title>
+		<content>
+			SELECT MTrsS.TRAN_SUMMARY_ID, MTrsS.SCHEME_ID, MTrsS.CUSTOMER_ID, MTrsS.EMPLOYEE_ID, MTrsS.TOTAL_PAYMENT_PRINCIPAL, 
+			MTrsS.TOTAL_PAYMENT_DUE_PRINCIPAL, MTrsS.TOTAL_RECEIPT_DUE_PRINCIPAL, MTrsS.TOTAL_RECEIPT_PRINCIPAL,
+			MTrsS.ACTIVE_STATUS from ltr_trn_summary AS MTrsS, ref_mst_entity AS MEnti 
+			where MTrsS.CUSTOMER_ID=MEnti.CUSTOMER_ID AND MEnti.NAME LIKE '%:cust_nm%' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:cust_nm</param>
+		</params>
+	</query>
+
+	<query id="TransactionSummaryByENmQuery">
+		<title>Customer Transaction Summaries By Employee Name</title>
+		<content>
+			SELECT MTrsS.TRAN_SUMMARY_ID, MTrsS.SCHEME_ID, MTrsS.CUSTOMER_ID, MTrsS.EMPLOYEE_ID, MTrsS.TOTAL_PAYMENT_PRINCIPAL, 
+			MTrsS.TOTAL_PAYMENT_DUE_PRINCIPAL, MTrsS.TOTAL_RECEIPT_DUE_PRINCIPAL, MTrsS.TOTAL_RECEIPT_PRINCIPAL,
+			MTrsS.ACTIVE_STATUS from ltr_trn_summary AS MTrsS, ref_mst_entity AS MEnti 
+			where MTrsS.EMPLOYEE_ID=MEnti.EMPLOYEE_ID AND MEnti.NAME LIKE '%:emp_nm%' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:emp_nm</param>
+		</params>
+	</query>
+
+	<query id="TransactionSummaryByScrhQuery">
+		<title>Customer Transaction Summaries By Searching</title>
+		<content>
+			SELECT Trns_Alias_1.ID, TrnDtl.TRAN_DETAILS_ID,Trns_Alias_1.TRAN_SUMMARY_ID,concat( TrnDtl.CUSTOM_COMMENT1,' (',TrnDtl.CUSTOM_COMMENT2,')' ) AS 'CUSTOMER_NAME', 
+			TrnDtl.VOUCHER_NO, Trns_Alias_1.SCHEME_ID, schm.SCHEME_TYPE, Trns_Alias_1.CUSTOMER_ID, 
+			Trns_Alias_1.EMPLOYEE_ID, Trns_Alias_1.TOTAL_PAYMENT_PRINCIPAL, 
+			Trns_Alias_1.TOTAL_PAYMENT_DUE_PRINCIPAL,TrnDtl.PAYMENT_TYPE, 
+			Trns_Alias_1.TOTAL_RECEIPT_DUE_PRINCIPAL, 
+			Trns_Alias_1.TOTAL_RECEIPT_PRINCIPAL,
+			Trns_Alias_1.START_DATE , Trns_Alias_1.LATEST_DATE , Trns_Alias_1.ACTIVE_STATUS
+			FROM ltr_trn_summary AS Trns_Alias_1 use index (I_LTS_CUSTOMER_ID,I_LTS_EMPLOYEE_ID,I_LTS_TRAN_SUMMARY_ID)
+			LEFT OUTER JOIN ( SELECT ENTITY_ID, NAME FROM ref_mst_entity use index (I_RME_ENTITY_ID)
+			WHERE ENTITY_TYPE='Customer'
+			AND STATUS='NORMAL' ) AS Entity_Alias_1
+			ON Trns_Alias_1.CUSTOMER_ID = Entity_Alias_1.ENTITY_ID 
+			LEFT OUTER JOIN ( SELECT ENTITY_ID, NAME FROM ref_mst_collector use index (I_RMC_ENTITY_ID)
+			WHERE ENTITY_TYPE='COLLECTOR'
+			AND STATUS='NORMAL' ) AS Entity_Alias_2
+			ON Trns_Alias_1.EMPLOYEE_ID = Entity_Alias_2.ENTITY_ID
+			LEFT OUTER JOIN ( SELECT SCHEME_ID, SCHEME_TYPE FROM ref_mst_scheme) AS schm
+			ON schm.SCHEME_ID=Trns_Alias_1.SCHEME_ID 
+			LEFT OUTER JOIN ( SELECT  TRAN_DETAILS_ID,TRAN_SUMMARY_ID,PAYMENT_TYPE, VOUCHER_NO , CUSTOM_COMMENT1,CUSTOM_COMMENT2, STATUS
+			FROM ltr_trn_details USE INDEX(I_LTD_TRAN_SUMMARY_ID,I_LTD_VOUCHER) WHERE STATUS='NORMAL' AND RECEIPT_TYPE IS NULL ) AS TrnDtl
+			ON Trns_Alias_1.TRAN_SUMMARY_ID = TrnDtl.TRAN_SUMMARY_ID
+			WHERE Trns_Alias_1.STATUS='NORMAL'  AND TrnDtl.STATUS='NORMAL'
+		</content>
+		<queryparams>
+			<queryparam>Entity_Alias_1.NAME</queryparam>
+			<queryparam>Entity_Alias_2.NAME</queryparam>
+			<queryparam>Trns_Alias_1.SCHEME_ID </queryparam>
+			<queryparam>schm.SCHEME_TYPE </queryparam>
+			<queryparam>Entity_Alias_1.ENTITY_ID</queryparam>
+			<queryparam>Entity_Alias_2.ENTITY_ID</queryparam>
+			<queryparam>TrnDtl.VOUCHER_NO </queryparam>
+			<queryparam condition='BETWEEN'>Trns_Alias_1.START_DATE</queryparam>
+		</queryparams>
+	</query>
+
+
+	<query id="TransactionSummaryOnTsidQuery">
+		<title>Customer Transaction Summaries basic information on transaction id</title>
+		<content>
+			SELECT Trns.TRAN_SUMMARY_ID, Trns.SCHEME_ID, Mschm.SCHEME_NAME,
+			Trns.CUSTOMER_ID, Menty1.NAME AS 'CUSTOMER_NAME',
+			Trns.EMPLOYEE_ID, Menty2.NAME AS 'EMPLOYEE_NAME',
+			Trndtl.PAYMENT_AMOUNT AS TOTAL_PAYMENT_PRINCIPAL, Trndtl.PAYMENT_TYPE, Trns.TOTAL_RECEIPT_PRINCIPAL, 
+			Trns.TOTAL_RECEIPT_PRINCIPAL, Trns.TOTAL_RECEIPT_DUE_PRINCIPAL AS 'DUE',
+			Trns.TOTAL_PAYMENT_SECURITY_DEPOSITE AS 'PAYMENT_SECURITY_DEPOSITE',
+			Trns.TOTAL_RECEIPT_SECURITY_DEPOSITE AS 'RECEIPT_SECURITY_DEPOSITE',
+			Trns.TOTAL_RECEIPT_DONATION AS 'TOTAL_RECEIPT_DONATION',
+			Trns.TOTAL_RECEIPT_FEES AS 'TOTAL_RECEIPT_FEES',
+			Trndtl.TRANSACTION_DATE, Trns.TOTAL_DETAILS, Trndtl.VOUCHER_NO, Trns.REMARKS,Trns.CREATION_DATE,Trns.ACTIVE_STATUS 
+			FROM ltr_trn_summary AS Trns USE INDEX (I_LTS_TRAN_SUMMARY_ID)
+			LEFT OUTER JOIN ( SELECT SCHEME_ID, SCHEME_NAME FROM ref_mst_scheme )AS Mschm
+			ON Trns.SCHEME_ID = Mschm.SCHEME_ID
+			LEFT OUTER JOIN ( SELECT CUSTOMER_ID, NAME FROM ref_mst_entity WHERE ENTITY_TYPE='Customer')AS Menty1
+			ON Trns.CUSTOMER_ID = Menty1.CUSTOMER_ID
+			LEFT OUTER JOIN ( SELECT EMPLOYEE_ID, NAME FROM ref_mst_collector WHERE ENTITY_TYPE='COLLECTOR')AS Menty2
+			ON Trns.EMPLOYEE_ID = Menty2.EMPLOYEE_ID
+			INNER JOIN ( SELECT TRAN_DETAILS_ID,TRAN_SUMMARY_ID, PAYMENT_TYPE, PAYMENT_AMOUNT, VOUCHER_NO, TRANSACTION_DATE FROM ltr_trn_details WHERE PAYMENT_TYPE IS NOT NULL) AS Trndtl
+			ON Trndtl.TRAN_SUMMARY_ID = Trns.TRAN_SUMMARY_ID
+			WHERE Trndtl.TRAN_DETAILS_ID = ':tsId' AND Trns.STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:tsId</param>
+		</params>
+	</query>
+
+	<query id="TransactionSummaryOnTsid2Query">
+		<title>Customer Transaction Summaries basic information on transaction id</title>
+		<content>
+			SELECT Trns.TRAN_SUMMARY_ID, Trns.SCHEME_ID, Mschm.SCHEME_NAME,
+			Trns.CUSTOMER_ID, Menty1.NAME AS 'CUSTOMER_NAME',
+			Trns.EMPLOYEE_ID, Menty2.NAME AS 'EMPLOYEE_NAME',
+			Trndtl.PAYMENT_AMOUNT AS TOTAL_PAYMENT_PRINCIPAL, Trndtl.PAYMENT_TYPE, Trns.TOTAL_RECEIPT_PRINCIPAL, 
+			Trns.TOTAL_RECEIPT_PRINCIPAL, Trns.TOTAL_RECEIPT_DUE_PRINCIPAL AS 'DUE',
+			Trns.TOTAL_PAYMENT_SECURITY_DEPOSITE AS 'PAYMENT_SECURITY_DEPOSITE',
+			Trns.TOTAL_RECEIPT_SECURITY_DEPOSITE AS 'RECEIPT_SECURITY_DEPOSITE',
+			Trns.TOTAL_RECEIPT_DONATION AS 'TOTAL_RECEIPT_DONATION',
+			Trns.TOTAL_RECEIPT_FEES AS 'TOTAL_RECEIPT_FEES',
+			Trndtl.TRANSACTION_DATE, Trns.TOTAL_DETAILS, Trndtl.VOUCHER_NO, Trns.REMARKS,Trns.CREATION_DATE,Trns.ACTIVE_STATUS 
+			FROM ltr_trn_summary AS Trns USE INDEX (I_LTS_TRAN_SUMMARY_ID)
+			LEFT OUTER JOIN ( SELECT SCHEME_ID, SCHEME_NAME FROM ref_mst_scheme )AS Mschm
+			ON Trns.SCHEME_ID = Mschm.SCHEME_ID
+			LEFT OUTER JOIN ( SELECT CUSTOMER_ID, NAME FROM ref_mst_entity WHERE ENTITY_TYPE='Customer')AS Menty1
+			ON Trns.CUSTOMER_ID = Menty1.CUSTOMER_ID
+			LEFT OUTER JOIN ( SELECT EMPLOYEE_ID, NAME FROM ref_mst_collector WHERE ENTITY_TYPE='COLLECTOR')AS Menty2
+			ON Trns.EMPLOYEE_ID = Menty2.EMPLOYEE_ID
+			INNER JOIN ( SELECT TRAN_DETAILS_ID,TRAN_SUMMARY_ID, PAYMENT_TYPE, PAYMENT_AMOUNT, VOUCHER_NO, TRANSACTION_DATE FROM ltr_trn_details WHERE PAYMENT_TYPE IS NOT NULL) AS Trndtl
+			ON Trndtl.TRAN_SUMMARY_ID = Trns.TRAN_SUMMARY_ID
+			WHERE Trns.TRAN_SUMMARY_ID = ':tsId' AND Trns.STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:tsId</param>
+		</params>
+	</query>
+
+	<query id="tsIdByTdIdQuery">
+		<title>Ts id on td id</title>
+		<content>
+			SELECT * FROM ltr_trn_details
+			WHERE TRAN_DETAILS_ID=':tdId'
+		</content>
+		<params>
+			<param>:tdId</param>
+		</params>
+	</query>
+
+
+	<query id="trnSmryDueByTsIdQuery">
+		<title>Due amount of a payment</title>
+		<content>
+			SELECT TOTAL_RECEIPT_DUE_PRINCIPAL AS DUE FROM ltr_trn_summary
+			WHERE TRAN_SUMMARY_ID=':tsId'
+		</content>
+		<params>
+			<param>:tsId</param>
+		</params>
+	</query>
+
+
+	<query id="TransactionSummaryRecentQuery">
+		<title>Customer Transaction Summaries On Limit</title>
+		<content>
+			SELECT TrnSmry.ID, TrnDtl.TRAN_DETAILS_ID,TrnSmry.TRAN_SUMMARY_ID,concat( TrnDtl.CUSTOM_COMMENT1,' (',TrnDtl.CUSTOM_COMMENT2,')' ) AS 'CUSTOMER_NAME', TrnDtl.VOUCHER_NO,TrnSmry.SCHEME_ID, schm.SCHEME_TYPE, TrnSmry.CUSTOMER_ID, TrnSmry.EMPLOYEE_ID, 
+			TrnDtl.PAYMENT_AMOUNT AS TOTAL_PAYMENT_PRINCIPAL, TrnDtl.PAYMENT_TYPE, TrnSmry.TOTAL_PAYMENT_DUE_PRINCIPAL, 
+			TrnSmry.TOTAL_RECEIPT_DUE_PRINCIPAL, TrnSmry.TOTAL_RECEIPT_PRINCIPAL, TrnSmry.START_DATE,
+			TrnSmry.LATEST_DATE, TrnSmry.ACTIVE_STATUS
+			FROM ltr_trn_summary AS TrnSmry USE INDEX (I_LTS_TRAN_SUMMARY_ID)
+			LEFT OUTER JOIN ( SELECT SCHEME_ID, SCHEME_TYPE FROM ref_mst_scheme) AS schm
+			ON schm.SCHEME_ID=TrnSmry.SCHEME_ID 
+			INNER JOIN (SELECT ID, TRAN_DETAILS_ID,TRAN_SUMMARY_ID,PAYMENT_AMOUNT, PAYMENT_TYPE,VOUCHER_NO,CUSTOM_COMMENT1,CUSTOM_COMMENT2, STATUS FROM ltr_trn_details USE INDEX (I_LTD_VOUCHER) )AS TrnDtl
+			ON TrnSmry.TRAN_SUMMARY_ID = TrnDtl.TRAN_SUMMARY_ID
+			WHERE TrnSmry.STATUS='NORMAL' AND TrnDtl.STATUS='NORMAL' AND TrnDtl.PAYMENT_TYPE IS NOT NULL AND TrnDtl.ID IN (:ids)
+			ORDER BY TrnSmry.ID DESC
+		</content>
+		<params>
+			<param>:ids</param>
+		</params>
+	</query>
+
+	<query id="trnReceiptRecentQuery">
+		<title>Recent submitted Receipt Details</title>
+		<content>
+		   SELECT Trndtl.ID, Trndtl.TRAN_DETAILS_ID, Trndtl.MEMO_NO, TrnDtl_1.VOUCHER_NO, Trndtl.TRAN_SUMMARY_ID, Trndtl.SCHEME_ID, MSchem.SCHEME_TYPE, 
+			concat( TrnDtl_1.CUSTOM_COMMENT1,' (',TrnDtl_1.CUSTOM_COMMENT2,')' ) AS 'CUSTOMER_NAME', Trndtl.EMPLOYEE_ID, Trndtl.RECEIPT_AMOUNT, Trndtl.RECEIPT_TYPE, 
+			Trndtl.TRANSACTION_DATE
+			FROM ltr_trn_details AS Trndtl
+			INNER JOIN (
+			SELECT TRAN_SUMMARY_ID, PAYMENT_TYPE, VOUCHER_NO, CUSTOM_COMMENT1, CUSTOM_COMMENT2
+			FROM ltr_trn_details
+			WHERE PAYMENT_TYPE = 'CAPITAL_PAID'
+			) AS TrnDtl_1 ON Trndtl.TRAN_SUMMARY_ID = TrnDtl_1.TRAN_SUMMARY_ID
+			LEFT OUTER JOIN (
+			SELECT SCHEME_ID, SCHEME_TYPE
+			FROM ref_mst_scheme
+			WHERE STATUS = 'NORMAL'
+			) AS MSchem ON MSchem.SCHEME_ID = Trndtl.SCHEME_ID
+			WHERE STATUS = 'NORMAL'
+			AND Trndtl.PAYMENT_TYPE IS NULL AND ID IN ( :ids )
+			ORDER BY ID DESC 
+		</content>
+		<params>
+			<param>:ids</param>
+		</params>
+	</query>
+
+	<query id="tranOnCustAndSchmQuery">
+		<title>Transaction summary on customer id and scheme id</title>
+		<content>
+		    SELECT ID FROM ltr_trn_summary
+			WHERE CUSTOMER_ID=':custId' AND SCHEME_ID=':schmId' AND STATUS='NORMAL' AND ACTIVE_STATUS='OPEN'
+		</content>
+		<params>
+			<param>:custId</param>
+			<param>:schmId</param>
+		</params>
+	</query>
+
+	<query id="getTranOnCustQuery">
+		<title>Transaction summary on customer id</title>
+		<content>
+		    SELECT ID FROM ltr_trn_summary
+		    WHERE CUSTOMER_ID=':custId' AND ACTIVE_STATUS @NOTEQ@ 'CLOSE' AND STATUS='NORMAL' LIMIT 1
+		</content>
+		<params>
+			<param>:custId</param>
+		</params>
+	</query>
+
+	<query id="TransactionSummaryQuery">
+		<title>Customer Transaction Summaries</title>
+		<content>
+			SELECT VOUCHER_NO,TrnSmry.TRAN_SUMMARY_ID, SCHEME_ID, CUSTOMER_ID, EMPLOYEE_ID, TOTAL_PAYMENT_PRINCIPAL, 
+			TOTAL_PAYMENT_DUE_PRINCIPAL, TOTAL_PAYMENT_INTEREST, TOTAL_RECEIPT_PRINCIPAL,
+			TOTAL_RECEIPT_DUE_PRINCIPAL, TOTAL_RECEIPT_INTEREST, TOTAL_RECEIPT_DONATION,
+			TOTAL_RECEIPT_FEES, TOTAL_DETAILS, LATEST_DATE, 
+			TRANSACTION_CCY,TOTAL_PAYMENT_SECURITY_DEPOSITE, TOTAL_RECEIPT_SECURITY_DEPOSITE,
+			REMARKS, 
+			ACTIVE_STATUS FROM ltr_trn_summary AS TrnSmry    
+			INNER JOIN (SELECT TRAN_SUMMARY_ID,VOUCHER_NO FROM ltr_trn_details WHERE PAYMENT_TYPE IS NOT NULL ) AS TrnDtl
+			ON TrnSmry.TRAN_SUMMARY_ID = TrnDtl.TRAN_SUMMARY_ID
+			WHERE TrnSmry.TRAN_SUMMARY_ID =  ':trnS_id'
+			AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:trnS_id</param>
+		</params>
+	</query>
+
+	<query id="TransactionSummaryByIdQuery">
+		<title>Customer Transaction Summaries</title>
+		<content>
+			SELECT CUSTOMER_ID , TOTAL_DETAILS FROM ltr_trn_summary  WHERE TRAN_SUMMARY_ID = ':trnS_id'
+			AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:trnS_id</param>
+		</params>
+	</query>
+
+	<query id="AllCustomerByEmployeePaymentQuery">
+		<title>All Customer name and id by employee payment</title>
+		<content>
+			SELECT DISTINCT(MstE.CUSTOMER_ID), MstE.NAME
+			FROM ref_mst_entity as MstE, ltr_trn_summary as MstTrnS
+			WHERE  MstE.CUSTOMER_ID=MstTrnS.CUSTOMER_ID AND MstTrnS.EMPLOYEE_ID=':eID' AND MstE.STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:eID</param>
+		</params>
+	</query>
+
+	<query id="transSummaryByCustIDQuery">
+		<title>All Transaction summaries by customer id</title>
+		<content>
+			SELECT TrnSmry.TRAN_SUMMARY_ID, TrnDtl.VOUCHER_NO FROM ltr_trn_summary AS TrnSmry
+			INNER JOIN (SELECT TRAN_SUMMARY_ID,PAYMENT_TYPE,VOUCHER_NO FROM ltr_trn_details WHERE PAYMENT_TYPE IS NOT NULL ) AS TrnDtl
+			ON TrnSmry.TRAN_SUMMARY_ID = TrnDtl.TRAN_SUMMARY_ID
+			WHERE CUSTOMER_ID = ':cId' AND STATUS='NORMAL' AND TrnSmry.ACTIVE_STATUS @NOTEQ@ 'CLOSE'
+		</content>
+		<params>
+			<param>:cId</param>
+		</params>
+	</query>
+
+	<query id="tranSmryInfosByCustIDQuery">
+		<title>All Transaction summaries information by customer id</title>
+		<content>
+			SELECT trns.ID,trns.TRAN_SUMMARY_ID, VOUCHER_NO, CUSTOMER_ID,SCHEME_ID,EMPLOYEE_ID, TOTAL_PAYMENT_PRINCIPAL,
+			TOTAL_RECEIPT_PRINCIPAL,TOTAL_RECEIPT_DUE_PRINCIPAL, TOTAL_RECEIPT_DONATION, TOTAL_RECEIPT_FEES,
+			TOTAL_PAYMENT_SECURITY_DEPOSITE, TOTAL_RECEIPT_SECURITY_DEPOSITE, ACTIVE_STATUS,TOTAL_DETAILS
+			FROM ltr_trn_summary AS trns USE INDEX (I_LTS_TRAN_SUMMARY_ID)
+			INNER JOIN (SELECT TRAN_SUMMARY_ID,PAYMENT_TYPE,VOUCHER_NO FROM ltr_trn_details WHERE PAYMENT_TYPE IS NOT NULL ) AS TrnDtl
+			ON trns.TRAN_SUMMARY_ID = TrnDtl.TRAN_SUMMARY_ID
+			WHERE CUSTOMER_ID = ':cId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:cId</param>
+		</params>
+	</query>
+
+	<query id="tranSmryInfosByCustIDQuery2">
+		<title>All Transaction summaries information by customer id</title>
+		<content>
+			SELECT trns.ID,trns.TRAN_SUMMARY_ID, VOUCHER_NO, CUSTOMER_ID,SCHEME_ID,EMPLOYEE_ID, TOTAL_PAYMENT_PRINCIPAL,
+			TOTAL_RECEIPT_PRINCIPAL,TOTAL_RECEIPT_DUE_PRINCIPAL, TOTAL_RECEIPT_DONATION, TOTAL_RECEIPT_FEES,
+			TOTAL_PAYMENT_SECURITY_DEPOSITE, TOTAL_RECEIPT_SECURITY_DEPOSITE, ACTIVE_STATUS,TOTAL_DETAILS
+			FROM ltr_trn_summary AS trns USE INDEX (I_LTS_TRAN_SUMMARY_ID)
+			INNER JOIN (SELECT TRAN_SUMMARY_ID,PAYMENT_TYPE,VOUCHER_NO FROM ltr_trn_details WHERE PAYMENT_TYPE IS NOT NULL ) AS TrnDtl
+			ON trns.TRAN_SUMMARY_ID = TrnDtl.TRAN_SUMMARY_ID
+			WHERE CUSTOMER_ID = ':cId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:cId</param>
+		</params>
+	</query>
+
+	<query id="AllTransactionSummaryQuery">
+		<title>All Customer Transaction Summaries</title>
+		<content>
+			SELECT TrnSmry.ID, TrnDtl.TRAN_DETAILS_ID,TrnSmry.TRAN_SUMMARY_ID,concat( TrnDtl.CUSTOM_COMMENT1,' (',TrnDtl.CUSTOM_COMMENT2,')' ) AS 'CUSTOMER_NAME', TrnDtl.VOUCHER_NO,TrnSmry.SCHEME_ID, schm.SCHEME_TYPE, TrnSmry.CUSTOMER_ID, TrnSmry.EMPLOYEE_ID, 
+			TrnDtl.PAYMENT_AMOUNT AS TOTAL_PAYMENT_PRINCIPAL, TrnDtl.PAYMENT_TYPE, TrnSmry.TOTAL_PAYMENT_DUE_PRINCIPAL, 
+			TrnSmry.TOTAL_RECEIPT_DUE_PRINCIPAL, TrnSmry.TOTAL_RECEIPT_PRINCIPAL, TrnSmry.START_DATE,
+			TrnSmry.LATEST_DATE, TrnSmry.ACTIVE_STATUS
+			FROM ltr_trn_summary AS TrnSmry USE INDEX (I_LTS_TRAN_SUMMARY_ID)
+			LEFT OUTER JOIN ( SELECT SCHEME_ID, SCHEME_TYPE FROM ref_mst_scheme) AS schm
+			ON schm.SCHEME_ID=TrnSmry.SCHEME_ID 
+			INNER JOIN (SELECT TRAN_DETAILS_ID,TRAN_SUMMARY_ID,PAYMENT_AMOUNT, PAYMENT_TYPE,VOUCHER_NO,
+			CUSTOM_COMMENT1,CUSTOM_COMMENT2, STATUS FROM ltr_trn_details USE INDEX (I_LTD_TRAN_SUMMARY_ID,I_LTD_VOUCHER) )AS TrnDtl
+			ON TrnSmry.TRAN_SUMMARY_ID = TrnDtl.TRAN_SUMMARY_ID
+			WHERE TrnSmry.STATUS='NORMAL' AND TrnDtl.STATUS='NORMAL' AND TrnDtl.PAYMENT_TYPE IS NOT NULL
+			ORDER BY TrnSmry.ID DESC
+			LIMIT :start, :rows
+		</content>
+		<params>
+			<param>:start</param>
+			<param>:rows</param>
+		</params>
+	</query>
+
+	<query id="allPaymentQuery">
+		<title>All Customer Payment Details</title>
+		<content>
+			SELECT TrnSmry.ID,TrnSmry.TRAN_SUMMARY_ID,TrnDtl.VOUCHER_NO,TrnSmry.SCHEME_ID, TrnSmry.CUSTOMER_ID, TrnSmry.EMPLOYEE_ID, 
+			TrnSmry.TOTAL_PAYMENT_PRINCIPAL, TrnDtl.PAYMENT_TYPE, TrnSmry.TOTAL_PAYMENT_DUE_PRINCIPAL, 
+			TrnSmry.TOTAL_RECEIPT_DUE_PRINCIPAL, TrnSmry.TOTAL_RECEIPT_PRINCIPAL, TrnSmry.START_DATE,
+			TrnSmry.LATEST_DATE
+			FROM ltr_trn_summary AS TrnSmry  
+			LEFT OUTER JOIN ltr_trn_details AS TrnDtl
+			ON TrnSmry.TRAN_SUMMARY_ID = TrnDtl.TRAN_SUMMARY_ID
+			WHERE TrnSmry.STATUS='NORMAL' AND TrnDtl.PAYMENT_TYPE IS NOT NULL
+			ORDER BY TrnSmry.ID DESC
+			LIMIT :start, :rows
+		</content>
+		<params>
+			<param>:start</param>
+			<param>:rows</param>
+		</params>
+	</query>
+
+	<query id="TransactionDetailQuery">
+		<title>Customer Transaction Details</title>
+		<content>
+			(SELECT dtl.ID, dtl.TRAN_DETAILS_ID, dtl.TRAN_SUMMARY_ID AS 'SUMMARY_ID', dtl.VOUCHER_NO, 
+			'' AS MEMO_NO, dtl.SCHEME_ID AS 'SCHEME', schm.SCHEME_TYPE, dtl.CUSTOMER_ID AS 'CUSTOMER', dtl.EMPLOYEE_ID, 
+			@Amount_:user_id:=dtl.PAYMENT_AMOUNT AS PAYMENT_AMOUNT, dtl.PAYMENT_TYPE , '' AS RECEIPT_AMOUNT,
+			'' AS RECEIPT_TYPE, dtl.TRANSACTION_DATE, @Amount_:user_id AS RECEIPT_DUE_AMOUNT, 
+			Smry.TOTAL_RECEIPT_PRINCIPAL AS 'TOTAL_RECEIPT', Smry.ACTIVE_STATUS AS 'PAYMENT_STATUS',
+			Smry.TOTAL_RECEIPT_DUE_PRINCIPAL AS 'DUE_AMOUNT', Smry.UPDATE_DATE,
+			Smry.TOTAL_RECEIPT_DONATION AS 'DONATION', Smry.TOTAL_RECEIPT_FEES AS 'FEES', 
+			Smry.TOTAL_RECEIPT_SECURITY_DEPOSITE AS 'SECURITY_DEPOSITE_RECEIPT',Smry.TOTAL_PAYMENT_SECURITY_DEPOSITE AS 'SECURITY_DEPOSITE_PAYMENT'
+			FROM ltr_trn_details AS dtl 
+			LEFT OUTER JOIN ( SELECT TRAN_SUMMARY_ID, TOTAL_RECEIPT_PRINCIPAL,TOTAL_RECEIPT_DUE_PRINCIPAL, 
+			TOTAL_RECEIPT_DONATION, TOTAL_RECEIPT_FEES, TOTAL_PAYMENT_SECURITY_DEPOSITE, TOTAL_RECEIPT_SECURITY_DEPOSITE,
+			ACTIVE_STATUS,UPDATE_DATE FROM ltr_trn_summary WHERE TRAN_SUMMARY_ID = ':trns_id' ) AS Smry
+			ON Smry.TRAN_SUMMARY_ID =  dtl.TRAN_SUMMARY_ID
+			LEFT OUTER JOIN ( SELECT SCHEME_ID, SCHEME_TYPE FROM ref_mst_scheme) AS schm
+			ON schm.SCHEME_ID=dtl.SCHEME_ID 
+			WHERE dtl.TRAN_SUMMARY_ID = ':trns_id' AND dtl.STATUS='NORMAL' AND dtl.PAYMENT_TYPE LIKE 'CAPITAL_PAID')
+			UNION ALL
+			(SELECT dtl1.ID,  dtl1.TRAN_DETAILS_ID, '' AS 'SUMMARY_ID', '' AS VOUCHER_NO, dtl1.MEMO_NO, 
+			'' AS 'SCHEME', '' AS SCHEME_TYPE , '' AS 'CUSTOMER', dtl1.EMPLOYEE_ID, '' AS PAYMENT_AMOUNT, '' AS PAYMENT_TYPE, 
+			IF(dtl1.RECEIPT_AMOUNT=0,'',dtl1.RECEIPT_AMOUNT) AS RECEIPT_AMOUNT, dtl1.RECEIPT_TYPE, dtl1.TRANSACTION_DATE, 
+			@Amount_:user_id:= @Amount_:user_id - dtl1.RECEIPT_AMOUNT AS RECEIPT_DUE_AMOUNT, '' AS
+			'TOTAL_RECEIPT', '' AS 'PAYMENT_STATUS', '' AS 'DUE_AMOUNT', '' AS UPDATE_DATE,'' AS 'DONATION', '' AS 'FEES', 
+			'' AS 'SECURITY_DEPOSITE_RECEIPT', '' AS 'SECURITY_DEPOSITE_PAYMENT'
+			FROM ltr_trn_details AS dtl1 
+			WHERE dtl1.TRAN_SUMMARY_ID = ':trns_id' AND dtl1.STATUS='NORMAL' AND dtl1.RECEIPT_TYPE LIKE 'CAPITAL_RECEIVED')
+			UNION ALL
+			(SELECT ''AS ID, '' AS TRAN_DETAILS_ID, '' AS 'SUMMARY_ID', Trndl.VOUCHER_NO, 
+			'' AS MEMO_NO, '' AS 'SCHEME', '' AS SCHEME_TYPE, '' AS 'CUSTOMER', '' AS EMPLOYEE_ID, 
+			Trns.TOTAL_PAYMENT_PRINCIPAL AS PAYMENT_AMOUNT, '' AS PAYMENT_TYPE, 
+			Trns.TOTAL_RECEIPT_PRINCIPAL AS RECEIPT_AMOUNT, '' AS RECEIPT_TYPE , CURRENT_DATE AS TRANSACTION_DATE, 
+			@Amount_:user_id AS RECEIPT_DUE_AMOUNT, '' AS 'TOTAL_RECEIPT' ,'' AS 'PAYMENT_STATUS', '' AS 'DUE_AMOUNT',
+			'' AS UPDATE_DATE,'' AS 'DONATION', '' AS 'FEES', '' AS 'SECURITY_DEPOSITE_RECEIPT', '' AS 'SECURITY_DEPOSITE_PAYMENT'
+			FROM ltr_trn_summary AS Trns
+			LEFT OUTER JOIN ( SELECT TRAN_SUMMARY_ID, RECEIPT_AMOUNT,VOUCHER_NO FROM ltr_trn_details WHERE STATUS='NORMAL' ) AS Trndl
+			ON Trns.TRAN_SUMMARY_ID = Trndl.TRAN_SUMMARY_ID
+			WHERE Trns.TRAN_SUMMARY_ID = ':trns_id' 
+			GROUP BY Trndl.TRAN_SUMMARY_ID )
+		</content>
+		<params>
+			<param>:user_id</param>
+			<param>:trns_id</param>
+		</params>
+	</query>
+
+	<query id="TransactionDetailByCidQuery">
+		<title>Customer Transaction Details By Customer Id</title>
+		<content>
+			SELECT TRAN_DETAILS_ID, TRAN_SUMMARY_ID, SCHEME_ID, CUSTOMER_ID, EMPLOYEE_ID, 
+			PAYMENT_AMOUNT, RECEIPT_AMOUNT from ltr_trn_details WHERE CUSTOMER_ID = ':cust_id' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:cust_id</param>
+		</params>
+	</query>
+
+	<query id="TransactionDetailByCNmQuery">
+		<title>Customer Transaction Details By Customer Name</title>
+		<content>
+			SELECT MTrnsD.TRAN_DETAILS_ID, MTrnsD.TRAN_SUMMARY_ID, MTrnsD.SCHEME_ID, MTrnsD.CUSTOMER_ID,
+			MTrnsD.EMPLOYEE_ID, MTrnsD.PAYMENT_AMOUNT, MTrnsD.RECEIPT_AMOUNT 
+			from ltr_trn_details AS MTrnsD, ref_mst_entity AS MEnti 
+			WHERE MTrnsD.CUSTOMER_ID = MEnti.CUSTOMER_ID AND MEnti.NAME LIKE ':cust_nm%' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:cust_nm</param>
+		</params>
+	</query>
+
+	<query id="transactionDetailByTdIdQuery">
+		<title>Customer Transaction Details By Transaction Detail Id</title>
+		<content>
+			SELECT Trnd.TRAN_DETAILS_ID, Trnd.TRAN_SUMMARY_ID,
+			(MstrE1.NAME) AS CUSTOMER_NAME,Trnd.CUSTOMER_ID,(MstrE2.NAME) AS EMPLOYEE_NAME,
+			Trnd.EMPLOYEE_ID, Trnd.MEMO_NO, Trnd.PAYMENT_AMOUNT, Trnd.RECEIPT_AMOUNT, 
+			Trnd.RECEIPT_TYPE, Trnd.REMARKS, Trnd.TRANSACTION_DATE
+			FROM ltr_trn_details AS Trnd
+			LEFT OUTER JOIN ref_mst_entity AS MstrE1
+			ON MstrE1.CUSTOMER_ID = Trnd.CUSTOMER_ID
+			LEFT OUTER JOIN ref_mst_entity AS MstrE2
+			ON MstrE2.EMPLOYEE_ID = Trnd.EMPLOYEE_ID
+			WHERE Trnd.TRAN_DETAILS_ID=':tdId' AND Trnd.STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:tdId</param>
+		</params>
+	</query>
+
+	<query id="voucherNoBySmryIdQuery">
+		<title>Voucher No By Transaction Summary Id</title>
+		<content>
+			SELECT DISTINCT VOUCHER_NO FROM ltr_trn_details
+			WHERE TRAN_SUMMARY_ID=':tsId' AND PAYMENT_TYPE IS NOT NULL
+		</content>
+		<params>
+			<param>:tsId</param>
+		</params>
+	</query>
+
+	<query id="voucherNosByTrnsSmryIdsQuery">
+		<title>Voucher Nos By Transaction Summary Ids</title>
+		<content>
+			SELECT DISTINCT VOUCHER_NO FROM ltr_trn_details
+			WHERE TRAN_SUMMARY_ID IN (:tsIds ) AND PAYMENT_TYPE IS NOT NULL
+		</content>
+		<params>
+			<param>:tsIds</param>
+		</params>
+	</query>
+
+	<query id="TransactionDetailBySrchQuery">
+		<title>Customer Transaction Details By Customer Search</title>
+		<content>
+			SELECT MTrnsD.ID,concat( MTrnsD.CUSTOM_COMMENT1,' (',MTrnsD.CUSTOM_COMMENT2,')' ) AS 'CUSTOMER_NAME', MTrnsD.TRAN_DETAILS_ID, MTrnsD.TRAN_SUMMARY_ID, MTrnsD.MEMO_NO, 
+			TrnDtl.VOUCHER_NO, MTrnsD.SCHEME_ID, MSchem.SCHEME_TYPE, MTrnsD.CUSTOMER_ID, 
+			MTrnsD.EMPLOYEE_ID, MTrnsD.PAYMENT_AMOUNT,MTrnsD.PAYMENT_TYPE, 
+			MTrnsD.RECEIPT_AMOUNT, MTrnsD.RECEIPT_TYPE, MTrnsD.TRANSACTION_DATE 
+			FROM ltr_trn_details AS MTrnsD 
+			USE INDEX (I_LTD_TRAN_SUMMARY_ID,I_LTD_CUSTOMER_ID,I_LTD_EMPLOYEE_ID,I_LTD_MEMO,I_LTD_VOUCHER)
+			LEFT OUTER JOIN ( SELECT NAME, ENTITY_ID FROM ref_mst_entity USE INDEX (I_RME_ENTITY_ID) 
+			WHERE ENTITY_TYPE='Customer' AND STATUS='NORMAL' ) AS MEnti1 
+			ON MTrnsD.CUSTOMER_ID = MEnti1.ENTITY_ID 
+			RIGHT OUTER JOIN ( SELECT NAME, ENTITY_ID FROM ref_mst_collector USE INDEX (I_RMC_ENTITY_ID) 
+			WHERE ENTITY_TYPE='COLLECTOR' AND STATUS='NORMAL')AS MEnti2 
+			ON MTrnsD.EMPLOYEE_ID = MEnti2.ENTITY_ID
+			LEFT OUTER JOIN ( SELECT SCHEME_ID,SCHEME_TYPE FROM ref_mst_scheme WHERE STATUS='NORMAL' ) AS MSchem
+			ON MTrnsD.SCHEME_ID = MSchem.SCHEME_ID
+			INNER JOIN (SELECT TRAN_SUMMARY_ID,PAYMENT_TYPE, VOUCHER_NO FROM ltr_trn_details 
+			USE INDEX (I_LTD_TRAN_SUMMARY_ID, I_LTD_VOUCHER)
+			WHERE PAYMENT_TYPE IS NOT NULL ) AS TrnDtl
+			ON MTrnsD.TRAN_SUMMARY_ID = TrnDtl.TRAN_SUMMARY_ID
+			WHERE MTrnsD.STATUS='NORMAL' AND  MTrnsD.PAYMENT_TYPE IS NULL
+		</content>
+		<queryparams>
+			<queryparam>MEnti1.NAME</queryparam>
+			<queryparam>MEnti2.NAME</queryparam>
+			<queryparam>MEnti1.ENTITY_ID</queryparam>
+			<queryparam>MEnti2.ENTITY_ID</queryparam>
+			<queryparam>MTrnsD.SCHEME_ID </queryparam>
+			<queryparam condition='GREATEREQUAL'>MTrnsD.TRANSACTION_DATE</queryparam>
+			<queryparam condition='LESSEQUAL'>MTrnsD.TRANSACTION_DATE</queryparam>
+			<queryparam condition='GREATEREQUAL'>MTrnsD.MEMO_NO</queryparam>
+			<queryparam condition='LESSEQUAL'>MTrnsD.MEMO_NO</queryparam>
+			<queryparam>MSchem.SCHEME_TYPE </queryparam>
+			<queryparam>MTrnsD.MEMO_NO </queryparam>
+		</queryparams>
+	</query>
+
+	<query id="AllTransactionDetailQuery">
+		<title>All Customer Transaction Details</title>
+		<content>
+			SELECT Trndtl.ID, Trndtl.TRAN_DETAILS_ID, Trndtl.MEMO_NO, TrnDtl_1.VOUCHER_NO, Trndtl.TRAN_SUMMARY_ID, Trndtl.SCHEME_ID, MSchem.SCHEME_TYPE, 
+			concat( TrnDtl_1.CUSTOM_COMMENT1,' (',TrnDtl_1.CUSTOM_COMMENT2,')' ) AS 'CUSTOMER_NAME', Trndtl.EMPLOYEE_ID, Trndtl.RECEIPT_AMOUNT, Trndtl.RECEIPT_TYPE, 
+			Trndtl.TRANSACTION_DATE
+			FROM ltr_trn_details AS Trndtl
+			INNER JOIN (
+			SELECT TRAN_SUMMARY_ID, PAYMENT_TYPE, VOUCHER_NO, CUSTOM_COMMENT1, CUSTOM_COMMENT2
+			FROM ltr_trn_details
+			WHERE PAYMENT_TYPE = 'CAPITAL_PAID'
+			) AS TrnDtl_1 ON Trndtl.TRAN_SUMMARY_ID = TrnDtl_1.TRAN_SUMMARY_ID
+			LEFT OUTER JOIN (
+			SELECT SCHEME_ID, SCHEME_TYPE
+			FROM ref_mst_scheme
+			WHERE STATUS = 'NORMAL'
+			) AS MSchem ON MSchem.SCHEME_ID = Trndtl.SCHEME_ID
+			WHERE STATUS = 'NORMAL'
+			AND Trndtl.PAYMENT_TYPE IS NULL
+			ORDER BY Trndtl.ID DESC
+			LIMIT :start, :rows
+		</content>
+		<params>
+			<param>:start</param>
+			<param>:rows</param>
+		</params>
+	</query>
+
+	<query id="empOnCustTranQuery">
+	<title>To get employee on transaction</title>
+		<content>
+			SELECT enty.EMPLOYEE_ID, enty.NAME FROM ltr_trn_summary AS smry
+			LEFT OUTER JOIN ( SELECT EMPLOYEE_ID,NAME FROM ref_mst_collector WHERE ENTITY_TYPE='COLLECTOR') AS enty
+			ON enty.EMPLOYEE_ID = smry.EMPLOYEE_ID
+			WHERE smry.TRAN_SUMMARY_ID = ':tsid'
+		</content>
+		<params>
+			<param>:tsid</param>
+		</params>
+	</query>
+
+	<query id="combinedTransInfoOnTdIdQuery">
+	<title>To get transaction information</title>
+		<content>
+			SELECT a.ID, b.TRAN_SUMMARY_ID, a.TRAN_DETAILS_ID, a.CUSTOMER_ID, a.EMPLOYEE_ID, a.PAYMENT_AMOUNT, a.PAYMENT_TYPE,
+			a.VOUCHER_NO, a.TRANSACTION_DATE,b.TOTAL_PAYMENT_PRINCIPAL,b.TOTAL_RECEIPT_PRINCIPAL, b.TOTAL_PAYMENT_SECURITY_DEPOSITE,
+			b.TOTAL_RECEIPT_SECURITY_DEPOSITE, b.TOTAL_DETAILS FROM ltr_trn_details AS a
+			INNER JOIN ltr_trn_summary AS b
+			ON a.TRAN_SUMMARY_ID=b.TRAN_SUMMARY_ID
+			WHERE a.TRAN_DETAILS_ID=':tdid' AND a.STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:tdid</param>
+		</params>
+	</query>
+
+
+	<query id="insertRowInDetailDML">
+		<title>Add Empty Row Transaction Details</title>
+		<content>
+			INSERT INTO  ltr_trn_details SET  TRAN_DETAILS_ID=null
+		</content>
+	</query>
+
+	<query id="insertRowInSummaryDML">
+		<title>Add Empty Row Transaction Details</title>
+		<content>
+			INSERT INTO  ltr_trn_summary SET  TRAN_SUMMARY_ID=null
+		</content>
+	</query>
+
+	<query id="insertAdditonalRefInfoDML_1">
+		<title>Insert Additional Reference Information</title>
+		<content>
+			INSERT INTO ref_reference_info(TABLE_NAME, COLUMN_NAME, COLUMN_VALUE, ID_VALUE, REFERENCE_TYPE, 
+			REFERENCE_VALUE)
+			VALUES ( ':tblNm', ':colmNm', ':colmVal', ':idValue' , ':refNm', ':refVal' ) 
+		</content>
+		<params>
+			<param>:tblNm</param>
+			<param>:colmNm</param>
+			<param>:colmVal</param>
+			<param>:idValue</param>
+			<param>:refNm</param>
+			<param>:refVal</param>
+		</params>
+	</query>
+
+	<query id="insertXLSTrnSmryDML">
+		<title>Add Payment</title>
+		<content>
+			INSERT INTO ltr_trn_summary(TRAN_SUMMARY_ID,SCHEME_ID,CUSTOMER_ID,EMPLOYEE_ID,TOTAL_PAYMENT_PRINCIPAL,
+			TOTAL_RECEIPT_DUE_PRINCIPAL,START_DATE)
+			VALUEs (':tsId',':schmId',':custId',':empId',:pAmount,:dAmount,':dt' ) 
+		</content>
+		<params>
+			<param>:tsId</param>
+			<param>:schmId</param>
+			<param>:custId</param>
+			<param>:empId</param>
+			<param>:pAmount</param>
+			<param>:dAmount</param>
+			<param>:dt</param>
+		</params>
+	</query>
+
+
+	<query id="insertXLSTrnDtlonSmryDML">
+		<title>Add Default Receive by Payment </title>
+		<content>
+			INSERT INTO ltr_trn_details(TRAN_DETAILS_ID,TRAN_SUMMARY_ID,SCHEME_ID,CUSTOMER_ID,EMPLOYEE_ID,
+			PAYMENT_AMOUNT,PAYMENT_TYPE,TRANSACTION_DATE)
+			VALUES(':tdId',':tsId',':schmId',':custId',':empId',:pAmount,':pTyp',':dt' ) 
+		</content>
+		<params>
+			<param>:tdId</param>
+			<param>:tsId</param>
+			<param>:schmId</param>
+			<param>:custId</param>
+			<param>:empId</param>
+			<param>:pAmount</param>
+			<param>:pTyp</param>
+			<param>:dt</param>
+		</params>
+	</query>
+
+	<query id="insertXLSTrnDtlDML">
+		<title>Add  Receive </title>
+		<content>
+			INSERT INTO ltr_trn_details(TRAN_DETAILS_ID,TRAN_SUMMARY_ID,SCHEME_ID,CUSTOMER_ID,EMPLOYEE_ID,
+			RECEIPT_AMOUNT,RECEIPT_TYPE,TRANSACTION_DATE)
+			VALUES(':tdId',':tsId',':schmId',':custId',':empId',:rAmount,':rTyp',':dt' ) 
+		</content>
+		<params>
+			<param>:tdId</param>
+			<param>:tsId</param>
+			<param>:schmId</param>
+			<param>:custId</param>
+			<param>:empId</param>
+			<param>:rAmount</param>
+			<param>:rTyp</param>
+			<param>:dt</param>
+		</params>
+	</query>
+
+	<query id="updateXLSTrnSmryDML">
+		<title>Update Summary on the basis on receive </title>
+		<content>
+			UPDATE ltr_trn_summary SET
+			TOTAL_RECEIPT_PRINCIPAL = ':recitpAmount', TOTAL_RECEIPT_DUE_PRINCIPAL=':dueAmount', 
+			LATEST_DATE = ':dt', TOTAL_DETAILS = :totlDetails, UPDATE_DATE=':dt'
+			WHERE TRAN_SUMMARY_ID = ':tsId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:recitpAmount</param>
+			<param>:dueAmount</param>
+			<param>:dt</param>
+			<param>:totlDetails</param>
+			<param>:tsId</param>
+		</params>
+	</query>
+
+	<query id="AddTransactionDetailsQuery2">
+		<title>Add Transaction Details</title>
+		<content>
+			INSERT INTO  ltr_trn_details( TRAN_DETAILS_ID, TRAN_SUMMARY_ID, SCHEME_ID, CUSTOMER_ID,
+			EMPLOYEE_ID, PAYMENT_AMOUNT, RECEIPT_TYPE, RECEIPT_AMOUNT, CREATION_DATE, REMARKS, TRANSACTION_DATE) VALUES 
+			(':tdId',':tsId',':sId', ':cId', ':eId', ':pAmount', ':pType', ':rAmount', ':cDt' ,':remarks',':cDt' )
+		</content>
+		<params>
+			<param>:tdId</param>
+			<param>:tsId</param>
+			<param>:sId</param>
+			<param>:cId</param>
+			<param>:eId</param>
+			<param>:pAmount</param>
+			<param>:pType</param>
+			<param>:rAmount</param>
+			<param>:cDt</param>
+			<param>:remarks</param>
+		</params>
+	</query>
+
+	<query id="updateTotalActiveRowsDML">
+		<title>Update Active rows and deactive roes of a table</title>
+		<content>
+			UPDATE ref_mst_tbl_rows_count 
+			SET TOTAL_ACTIVE_ROWS = :tRows 
+			WHERE SECTION_ID = ':secId'
+		</content>
+		<params>
+			<param>:tRows</param>
+			<param>:secId</param>
+		</params>
+	</query>
+
+	
+	<query id="updateInsertedCustPaymentDML">
+		<title>Update customer payment to a partiqular row</title>
+		<content>
+			UPDATE ltr_trn_summary
+			SET TRAN_SUMMARY_ID=':tId', SCHEME_ID=':sId', CUSTOMER_ID=':cId', EMPLOYEE_ID=':eId', 
+			TOTAL_PAYMENT_PRINCIPAL=:pamout, TOTAL_RECEIPT_DUE_PRINCIPAL=:rdamout, 
+			CREATION_DATE=':cDt', START_DATE=':cDt',LATEST_DATE=':cDt',REMARKS=':remarks'
+			WHERE ID=:id
+		</content>
+		<params>
+			<param>:tId</param>
+			<param>:sId</param>
+			<param>:cId</param>
+			<param>:eId</param>
+			<param>:pamout</param>
+			<param>:rdamout</param>
+			<param>:cDt</param>
+			<param>:remarks</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="updateInsertedPaymentDetailDML">
+		<title>Update customer payment details to a partiqular row</title>
+		<content>
+			UPDATE ltr_trn_details 
+			SET TRAN_DETAILS_ID=':tdId', TRAN_SUMMARY_ID=':tsId', SCHEME_ID=':sId', CUSTOMER_ID=':cId',
+			EMPLOYEE_ID=':eId' , PAYMENT_AMOUNT=:pAmount , PAYMENT_TYPE=':pType', VOUCHER_NO=':voucher', MEMO_NO=':memo',
+			CREATION_DATE=':cDt', REMARKS=':remarks', TRANSACTION_DATE=':cDt',CUSTOM_COMMENT1=':custNm', CUSTOM_COMMENT2=':custSx'
+			WHERE ID=:id
+		</content>
+		<params>
+			<param>:tdId</param>
+			<param>:tsId</param>
+			<param>:sId</param>
+			<param>:cId</param>
+			<param>:eId</param>
+			<param>:pAmount</param>
+			<param>:pType</param>
+			<param>:voucher</param>
+			<param>:memo</param>
+			<param>:cDt</param>
+			<param>:remarks</param>
+			<param>:custNm</param>
+			<param>:custSx</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="updateInsertedReceiptDetailDML">
+		<title>Add Transaction Details</title>
+		<content>
+			UPDATE  ltr_trn_details
+			SET TRAN_DETAILS_ID=':tdId', TRAN_SUMMARY_ID=':tsId', SCHEME_ID=':sId', CUSTOMER_ID=':cId',
+			EMPLOYEE_ID=':eId',  RECEIPT_TYPE=':rType', MEMO_NO=':memo', RECEIPT_AMOUNT=:rAmount, 
+			CREATION_DATE=':cDt', REMARKS=':remarks', TRANSACTION_DATE=':cDt'
+			WHERE ID=:id
+		</content>
+		<params>
+			<param>:tdId</param>
+			<param>:tsId</param>
+			<param>:sId</param>
+			<param>:cId</param>
+			<param>:eId</param>
+			<param>:rType</param>
+			<param>:memo</param>
+			<param>:rAmount</param>
+			<param>:cDt</param>
+			<param>:remarks</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+
+	<query id="updateSecurityDeposAmountDML">
+		<title>Update Customer Transaction Summary By group of Scheme and Customer Id</title>
+		<content>
+			UPDATE ltr_trn_summary SET
+			TOTAL_PAYMENT_SECURITY_DEPOSITE = ':amount'
+			WHERE TRAN_SUMMARY_ID = ':tsId' AND STATUS='NORMAL' AND ACTIVE_STATUS @NOTEQ@ 'CLOSE'
+		</content>
+		<params>
+			<param>:amount</param>
+			<param>:tsId</param>
+		</params>
+	</query>
+
+	<query id="UpdateTrnSummaryByTsIdQuery">
+		<title>Update Customer Transaction Summary By group of Scheme and Customer Id</title>
+		<content>
+			UPDATE ltr_trn_summary SET
+			TOTAL_RECEIPT_PRINCIPAL = ':recitpAmount', TOTAL_RECEIPT_DUE_PRINCIPAL=':dueAmount', 
+			TOTAL_RECEIPT_DONATION=':donationAmount',TOTAL_RECEIPT_FEES=':feesAmount',
+			TOTAL_RECEIPT_SECURITY_DEPOSITE=':securityAmount' ,
+			LATEST_DATE = ':dt', TOTAL_DETAILS = ':totlDetails'
+			WHERE TRAN_SUMMARY_ID = ':tsId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:recitpAmount</param>
+			<param>:dueAmount</param>
+			<param>:donationAmount</param>
+			<param>:feesAmount</param>
+			<param>:securityAmount</param>
+			<param>:dt</param>
+			<param>:totlDetails</param>
+			<param>:tsId</param>
+		</params>
+	</query>
+
+	<query id="updateSmryStatusToCloseDML">
+		<title>update transaction status field to 'CLOSE'</title>
+		<content>
+			UPDATE ltr_trn_summary
+			SET ACTIVE_STATUS='CLOSE'
+			WHERE TRAN_SUMMARY_ID = ':tsId'
+		</content>
+		<params>
+			<param>:tsId</param>
+		</params>
+	</query>
+
+	<query id="updateSmrStatToDisbalDML">
+		<title>update transaction status field to 'DISBALANCED'</title>
+		<content>
+			UPDATE ltr_trn_summary
+			SET ACTIVE_STATUS='OVER RECEIVED'
+			WHERE TRAN_SUMMARY_ID = ':tsId'
+		</content>
+		<params>
+			<param>:tsId</param>
+		</params>
+	</query>
+
+	<query id="updateSmryStatusToOpenDML">
+		<title>update transaction status field to 'OPEN'</title>
+		<content>
+			UPDATE ltr_trn_summary
+			SET ACTIVE_STATUS='OPEN'
+			WHERE TRAN_SUMMARY_ID = ':tsId'
+		</content>
+		<params>
+			<param>:tsId</param>
+		</params>
+	</query>
+
+
+	<query id="UpdateTrnDetailQuery">
+		<title>Update Customer Transaction Detail</title>
+		<content>
+			UPDATE ltr_trn_details
+			SET TRAN_SUMMARY_ID=':tsId', SCHEME_ID=':schmId', CUSTOMER_ID=':custId', 
+			EMPLOYEE_ID=':empId', RECEIPT_AMOUNT=:amnt, RECEIPT_TYPE=':recpTyp', MEMO_NO=':memo', REMARKS=':rmarks',
+			TRANSACTION_DATE=':dt'
+			WHERE TRAN_DETAILS_ID=':tdId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:tsId</param>
+			<param>:schmId</param>
+			<param>:custId</param>
+			<param>:empId</param>
+			<param>:amnt</param>
+			<param>:recpTyp</param>
+			<param>:memo</param>
+			<param>:rmarks</param>
+			<param>:dt</param>
+			<param>:tdId</param>
+		</params>
+	</query>
+
+	<query id="editTrnSummaryDML">
+		<title>Edit Transaction Summary</title>
+		<content>
+			UPDATE ltr_trn_summary 
+			SET SCHEME_ID=':schmId', CUSTOMER_ID=':custId', EMPLOYEE_ID=':empId',
+			TOTAL_PAYMENT_PRINCIPAL=:payAmount ,TOTAL_RECEIPT_DUE_PRINCIPAL=:dueAmount,
+			START_DATE=':pdate', ACTIVE_STATUS=':status'
+			WHERE TRAN_SUMMARY_ID = ':trnsId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:schmId</param>
+			<param>:custId</param>
+			<param>:empId</param>
+			<param>:payAmount</param>
+			<param>:dueAmount</param>
+			<param>:pdate</param>
+			<param>:status</param>
+			<param>:trnsId</param>
+		</params>
+	</query>
+
+
+	<query id="editTrnSummaryDetailsDML">
+		<title>Edit Transaction Summary Details</title>
+		<content>
+			UPDATE ltr_trn_details 
+			SET SCHEME_ID=':schmId' ,CUSTOMER_ID=':custId' , EMPLOYEE_ID=':empId' , 
+			PAYMENT_AMOUNT=:pAmount ,PAYMENT_TYPE=':pType', VOUCHER_NO=':voucher',
+			REMARKS=':remarks', TRANSACTION_DATE=':dt',CUSTOM_COMMENT1=':custNm', CUSTOM_COMMENT2=':custSx'
+			WHERE TRAN_SUMMARY_ID=':trnsId' AND STATUS='NORMAL' AND PAYMENT_TYPE=':typ'
+		</content>
+		<params>
+			<param>:schmId</param>
+			<param>:custId</param>
+			<param>:empId</param>
+			<param>:pAmount</param>
+			<param>:pType</param>
+			<param>:voucher</param>
+			<param>:remarks</param>
+			<param>:dt</param>
+			<param>:custNm</param>
+			<param>:custSx</param>
+			<param>:typ</param>
+			<param>:trnsId</param>
+		</params>
+	</query>
+
+	<query id="editTrnSummaryDetails2DML">
+		<title>Edit Transaction Summary Details</title>
+		<content>
+			UPDATE ltr_trn_details 
+			SET TRAN_SUMMARY_ID=':trnsId', SCHEME_ID=':schmId' ,CUSTOMER_ID=':custId' , EMPLOYEE_ID=':empId' , 
+			PAYMENT_AMOUNT=:pAmount ,PAYMENT_TYPE=':pType', VOUCHER_NO=':voucher',
+			REMARKS=':remarks', TRANSACTION_DATE=':dt',CUSTOM_COMMENT1=':custNm', CUSTOM_COMMENT2=':custSx'
+			WHERE TRAN_DETAILS_ID=':tdId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:trnsId</param>
+			<param>:schmId</param>
+			<param>:custId</param>
+			<param>:empId</param>
+			<param>:pAmount</param>
+			<param>:pType</param>
+			<param>:voucher</param>
+			<param>:remarks</param>
+			<param>:dt</param>
+			<param>:custNm</param>
+			<param>:custSx</param>
+			<param>:tdId</param>
+		</params>
+	</query>
+
+	<query id="updateSmryRelatedInfoToDtlsDML">
+		<title>Update Transaction Details info related to summary for payment</title>
+		<content>
+			UPDATE ltr_trn_details
+			SET SCHEME_ID=':schmId', CUSTOMER_ID=':custId', EMPLOYEE_ID=':empId'
+			WHERE TRAN_SUMMARY_ID=':tsId'
+		</content>
+		<params>
+			<param>:schmId</param>
+			<param>:custId</param>
+			<param>:empId</param>
+			<param>:tsId</param>
+		</params>
+	</query>
+
+	<query id="editTrnVoucherOnTrnsIdDML">
+		<title>Edit Vouncher No of Transaction Summary</title>
+		<content>
+			UPDATE ref_reference_info 
+			SET  REFERENCE_VALUE=':newNo'  
+			WHERE REFERENCE_VALUE = ':oldNo' AND STATUS='NORMAL' 
+		</content>
+		<params>
+			<param>:newNo</param>
+			<param>:oldNo</param>
+		</params>
+	</query>
+
+	<query id="editTrnVoucherOnTrnsIdDML">
+		<title>Edit Vouncher No of Transaction Summary</title>
+		<content>
+			UPDATE ref_reference_info 
+			SET  REFERENCE_VALUE=':newNo'  
+			WHERE REFERENCE_VALUE = ':oldNo' AND STATUS='NORMAL' 
+		</content>
+		<params>
+			<param>:newNo</param>
+			<param>:oldNo</param>
+		</params>
+	</query>
+
+	<query id="updateTrnMemoOnTdlIdDML">
+		<title>Edit Memo No of Transaction Details</title>
+		<content>
+			UPDATE ref_reference_info 
+			SET  REFERENCE_VALUE=':newNo'  
+			WHERE COLUMN_VALUE = ':tdId' AND STATUS='NORMAL' 
+		</content>
+		<params>
+			<param>:newNo</param>
+			<param>:tdId</param>
+		</params>
+	</query>
+
+	<query id="updateBSDToZeroAndOpenAccDML">
+		<title>Edit Memo No of Transaction Details</title>
+		<content>
+			UPDATE ltr_trn_summary 
+			SET  TOTAL_PAYMENT_SECURITY_DEPOSITE=0 , ACTIVE_STATUS='OPEN'
+			WHERE TRAN_SUMMARY_ID = ':tsId' AND STATUS='NORMAL' 
+		</content>
+		<params>
+			<param>:tsId</param>
+		</params>
+	</query>
+
+	<query id="updateBsdPayOnTsIdDML">
+		<title>Update Bsd payment on ts id</title>
+		<content>
+			UPDATE ltr_trn_summary 
+			SET  TOTAL_PAYMENT_SECURITY_DEPOSITE=:amount , ACTIVE_STATUS='CLOSE'
+			WHERE TRAN_SUMMARY_ID = ':tsId' AND STATUS='NORMAL' 
+		</content>
+		<params>
+			<param>:amount</param>
+			<param>:tsId</param>
+		</params>
+	</query>
+	
+	<query id="updateBsdPayDetailsOnTsIdDML">
+		<title>Update Bsd payment on td id</title>
+		<content>
+			UPDATE ltr_trn_details 
+			SET  TRAN_SUMMARY_ID=':tsId',CUSTOMER_ID=':custId', SCHEME_ID=':schmId', EMPLOYEE_ID=':empId',
+			PAYMENT_AMOUNT=:amount , VOUCHER_NO=':vchrNo', TRANSACTION_DATE=':dt', CUSTOM_COMMENT1=':nm', CUSTOM_COMMENT2=':sx'
+			WHERE TRAN_DETAILS_ID = ':tdId' AND STATUS='NORMAL' 
+		</content>
+		<params>
+			<param>:tsId</param>
+			<param>:custId</param>
+			<param>:empId</param>
+			<param>:schmId</param>
+			<param>:amount</param>
+			<param>:vchrNo</param>
+			<param>:dt</param>
+			<param>:nm</param>
+			<param>:sx</param>
+			<param>:tdId</param>
+		</params>
+	</query>
+
+	<query id="transactionChartQuery">
+		<title></title>
+		<content>
+			SELECT SUM(TOTAL_PAYMENT_PRINCIPAL) AS TOTAL_PAYMENT, SUM(TOTAL_RECEIPT_PRINCIPAL) AS TOTAL_RECEIVED FROM ltr_trn_summary AND STATUS='NORMAL'
+		</content>
+		<params>
+		</params>
+	</query>
+
+	<query id="cancelTrnSummaryDML">
+		<title>Cancel Transaction Information</title>
+		<content>
+			UPDATE ltr_trn_summary
+			SET STATUS='CANCEL'
+			WHERE TRAN_SUMMARY_ID IN ( :datas ) AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:datas</param>
+		</params>
+	</query>
+
+	<query id="cancelTrnSummaryOnTsId2DML">
+		<title>Cancel Transaction Information</title>
+		<content>
+			UPDATE ltr_trn_summary
+			SET STATUS='CANCEL'
+			WHERE TRAN_SUMMARY_ID = ':id' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="cancelTrnSummaryDetailsDML">
+		<title>Cancel Transaction Details on the basis of Transaction summary</title>
+		<content>
+			UPDATE ltr_trn_details
+			SET STATUS='CANCEL'
+			WHERE TRAN_SUMMARY_ID IN ( :datas ) AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:datas</param>
+		</params>
+	</query>
+
+	<query id="cancelTrnSummaryVoucherIdsDML">
+		<title>Cancel Voucher Nos of Transaction summary</title>
+		<content>
+			UPDATE ref_reference_info
+			SET STATUS='CANCEL'
+			WHERE REFERENCE_VALUE IN ( :data ) AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:data</param>
+		</params>
+	</query>
+
+	<query id="cancelTrnDetailsDML">
+		<title>Cancel Transaction Details </title>
+		<content>
+			UPDATE ltr_trn_details
+			SET STATUS='CANCEL'
+			WHERE TRAN_DETAILS_ID = ':tdId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:tdId</param>
+		</params>
+	</query>
+
+	<query id="SuggestEntityNameQuery">
+		<title>Suggest Entity Name</title>
+		<content>
+			SELECT NAME FROM ref_mst_entity WHERE NAME LIKE ':entNm%' AND STATUS='NORMAL'
+			LIMIT 10
+		</content>
+		<params>
+			<param>:entNm</param>
+		</params>
+	</query>
+
+	<query id="SuggestEmployeeQuery">
+		<title>Suggest Employee Info</title>
+		<content>
+			SELECT NAME,EMPLOYEE_ID FROM ref_mst_entity WHERE ENTITY_TYPE="COLLECTOR" AND NAME LIKE ':emp%'
+			OR EMPLOYEE_ID LIKE ':emp%'
+			AND STATUS='NORMAL'
+			LIMIT 10
+		</content>
+		<params>
+			<param>:emp</param>
+		</params>
+	</query>
+
+	<query id="SuggestCustomerQuery">
+		<title>Suggest Customer Info</title>
+		<content>
+			SELECT NAME,CUSTOMER_ID FROM ref_mst_entity WHERE ENTITY_TYPE="Customer" AND NAME LIKE ':cust%'
+			OR CUSTOMER_ID LIKE ':cust%' AND STATUS='NORMAL'
+			LIMIT 10
+		</content>
+		<params>
+			<param>:cust</param>
+		</params>
+	</query>
+
+	<query id="SuggestAllIdQuery">
+		<title>Suggest All Ids</title>
+		<content>
+			SELECT CUSTOMER_ID AS "ID" FROM ref_mst_entity WHERE ENTITY_TYPE="Customer" AND CUSTOMER_ID 
+			LIKE ':id%' AND STATUS='NORMAL' UNION 
+            SELECT EMPLOYEE_ID AS "ID" FROM ref_mst_entity WHERE ENTITY_TYPE="COLLECTOR" AND EMPLOYEE_ID 
+			LIKE ':id%' AND STATUS='NORMAL' UNION
+			SELECT TRAN_SUMMARY_ID AS "ID" FROM ltr_trn_summary WHERE TRAN_SUMMARY_ID 
+			LIKE ':id%' AND STATUS='NORMAL' UNION
+            SELECT SCHEME_ID AS "ID" FROM ref_mst_scheme WHERE SCHEME_ID 
+			LIKE ':id%' AND STATUS='NORMAL'
+			LIMIT 10
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="SuggestSchemeQuery">
+		<title>Scheme Information</title>
+		<content>
+			SELECT SCHEME_ID,SCHEME_NAME,SCHEME_AMT_LIMIT FROM ref_mst_scheme WHERE SCHEME_NAME LIKE '%:schmNm%'
+			AND STATUS='NORMAL'
+			LIMIT 10
+		</content>
+		<params>
+			<param>:schmNm</param>
+		</params>
+	</query>
+
+	<query id="SuggestCustOnEmpQuery">
+		<title>Suggest Customer Id and Name basis on Employee</title>
+		<content>
+			SELECT DISTINCT(MstE.CUSTOMER_ID), MstE.NAME
+			FROM ref_mst_entity as MstE, ltr_trn_summary as MstTrnS
+			WHERE  MstE.CUSTOMER_ID=MstTrnS.CUSTOMER_ID AND MstTrnS.EMPLOYEE_ID=':empId' 
+			AND MstE.NAME LIKE ':custNm%'  AND MstE.STATUS='NORMAL'
+			LIMIT 10
+		</content>
+		<params>
+			<param>:empId</param>
+			<param>:custNm</param>
+		</params>
+	</query>
+
+	<query id="SuggestTrnsOnCustQuery">
+		<title>Suggest Transaction Id and Scheme Name Basis on Customer</title>
+		<content>
+			SELECT MstTrnS.TRAN_SUMMARY_ID, MstS.SCHEME_NAME
+			FROM ref_mst_scheme as MstS, ltr_trn_summary as MstTrnS
+			WHERE  MstS.SCHEME_ID=MstTrnS.SCHEME_ID AND MstTrnS.CUSTOMER_ID=':custId'
+			AND MstS.SCHEME_NAME LIKE ':schmNm%' AND MstE.STATUS='NORMAL'
+			LIMIT 10
+		</content>
+		<params>
+			<param>:custId</param>
+			<param>:schmNm</param>
+		</params>
+	</query>
+
+	<query id="transDtlForXlsQuery">
+		<title>All Transaction Details</title>
+		<content>
+			SELECT Dtl.EMPLOYEE_ID, Dtl.CUSTOMER_ID, Dtl.SCHEME_ID, IF(Dtl.PAYMENT_AMOUNT=0,'',Dtl.PAYMENT_AMOUNT) AS PAYMENT_AMOUNT
+			 , Dtl.PAYMENT_TYPE, IF(Dtl.RECEIPT_AMOUNT=0,'',Dtl.RECEIPT_AMOUNT) AS RECEIPT_AMOUNT, 
+			Dtl.RECEIPT_TYPE, Dtl.TRANSACTION_DATE, 
+			Dtl.VOUCHER_NO, Dtl.MEMO_NO
+			FROM ltr_trn_details AS Dtl
+			WHERE Dtl.CUSTOMER_ID LIKE ':custId%' AND Dtl.EMPLOYEE_ID LIKE ':empId%' 
+			AND Dtl.SCHEME_ID LIKE ':schmId%'
+			ORDER BY Dtl.TRANSACTION_DATE
+			LIMIT :start, :rows
+		</content>
+		<params>
+			<param>:custId</param>
+			<param>:empId</param>
+			<param>:schmId</param>
+			<param>:start</param>
+			<param>:rows</param>
+		</params>
+	</query>
+
+</querylibrary>

@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="gndrPymtRecMis">
+     <title>Gender Wise Payment Receipt</title>
+     <result>
+		<externalTableFormat>y</externalTableFormat>
+         <tableheader>
+			 <label>Gender</label>
+			 <label>Total Beneficiary</label>
+			 <label>Total Loan</label>
+			 <label>Total Receipt</label>
+			 <label>Total Donation</label>
+			 <label>Total BSD Receipt</label>
+			 <label>Total BSD Paid</label>
+         </tableheader>
+
+         <queryheader>
+             <item>SEX</item>
+             <item>TOTAL_CUSTOMER</item>
+             <item>LOAN</item>
+			 <item>RECEIPT</item>
+			 <item>DONATION</item>
+			 <item>BSD_RECEIPT</item>
+			 <item>BSD_PAID</item>
+         </queryheader>
+
+         <sqlcontent>
+            SELECT 
+			IF(ent.SEX='M',ent.SEX,'F') AS SEX, COUNT(smry.CUSTOMER_ID) AS TOTAL_CUSTOMER, 
+			SUM(TOTAL_PAYMENT_PRINCIPAL) AS LOAN, SUM(TOTAL_RECEIPT_PRINCIPAL) AS RECEIPT, 
+			SUM(TOTAL_RECEIPT_DONATION) AS DONATION, SUM(TOTAL_RECEIPT_SECURITY_DEPOSITE) AS BSD_RECEIPT,
+			SUM(TOTAL_PAYMENT_SECURITY_DEPOSITE) AS BSD_PAID
+			FROM ltr_trn_summary AS smry,ref_mst_entity  AS ent
+			WHERE smry.STATUS='NORMAL' AND ent.ENTITY_ID=smry.CUSTOMER_ID
+			GROUP BY SEX
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+               
+			  <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>gender</name>
+                 <columnvalue>SEX</columnvalue>
+				 <conditiontype>@EQUAL@</conditiontype>
+                 <label>Gender</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>RADIO</displaytype>
+				 <sqlbundle>
+					<sqlcontent>
+						SELECT VALUE_ID,VALUE_NAME FROM ref_sta_key_value
+						WHERE KEY_ID ='Gender'
+					</sqlcontent>
+					<label>VALUE_NAME</label>
+					<value>VALUE_ID</value>
+				 </sqlbundle>
+             </searchitem>
+
+
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

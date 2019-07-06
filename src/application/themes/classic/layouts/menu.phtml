@@ -1,0 +1,36 @@
+<div id="menu">
+<ul class="menu">
+<?php
+if($_SESSION['menu']['objmenu']){
+	foreach($_SESSION['menu']['objmenu'] as $val)
+	{ 
+		echo "<li><a href='".$val['URL']."'><span>".$val['RESOURCE']."</span></a>";
+		createUl($val);	
+		echo "</li>";
+	}
+}else{
+echo '<div style="color:#fff;padding-top:10px;font-weight:bold;">No menu selected for this user role.</div>';
+}
+
+?>
+</ul>
+</div>
+<?php
+function createUl($val)
+{
+	if( !empty($val['CHILD']) )
+	{
+		echo "<ul>";
+		  foreach($val['CHILD'] as $value )
+		  {
+			$class=null;
+			if( !empty($value['CHILD']) )
+			 $class='class="parent"';
+			echo '<li><a href="'.$value['URL'].'" '.$class.'><span>'.$value['RESOURCE']."</span></a>";
+			createUl($value);
+			echo "</li>";
+		  }
+		echo "</ul>";
+	}  
+}
+?>

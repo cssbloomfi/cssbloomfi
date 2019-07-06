@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="Customer">
+     <title>Beneficiary wise Report</title>
+     <result>
+
+		 <tableformat>
+			<row>
+				 <tableheader>
+					<label>Name</label>
+					<label>Beneficiary Code</label>
+					<label>Address</label>
+				 </tableheader>
+			</row>
+			<row>
+				 <tableheader>
+
+					<label>Entry Date</label>
+					<label>Description</label>
+				 </tableheader>
+			</row>
+			<row>
+				 <tableheader>
+					<label>Gender</label>
+					<label>Location Id</label>
+
+				 </tableheader>
+			</row>
+		 </tableformat>
+
+		 <queryheader>
+				 <item>ENTITY_NAME</item>
+				 <item>ENTITY_ID</item>
+				 <item>ADDRESS_ID</item>
+				 <item>SEX</item>
+				 <item>LOCATION_ID</item>
+				 <item>CUSTOMER_ENTRY_DATE</item>
+				 <item>ENTITY_DESC</item>
+		</queryheader>
+
+
+         <sqlcontent>
+            SELECT
+			ENTITY_ID , PARENT_ENTITY_ID EMPLOYEE_CODE,ENTITY_NAME, SEX,LOCATION_ID,AGE,ADDRESS_ID,
+			CUSTOMER_ENTRY_DATE, ENTITY_DESC
+			FROM ref_mst_entity
+			WHERE ENTITY_TYPE = 'Customer'
+         </sqlcontent>
+
+         <orderby>
+			 <itemgroup>
+				<item>ENTITY_ID</item>
+				<type>DESC</type>
+			 </itemgroup>
+         </orderby>
+
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+
+             <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>entityid</name>
+				 <class>customer_id</class>
+                 <columnvalue>ENTITY_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Beneficiary Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+            
+            <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>entityname</name>
+				 <class>customer_name</class>
+                 <columnvalue>ENTITY_NAME</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Beneficiary Name</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <isdisplay>Y</isdisplay>
+                 <order>3</order>
+                 <displaytype>BLANK</displaytype>
+             </searchitem>
+
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>5</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

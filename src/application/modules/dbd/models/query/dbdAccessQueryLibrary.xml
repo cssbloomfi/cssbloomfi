@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+  <querylibrary>
+
+    <query id="customerEntryMonthWise">
+     <title>No of customer entry month wise</title>
+     <content>
+		SELECT COUNT(CUSTOMER_ID) AS CUSTOMERS, MONTH(CUSTOMER_ENTRY_DATE) AS MONTH FROM ref_mst_entity
+		WHERE ENTITY_TYPE='Customer' AND (SELECT YEAR(CURRENT_DATE))=(SELECT YEAR(CUSTOMER_ENTRY_DATE))
+		GROUP BY MONTH (CUSTOMER_ENTRY_DATE)
+     </content>
+   </query>
+
+  </querylibrary> 

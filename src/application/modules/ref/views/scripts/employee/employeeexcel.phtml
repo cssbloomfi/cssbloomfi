@@ -1,0 +1,11 @@
+<?php
+$header=array($this->employeeHeader['id'],$this->employeeHeader['name'],$this->employeeHeader['age'],
+$this->employeeHeader['sex'],$this->employeeHeader['addr'],$this->employeeHeader['description'],
+$this->employeeHeader['joindt'],$this->employeeHeader['designation'] );
+
+$columns=array('EMPLOYEE_ID','NAME','AGE','SEX','ADDRESS','ENTITY_DESC','EMPLOYEE_JOIN_DATE',
+'EMPLOYEE_DESIGNATION');
+
+$filename="employee_".$this->fileno;
+$this->createExcelReport($filename,$header,$this->xlsResult,$columns);
+?>

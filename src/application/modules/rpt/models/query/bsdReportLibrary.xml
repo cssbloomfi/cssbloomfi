@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="bsd">
+     <title>BSD Report</title>
+     <result>
+         <tableheader>
+            <label>Collector Code</label>
+            <label>Project</label>
+			<label>Beneficiary</label>
+			<label>Loan</label>
+			<label>Outstanding</label>
+			<label>BSD Paid</label>
+			<label>Loan Starting Date</label>
+			<label>BSD Receipt</label>
+			<label>BSD Receipt Date</label>
+			<label>Loan Closing Date</label>
+			<label>BSD Status</label>
+         </tableheader>
+
+         <queryheader>
+             <item>EMPLOYEE_ID</item>
+             <item>SCHEME_ID</item>
+             <item>CUSTOMER</item>
+             <item>LOAN</item>
+			 <item>OUTSTANDING</item>
+			 <item>BSD_PAID</item>
+			 <item>LOAN_STARTING_DATE</item>
+			 <item>BSD_RECEIPT</item>
+			 <item>BSD_RECEIPT_DATE</item>
+			 <item>LOAN_CLOSING_DATE</item>
+			 <item>BSD_STATUS</item>
+         </queryheader>
+
+         <sqlcontent>
+            SELECT EMPLOYEE_ID, SCHEME_ID, CONCAT(CUSTOMER_ID,'/',
+			IF(CUSTOM_COMMENT1 IS NULL,'',CUSTOM_COMMENT1)) AS CUSTOMER,
+			IF(PAYMENT_AMOUNT IS NOT NULL OR PAYMENT_TYPE='CAPITAL_PAID',PAYMENT_AMOUNT,0) AS LOAN,
+			(PAYMENT_AMOUNT-SUM(IF(RECEIPT_AMOUNT IS NOT NULL OR RECEIPT_TYPE='CAPITAL RECEIVED',RECEIPT_AMOUNT,0)) ) 
+			AS OUTSTANDING, IF(PAYMENT_TYPE='BSD_PAID',PAYMENT_AMOUNT,0) AS BSD_PAID ,
+			IF(PAYMENT_AMOUNT IS NOT NULL OR PAYMENT_TYPE='CAPITAL_PAID',TRANSACTION_DATE,'') AS LOAN_STARTING_DATE,
+			SUM(IF(RECEIPT_TYPE='BSD_RECEIVED',RECEIPT_AMOUNT,0)) AS BSD_RECEIPT,
+			GROUP_CONCAT(IF(RECEIPT_AMOUNT IS NOT NULL OR RECEIPT_TYPE='CAPITAL RECEIVED',TRANSACTION_DATE,'')
+			SEPARATOR ' @HTML:BR@ ') AS BSD_RECEIPT_DATE, IF(PAYMENT_TYPE='BSD_PAID',TRANSACTION_DATE,'') AS LOAN_CLOSING_DATE,
+			IF(PAYMENT_TYPE='BSD_PAID','PAID','NOT PAID') AS BSD_STATUS
+			FROM ltr_trn_details 
+			WHERE STATUS='NORMAL'
+			GROUP BY TRAN_SUMMARY_ID
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+            
+            <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>empid</name>
+				 <class>employee_id</class>
+                 <columnvalue>EMPLOYEE_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Collector Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>schmid</name>
+				 <class>scheme_id</class>
+                 <columnvalue>SCHEME_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Project</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			  <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>bsdstatus</name>
+                 <columnvalue>BSD_STATUS</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>BSD Status</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>3</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>4</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

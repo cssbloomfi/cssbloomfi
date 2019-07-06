@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="furecdate">
+     <title>Future recept date entry report</title>
+     <result>
+         <tableheader>
+            <label>Beneficiary Code</label>
+            <label>Project</label>
+			<label>Collector Code</label>
+			<label>Recept Amount</label>
+			<label>Recept type</label>
+			<label>Date</label>
+         </tableheader>
+
+         <queryheader>
+             <item>CUSTOMER_ID</item>
+             <item>SCHEME_ID</item>
+             <item>EMPLOYEE_ID</item>
+             <item>RECEIPT_AMOUNT</item>
+			 <item>RECEIPT_TYPE</item>
+			 <item>TRANSACTION_DATE</item>
+         </queryheader>
+
+         <sqlcontent>
+            select CUSTOMER_ID, SCHEME_ID, EMPLOYEE_ID, RECEIPT_AMOUNT, RECEIPT_TYPE, TRANSACTION_DATE
+			from ltr_trn_details 
+			where STATUS='NORMAL' and TRANSACTION_DATE>current_date and RECEIPT_AMOUNT!=null
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+
+			<searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>custid</name>
+				 <class>customer_id</class>
+                 <columnvalue>CUSTOMER_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Beneficiary Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+            
+            <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>empid</name>
+				 <class>employee_id</class>
+                 <columnvalue>EMPLOYEE_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Collector Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>schmid</name>
+				 <class>scheme_id</class>
+                 <columnvalue>SCHEME_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Project</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>3</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>4</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

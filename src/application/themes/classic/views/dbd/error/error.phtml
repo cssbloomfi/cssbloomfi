@@ -1,0 +1,30 @@
+<?php
+
+if ( $this->error_level_1 == 1 ){
+  echo '<br>';
+  echo '<div class="dbd-error">';	
+  echo '<img src="/../images/icons/Symbol-Error.png" class="symbol-error"><h2>'.$this->error_message ."</h2>";
+  echo '</div>';
+  echo '<br>';  }
+if ( $this->error_level_2 == 1 ){
+  echo '<br><br>';
+  echo "<h2>Error for developers ( Level - 2 ) </h2>";
+  echo "<pre style='font-family:courier;font-size:8pt;'>----------------------------------</pre><br>";
+  echo $this->error_detail_message;
+  echo '<br><br><br><br>';  }
+if ( $this->error_level_3 == 1 ){
+  echo "<div class='dbd-error-message'>";
+	echo '<br>';
+	  echo "<h2>Error for developers ( Level - 3 ) </h2>";
+	echo "<pre style='font-family:courier;font-size:8pt;'>----------------------------------\n";
+	//echo count($this->content);
+	print_r($this->error->exception);
+	print_r($this->content);
+	print $this->traceAsString;
+	echo "</pre>";
+	echo '<br>';  
+  echo "</div>";	
+} 
+	
+?>
+

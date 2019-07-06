@@ -1,0 +1,184 @@
+<script type="text/javascript">
+  
+  function setActiveStatus(){
+      var selection = document.deleteForm.finactid;
+
+      for (i=0; i<selection.length; i++)
+	if (selection[i].checked == true){
+	    document.activeStatus.id.value=selection[i].value;
+	   // document.activeStatus.sparams.value=document.deleteForm.params.value;
+	    document.activeStatus.submit();
+	}
+    }
+  
+</script>
+<?php 
+$this->showXlsDownloadSection($this->xlsResults);
+
+if($this->textSuccess)
+{
+  echo "<div class='successbox'>";
+     $this->successMessage($this->textSuccess);
+  echo "</div>";
+}
+if( $this->textErrors )
+{ 
+  echo "<div class='errorbox'>";
+  	echo "<b>".$this->viewlabels['termination']."</b><br>";
+		$this->textMessage($this->textErrors);
+  echo '</div>';
+}
+?>
+
+<form name="activeStatus" method="post">
+  <input type="hidden" name="REQUEST" value="FinYearActivation">
+  <input type="hidden" name="id" value="">
+<?php if ( $this->srch ) {?>
+<input name="params" type="hidden" value="<?php echo $this->param[0].'/'.$this->param[1]; ?>" >
+<?php } 
+?>
+</form>
+
+<?php
+$script='<script type="text/javascript">
+    $().ready(function() {
+
+	$(".pick-date").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			dateFormat:"yy-mm-dd",
+			beforeShow: function() {$("#ui-datepicker-div").maxZIndex(); },
+			showOn: "button",
+			buttonImage: "/../images/icons/calendar.gif",
+			buttonImageOnly: true,
+			buttonText:"Date Picker"
+		});
+                });
+        </script>';
+echo $script;
+?>
+
+<div class="entry-section">
+<fieldset>
+<legend class="icon-div">
+	<img src="/../images/icons/search.png" class="icons" > 
+	<?php echo $this->labels['searchSectionHead']; ?>
+</legend>
+<div class="add-link-section">
+	<a href="/adm/finyear/addfinyear" class="btn add"><?php echo $this->labels['addYear']; ?></a>	
+</div>
+
+<div class="search-section">
+	<form method="post" autocomplete="off">
+	<input name="REQUEST" type="hidden" value="Search">
+	       <table class="zebra">
+			<tr> 
+				<td> <b><?php echo $this->escape($this->labels['startDt']); ?></b>  </td>
+				<td> <input type="text" name="param1" id="param1" value="" class="pick-date"/>  </td>
+			
+				<td> <b><?php echo $this->escape($this->labels['endDt']); ?></b>  </td>
+				<td> <input type="text" name="param2" id="param2" value="" class="pick-date"/>  </td>
+			</tr>
+			<tr> 
+				<td colspan=4> <input type="submit" value="<?php echo $this->labels['search']; ?>" id="submit_1"/>  </td> 
+			</tr>
+		</table>
+	</form>
+</div>
+
+</fieldset>
+</div>
+
+
+<fieldset>
+	<legend><?php /*echo $this->viewlabels['totalvaluepre'].'&nbsp;&nbsp; ' . $this->escape($this->totalCustomers).' '.$this->viewlabels['totalvaluepost']; */ ?></legend>
+<?php
+if($this->srch){
+$searchResultString=$this->searchString( array('param1'=>$this->param[0],'param2'=>$this->param[1]), array('param1'=>$this->labels['startDt'],'param2'=>$this->labels['endDt'])); ?>
+<div class="search-result-string"><img src="/../images/icons/searchresult.png" class="search-result-icons"  > <?= $searchResultString; ?></div>
+
+<?php
+  }
+  if($this->paginator['paginator'])
+  {
+?>
+
+
+<fieldset class="export_section">
+<legend><?= $this->viewlabels['excelExport'] ?></legend>
+<form method="POST">
+	<input name="searchparams" type="hidden" value="<?php echo $this->searchparams; ?>" >
+	<input name="arrayparams" type="hidden" value="<?php echo $this->arrayparams; ?>" >
+	<input name="search" type="hidden" value="<?= $this->srch; ?>" >
+	<input type="submit" id="xlss" name="export" value="" />
+</form>
+</fieldset>
+
+<?php
+$pagiParams=array('search'=>$this->srch);
+$pagiParams=array_merge($pagiParams,$this->paginationparams);
+?>
+<div class="pagination"><?php echo $this->paginationControl($this->paginator['paginator'],
+                                    'Sliding',
+                                    '/partials/my_pagination_control.phtml',
+				    $pagiParams); ?></div>
+<?php } ?>
+
+<form name="deleteForm" METHOD="POST" >
+<?php if ( $this->srch ) {?>
+<input name="params" type="hidden" value="<?php echo $this->param[0].'/'.$this->param[1]; ?>" >
+<?php } 
+?>
+<input name="REQUEST" type="hidden" value="Delete"> 
+<?php
+	 $table_head = '<table class="zebra"> <tr>
+			    <th>'.$this->labels['id'].'</th>
+			    <th>'.$this->labels['startDate'].'</th>
+			    <th>'.$this->labels['endDate']."</th>
+			    <th>".$this->labels['desc']."</th>
+			    <th>".$this->labels['status']."</th>
+			    <th>".$this->labels['edit']."</th>
+			     <th><input type='button' name='active' value='' id='act_icon' onclick='setActiveStatus();'>".$this->labels['active']."</th>
+			    <th>".'<input type="checkbox" name="checkall" value=0 onclick="SetAllCheckBoxes'."('deleteForm','finid','checkall')".';"/><input type="submit" class="delete" name="delete" id="delete_icon" value="">'.$this->labels['delete'].'</th>
+			</tr> ';
+
+	echo $table_head;
+
+	if ($this->paginator['data']): 
+	$i=0;
+	foreach ($this->paginator['data'] as $row): 	
+		echo "<tr>";
+		echo "<td>$row->ID</td>";
+		echo "<td>$row->START_DATE</td>";
+		echo "<td>$row->END_DATE</td>";
+		echo "<td>$row->DESCRIPTION</td>";
+		echo "<td>$row->ACTIVE_STATUS</td>";
+		echo '<td class="ct"><a href="/adm/finyear/editfinyear/id/'.$row->ID.'" id="edit_icon"></a></td>';
+		$checked=null;
+		if($row->ACTIVE_STATUS=='ACTIVE') $checked='checked';
+		echo '<td class="ct"><input type="radio" name="finactid" id="finactid"  value="'.$row->ID.'"  '.$checked.'/></td>';
+		echo '<td class="ct"><input type="checkbox" name="finid['.$i.']" id="finid"  value="'.$row->ID.'" /></td>';
+		echo "</tr>";
+		$i++;   
+	endforeach; 
+	endif; 
+
+?>
+</table>
+<input type="hidden" name="ttlfields" id="ttlfields" value="<?= $i;?>">
+
+</form>
+
+<?php  
+if($this->paginator['paginator'])
+{
+?>
+<div class="pagination"><?php echo $this->paginationControl($this->paginator['paginator'],
+                                    'Sliding',
+                                    '/partials/my_pagination_control.phtml',
+				    array('search'=>$this->srch,'param1'=>$this->param1,'param2'=>$this->param2)); ?></div>
+</div>
+<?php } ?>
+
+</fieldset>
+

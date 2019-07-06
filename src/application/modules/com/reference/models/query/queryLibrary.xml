@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<querylibrary>
+
+	<query id='totalCustQuery'>
+	  <title>Total Beneficiary</title>
+		<content>
+			SELECT COUNT(ENTITY_ID) AS TOTAL_CUSTOMER
+			FROM ref_mst_entity
+			WHERE ENTITY_TYPE='Customer' AND STATUS='NORMAL' 
+		</content>  
+	</query>
+
+	<query id='totalSchmQuery'>
+	  <title>Total Project</title>
+	    <content>
+			SELECT COUNT(SCHEME_ID) AS TOTAL_SCHEME
+			FROM ref_mst_scheme
+			WHERE STATUS='NORMAL'
+		</content>
+	</query>
+
+	<query id='totalCollQuery'>
+	  <title>Total Collector</title>
+	    <content>
+			SELECT COUNT(ENTITY_ID) AS TOTAL_COLLECTOR
+			FROM ref_mst_collector
+			WHERE STATUS='NORMAL'
+		</content>
+	</query>
+
+	<query id='totalLocQuery'>
+	  <title>Total Location</title>
+	    <content>
+			SELECT COUNT(LOCATION_ID) AS TOTAL_LOCATION
+			FROM ref_mst_location 
+			WHERE STATUS='NORMAL'
+		</content>
+	</query>
+
+</querylibrary>

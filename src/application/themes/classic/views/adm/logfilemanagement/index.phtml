@@ -1,0 +1,51 @@
+<script type="text/javascript">
+	$(function() {
+		$("#accordion").accordion({
+			
+			active: false,
+			alwaysOpen: false,
+			collapsible: true,
+		});
+	});
+</script>
+
+<script>
+$( function(){ 
+$("table.zebra tr:even").addClass("even"); 
+$("table.zebra tr:odd").addClass("odd"); 
+});
+</script>
+
+
+<div class="left-section-1">
+
+	<div id="accordion" style="height:365px;">
+		<h3><img src="<?= $this->images['appLog']; ?>" class="bar-icons" ><a href="#">Application Log Section</a></h3>
+		<div>
+			 <table class="zebra">
+			 <tr>
+				<th width=20%><?php echo "File Id"; ?></th>
+				<th width=30%><?php echo "Access Time"; ?></th>
+				<th><?php echo "Log File"; ?></th>
+			 </tr>
+			 </table>
+			 <div class="table-fix-area">
+			 <table class="zebra">
+				<?php
+				$id=1;
+				if($this->applicationLogs){
+				foreach($this->applicationLogs as $key => $file){
+				 echo '<tr>';
+				 echo '<td width=21% class="ct">'.$id.'</td><td width=31%>'.$file['lstatime'].'</td>';
+				 echo '<td><a href="/tmp/logs/'.$file['filename'].'" target="_blank">'.$file['filename'].'</a></td>';
+				 echo '</tr>';
+				 $id++;
+				}}
+
+				?>
+			  </table>
+			</div>
+		</div>
+	</div>
+
+</div>

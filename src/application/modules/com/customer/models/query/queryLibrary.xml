@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<querylibrary>
+
+	<query id="monthwiseCustomerOfYearQuery">
+		<title>Month-wise customer entry of current year</title>
+		<content>
+			SELECT  MONTHNAME(a.CUSTOMER_ENTRY_DATE) as MONTH,  
+			cast( YEAR(a.CUSTOMER_ENTRY_DATE) as CHAR(5) ) as YEAR, count(a.ID) as CUSTOMERS, 
+			date(concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) as 'YEAR_START_DATE',
+			date(concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY)) as 'YEAR_END_DATE'
+			from ref_mst_entity as a 
+			join ( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as b
+			where a.STATUS='NORMAL' and b.ACTIVE_STATUS='ACTIVE' and 
+			a.CUSTOMER_ENTRY_DATE @GTEQ@ date(concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) and 
+			a.CUSTOMER_ENTRY_DATE @LTEQ@ date(concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY))
+			and UPPER(ENTITY_TYPE)='CUSTOMER'
+			group by MONTH, YEAR
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="schemewiseCustPaymentOfYearQuery">
+		<title>Scheme-wise customer payment of current year</title>
+		<content>
+			select COUNT(a.CUSTOMER_ID) as :value , a.SCHEME_ID as :label,  date(concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) as 'YEAR_START_DATE',
+			date(concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY)) as 'YEAR_END_DATE'
+			from ltr_trn_summary as a
+			join 
+			( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as b
+			where a.START_DATE@GTEQ@date(concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) and 
+			a.START_DATE@LTEQ@date(concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY))
+			and a.STATUS='NORMAL' and b.ACTIVE_STATUS='ACTIVE'
+			group by :label
+			order by :value desc
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="weekwiseCustPaymentOfYearQuery">
+		<title>Week-wise customer payment of current year</title>
+		<content>
+			SELECT COUNT(CUSTOMER_ID) AS CUSTOMERS, 
+			START_DATE
+			FROM ltr_trn_summary 
+			WHERE WEEK(current_date)=WEEK(START_DATE) AND STATUS='NORMAL'
+			GROUP BY START_DATE
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="totalCustomerPerOfficerQuery">
+		<title>Total customer per officer</title>
+		<content>
+			SELECT IFNULL(PARENT_ENTITY_ID,'#NO AGENT') AS ':label', 
+		    COUNT(ID) AS ':value' 
+			FROM ref_mst_entity
+			WHERE STATUS='NORMAL'
+			AND UPPER(ENTITY_TYPE) = 'Customer' 
+			GROUP BY IFNULL(PARENT_ENTITY_ID,'#NO AGENT')
+			ORDER BY 1
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="totalCustomerPerLocationQuery">
+		<title>Total customer per location</title>
+		<content>
+			SELECT IFNULL(LOCATION_ID,'#NO LOCATION') AS ':label', 
+			COUNT(ID) AS ':value' 
+			FROM ref_mst_entity
+			WHERE STATUS='NORMAL'
+			AND UPPER(ENTITY_TYPE) = 'CUSTOMER'
+			GROUP BY IFNULL(LOCATION_ID,'#NO LOCATION')
+			ORDER BY ':value'
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="totalCustVsPaymntDisburseQuery">
+		<title>Total customer vs payment disburse</title>
+		<content>
+			SELECT 'TOTAL BENEFICIARY' AS ':label', 
+			COUNT(ID) AS ':value' 
+			FROM ref_mst_entity
+			WHERE STATUS='NORMAL'
+			AND UPPER(ENTITY_TYPE) = 'CUSTOMER'
+			GROUP BY STATUS
+			UNION
+			SELECT  CUSTOMER , SUM(TOTAL) TOTAL
+			FROM (
+			SELECT 'BENEFICIARY PAYMENT GIVEN' AS CUSTOMER,1 AS TOTAL 
+			FROM ltr_trn_details
+			WHERE PAYMENT_TYPE = 'CAPITAL_PAID' 
+			AND STATUS='NORMAL'
+			GROUP BY CUSTOMER_ID
+			) outer_table
+			GROUP BY  CUSTOMER , TOTAL
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id='totalCustomerQuery'>
+	  <title>Customer Info</title>
+		<content>
+			SELECT COUNT(ENTITY_ID) AS TOTAL_CUSTOMER 
+			FROM ref_mst_entity
+			WHERE ENTITY_TYPE='Customer' AND STATUS='NORMAL'
+		</content>
+	</query>
+
+	<query id='totalLoanCustomerQuery'>
+	  <title>Loan Customer Info</title>
+		<content>
+			SELECT COUNT(ID) AS TOTAL_LOAN_CUSTOMER 
+			FROM ltr_trn_summary
+			WHERE STATUS='NORMAL' AND ACTIVE_STATUS='OPEN'
+		</content>
+	</query>
+
+	<query id="colDuePymtQuery">
+		<title>Total due for each collector</title>
+			<content>
+				SELECT SUM(TOTAL_RECEIPT_DUE_PRINCIPAL) AS :value ,EMPLOYEE_ID AS :label
+				FROM ltr_trn_summary 
+				WHERE STATUS='NORMAL'
+				GROUP BY EMPLOYEE_ID
+			</content>
+			<params>
+				<param>:label</param>
+				<param>:value</param>
+			</params>
+	</query>
+
+	<query id="schmWiseTotalCustCurrentYear">
+		<title>Scheme wise total customer</title>
+			<content>
+				select a.SCHEME_ID as :label, count(a.CUSTOMER_ID) as :value, date(concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) as 'YEAR_START_DATE',
+				date(concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY)) as 'YEAR_END_DATE'
+				from ltr_trn_summary as a 
+				join ( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as b
+				where a.STATUS='NORMAL' and b.ACTIVE_STATUS='ACTIVE' and 
+				a.START_DATE@GTEQ@date(concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) and 
+				a.START_DATE@LTEQ@date(concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY))
+				group by :label
+				order by :value desc 
+
+			</content>
+			<params>
+				<param>:label</param>
+				<param>:value</param>
+			</params>
+	</query>
+
+
+</querylibrary>

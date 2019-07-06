@@ -1,0 +1,128 @@
+
+
+<?php
+if(isset($this->tableFormatInfo['css'])) echo $this->tableFormatInfo['css'];
+if(isset($this->tableFormatInfo['js'])) echo $this->tableFormatInfo['js'];
+?>
+<h2><?php echo $this->heading; ?></h2>
+<?php
+require_once(ROOT_DIR.'/application/modules/rpt/views/scripts/helpers/reporthelper.js');
+
+$format=new Bloomfi_NumericFormat;
+
+$this->showXlsDownloadSection($this->xlsResults);
+if($this->form){
+?>
+
+<div class="entry-section">
+	<fieldset>
+		<legend class="icon-div">
+			<img src="<?= $this->images['search']; ?>" class="icons" >
+			Search
+		</legend>
+		<div class="search-section">
+			<?= $this->form; ?>
+		</div>
+	</fieldset>
+</div>
+
+<?php } ?>
+
+<fieldset>
+
+<?php if($this->paginator['data']){ ?>
+	<fieldset class="export_section">
+		<legend>Export</legend>
+		<?=  $this->xlsExportForm; ?>
+	</fieldset>
+<?php
+}
+if($this->srch){
+$searchResultString=$this->searchString($this->sparams, $this->slabels); ?>
+<div class="search-result-string"><img src="<?= $this->images['searchResult']; ?> class="search-result-icons"  > <?= $searchResultString; ?></div>
+<?php
+}
+$params=$this->pagiParams['pagination_params'];
+if($this->paginator['data']){
+?>
+	<div class="pagination"><?php echo $this->paginationControl($this->paginator['paginator'],
+										'Sliding',
+										'/partials/my_pagination_control.phtml', $params ); ?></div>
+<?php } ?>
+				
+<table class="zebra">
+	<tr>
+		<th>Column Name</th>
+		<th>Customer Code</th>
+		<th>Location Code</th>
+		<th>Gender</th>
+		<th>Payment Outstanding</th>
+		<th>Payment Current</th>
+		<th>Receipt</th>
+		<th>Due</th>
+		<th>Donation</th>
+		<th>BSD Pay</th>
+		<th>BSD Rec</th>
+	</tr>
+
+<?php 
+if($this->paginator['data']){
+ foreach($this->paginator['data'] as $data)
+ {
+	
+	$style=NULL;
+
+	if($data->COLUMN_NAME=='GENDER LOCATION TOTAL')
+	{
+		$style='style="color:#EA0000;font-weight:bold;font-size:11px;"';
+	}elseif($data->COLUMN_NAME=='LOCATION TOTAL')
+	{
+		$style='style="background:#FFB7B3;color:#EA0000;font-weight:bold;font-size:11px;"';
+	}
+
+	echo "<tr>";
+		echo "<td $style>".$data->COLUMN_NAME."</td>";
+		echo "<td $style>".$data->CUSTOMER_ID."</td>";
+		echo "<td $style>".$data->LOCATION_ID."</td>";
+		echo "<td $style>".$data->SEX."</td>";
+		echo "<td $style>".$format->numFormat($data->PAYMENT_OUTSTANDING)."</td>";
+		echo "<td $style>".$format->numFormat($data->PAYMENT)."</td>";
+		echo "<td $style>".$format->numFormat($data->TOTAL_RECEIPT)."</td>";
+		echo "<td $style>".$format->numFormat($data->TOTAL_DUE)."</td>";
+		echo "<td $style>".$format->numFormat($data->TOTAL_DONATION)."</td>";
+		echo "<td $style>".$format->numFormat($data->BSD_PAYMENT)."</td>";
+		echo "<td $style>".$format->numFormat($data->BSD_RECEIPT)."</td>";
+	echo "</tr>";	
+ }
+
+ if($_SESSION['SQL']['lastPage']==true)
+ {
+	$style1='style="background:#FFFF9F;color:#EA0000;font-weight:bold;font-size:11px;"';
+	echo "<tr>";
+		echo "<td $style1>".$this->footerSqlResult[0]->COLUMN_NAME."</td>";
+		echo "<td $style1>".$this->footerSqlResult[0]->CUSTOMER_ID."</td>";
+		echo "<td $style1>".$this->footerSqlResult[0]->LOCATION_ID."</td>";
+		echo "<td $style1>".$this->footerSqlResult[0]->SEX."</td>";
+		echo "<td $style1>".$format->numFormat($this->footerSqlResult[0]->PAYMENT_OUTSTANDING)."</td>";
+		echo "<td $style1>".$format->numFormat($this->footerSqlResult[0]->PAYMENT)."</td>";
+		echo "<td $style1>".$format->numFormat($this->footerSqlResult[0]->TOTAL_RECEIPT)."</td>";
+		echo "<td $style1>".$format->numFormat($this->footerSqlResult[0]->TOTAL_DUE)."</td>";
+		echo "<td $style1>".$format->numFormat($this->footerSqlResult[0]->TOTAL_DONATION)."</td>";
+		echo "<td $style1>".$format->numFormat($this->footerSqlResult[0]->BSD_PAYMENT)."</td>";
+		echo "<td $style1>".$format->numFormat($this->footerSqlResult[0]->BSD_RECEIPT)."</td>";
+	echo "</tr>";	
+ }
+}
+?>
+
+</table>
+
+<?php
+if($this->paginator['data']){ ?>
+	<div class="pagination"><?php echo $this->paginationControl($this->paginator['paginator'],
+										'Sliding',
+										'/partials/my_pagination_control.phtml', $params ); ?></div>
+<?php }?>
+</fieldset>
+
+

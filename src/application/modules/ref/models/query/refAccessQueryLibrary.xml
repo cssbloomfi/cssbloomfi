@@ -1,0 +1,1595 @@
+<?xml version="1.0"?>
+
+<querylibrary>
+
+	<query id="StartTransaction">
+		<title>Start Transaction</title>
+		<content>
+			START TRANSACTION
+		</content>
+	</query>
+
+	<query id="SavepointTransaction">
+		<title>Savepoint Transaction</title>
+		<content>
+			SAVEPOINT :savePoint
+		</content>
+		<params>
+			<param>:savePoint</param>
+		</params>
+	</query>
+
+	<query id="CommitTransaction">
+		<title>Commit Transaction</title>
+		<content>
+			COMMIT
+		</content>
+	</query>
+
+	<query id="RollbackTransaction">
+		<title>Rollback Transaction</title>
+		<content>
+			ROLLBACK TO SAVEPOINT :savePoint
+		</content>
+		<params>
+			<param>:savePoint</param>
+		</params>
+	</query>
+
+	<query id="customerPrePostQuery">
+		<title>Prefix and postfix value of customer</title>
+		<content>
+			SELECT PREFIX_POSTFIX_ID, PREFIX_VALUE, FETCH_CONDITION
+			FROM ref_rul_prefix_postfix 
+			WHERE PREFIX_POSTFIX_ID = 'RULE2' AND STATUS='NORMAL'
+		</content>
+	</query>
+
+	<query id="employeePrePostQuery">
+		<title>Prefix and postfix value of employee</title>
+		<content>
+			SELECT PREFIX_POSTFIX_ID, PREFIX_VALUE, FETCH_CONDITION
+			FROM ref_rul_prefix_postfix 
+			WHERE PREFIX_POSTFIX_ID = 'RULE1' AND STATUS='NORMAL'
+		</content>
+	</query>
+
+	<query id="customerAgeLimitQuery">
+		<title>Age limit for customers</title>
+		<content>
+			SELECT KEY_ID, VALUE_ID, KEY_NAME, VALUE_NAME
+			FROM ref_sta_key_value WHERE KEY_ID='CustomerAgeLimit'
+		</content>
+	</query>
+
+	<query id="allSchemeTypesQuery">
+		<title>All Schemes types</title>
+		<content>
+			SELECT KEY_ID, VALUE_ID, KEY_NAME, VALUE_NAME
+			FROM ref_sta_key_value WHERE KEY_ID='SchemeType'
+		</content>
+	</query>
+
+	<query id="totalSchemeCustomerQuery">
+		<title>Total Scheme value</title>
+		<content>
+			SELECT COUNT(SCHEME_ID) AS 'TOTAL_SCHEME_CUSTOMER' FROM ref_mst_entity
+			WHERE SCHEME_ID = ':scheme' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:scheme</param>
+		</params>
+	</query>
+
+	<query id="isCustomerIdQuery">
+		<title>Get id of a customer id</title>
+		<content>
+			SELECT ID FROM ref_mst_entity
+			WHERE ENTITY_ID LIKE ':custId'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:custId</param>
+		</params>
+	</query>
+
+	<query id="isCustomerIdExceptMeQuery">
+		<title>Get id of a customer id except me</title>
+		<content>
+			SELECT ID FROM ref_mst_entity
+			WHERE ENTITY_ID LIKE ':custId' AND ID @NOTEQ@ :id 
+			LIMIT 1
+		</content>
+		<params>
+			<param>:custId</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="isEmployeeIdQuery">
+		<title>Get id of a employee id</title>
+		<content>
+			SELECT ID FROM ref_mst_collector
+			WHERE ENTITY_ID LIKE ':empId' AND STATUS='NORMAL'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:empId</param>
+		</params>
+	</query>
+
+	<query id="isEmployeeIdExceptMeQuery">
+		<title>Get id of a employee id except me</title>
+		<content>
+			SELECT ID FROM ref_mst_collector
+			WHERE ENTITY_ID LIKE ':empId' AND ID @NOTEQ@ :id AND STATUS='NORMAL'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:empId</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="isSchemeIdQuery">
+		<title>Get id of a scheme id</title>
+		<content>
+			SELECT ID FROM ref_mst_scheme
+			WHERE SCHEME_ID LIKE ':schmId' AND STATUS='NORMAL'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:schmId</param>
+		</params>
+	</query>
+
+	<query id="isSchemeIdExceptMeQuery">
+		<title>Get id of a scheme id except me</title>
+		<content>
+			SELECT ID FROM ref_mst_scheme
+			WHERE SCHEME_ID LIKE ':schmId' AND ID @NOTEQ@ :id AND STATUS='NORMAL'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:schmId</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="isLocationIdQuery">
+		<title>Get id of a location id</title>
+		<content>
+			SELECT ID FROM ref_mst_location
+			WHERE LOCATION_ID LIKE ':locId' AND STATUS='NORMAL'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:locId</param>
+		</params>
+	</query>
+
+	<query id="isLocationIdExceptMeQuery">
+		<title>Get id of a location id</title>
+		<content>
+			SELECT ID FROM ref_mst_location
+			WHERE LOCATION_ID LIKE ':locId' AND ID @NOTEQ@ :id AND STATUS='NORMAL'
+			LIMIT 1
+		</content>
+		<params>
+			<param>:locId</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="customersIdListQuery">
+		<title>All Customer Ids on list</title>
+		<content>
+			SELECT MstE.ID 
+			FROM ref_mst_entity As MstE 
+			LEFT OUTER JOIN ref_mst_address As MstA 
+			ON MstA.ADDRESS_ID = MstE.ADDRESS_ID 
+			WHERE  MstE.ENTITY_TYPE = 'Customer' AND MstE.STATUS='NORMAL'
+			ORDER BY MstE.ID DESC LIMIT :start,:limit
+		</content>
+		<params>
+			<param>:start</param>
+			<param>:limit</param>
+		</params>
+	</query>
+
+	<query id="customerIdListBySrchQuery">
+		<title>All Customer Id By Searching on limits</title>
+		<content>
+			SELECT MstE.ID 
+			FROM ref_mst_entity As MstE 
+			INNER JOIN ref_mst_address As MstA 
+			ON MstE.ADDRESS_ID=MstA.ADDRESS_ID
+			LEFT OUTER JOIN (SELECT ENTITY_ID, NAME FROM ref_mst_collector where ENTITY_TYPE = 'COLLECTOR') AS MstEmp
+			ON MstE.PARENT_ENTITY_ID = MstEmp.ENTITY_ID 
+			LEFT OUTER JOIN (SELECT LOCATION_ID , LOCATION_NAME FROM ref_mst_location ) AS MstL
+			ON MstE.LOCATION_ID = MstL.LOCATION_ID 
+			WHERE  MstE.ENTITY_TYPE = 'Customer' AND MstE.STATUS='NORMAL' AND MstE.CUSTOMER_ID LIKE ':cId%'
+			AND MstE.NAME LIKE ':cNm%' AND IFNULL(MstE.AGE,40) BETWEEN :strtAge AND :endAge AND SEX LIKE ':sex%' 
+			AND IFNULL(CUSTOMER_ENTRY_DATE, CURDATE()) LIKE ':entryDt%' AND IFNULL(MstL.LOCATION_ID,'X') LIKE ':locId%'
+			LIMIT :start , :limit
+		</content>
+		<params>
+			<param>:cId</param>
+			<param>:cNm</param>
+			<param>:strtAge</param>
+			<param>:endAge</param>
+			<param>:sex</param>
+			<param>:entryDt</param>
+			<param>:locId</param>
+			<param>:start</param>
+			<param>:limit</param>
+		</params>
+	</query>
+
+	<query id="employeesIdListQuery">
+		<title>All Employees Ids on limits</title>
+		<content>
+			SELECT MstE.ID
+			FROM ref_mst_collector As MstE
+			LEFT OUTER JOIN ref_mst_address As MstA 
+			ON MstE.ADDRESS_ID=MstA.ADDRESS_ID 
+			WHERE MstE.ENTITY_TYPE = 'COLLECTOR' AND MstE.STATUS='NORMAL'
+			ORDER BY MstE.ID DESC
+			LIMIT :start,:limit
+		</content>
+		<params>
+			<param>:start</param>
+			<param>:limit</param>
+		</params>
+	</query>
+
+	<query id="employeeQuery">
+		<title>Employee entity id</title>
+		<content>
+			SELECT ID, ENTITY_ID FROM ref_mst_collector
+			WHERE ENTITY_TYPE = 'COLLECTOR' AND ENTITY_ID=':eId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:eId</param>
+		</params>
+	</query>
+
+	<query id="employeeLocationsQuery">
+		<title>Employee locations</title>
+		<content>
+			SELECT entloc.LOCATION_ID, loc.LOCATION_DESC AS LOCATION_DESC FROM ref_join_entity_location AS entloc
+			LEFT OUTER JOIN (SELECT LOCATION_ID,LOCATION_DESC FROM ref_mst_location) AS loc
+			ON entloc.LOCATION_ID = loc.LOCATION_ID
+			WHERE entloc.ENTITY_ID=':eId' AND entloc.STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:eId</param>
+		</params>
+	</query>
+
+	<query id="customerQuery">
+		<title>Customer entity id</title>
+		<content>
+			SELECT * FROM ref_mst_entity
+			WHERE ENTITY_TYPE='Customer' AND ENTITY_ID=':cId' 
+		</content>
+		<params>
+			<param>:cId</param>
+		</params>
+	</query>
+
+	<query id="isCustomerQuery">
+		<title>Customer entity id</title>
+		<content>
+			SELECT ID FROM ref_mst_entity
+			WHERE ENTITY_TYPE='Customer' AND CUSTOMER_ID=':cId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:cId</param>
+		</params>
+	</query>
+
+	<query id="schemeQuery">
+		<title>Scheme id</title>
+		<content>
+			SELECT ID, SCHEME_ID FROM ref_mst_scheme
+			WHERE SCHEME_ID =':schmId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:schmId</param>
+		</params>
+	</query>
+
+	<query id="schemeByNmQuery">
+		<title>Scheme Name</title>
+		<content>
+			SELECT ID, SCHEME_ID FROM ref_mst_scheme
+			WHERE  (SCHEME_NAME =':schmNm' OR SCHEME_ID = ':schmNm') AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:schmNm</param>
+		</params>
+	</query>
+
+
+	<query id="MasterLocationQuery">
+		<title>Master Locations</title>
+		<content>
+			SELECT  table1.ID, table1.LOCATION_ID, table1.PARENT_LOCATION_ID,
+			table1.ADDRESS_ID, table1.LOCATION_NAME, table2.LOCATION_NAME 'PARENT_LOCATION_NAME', 
+			table3.VALUE_NAME AS 'LOCATION_TYPE', table4.VALUE_NAME AS 'LOCATION_LEVEl'
+			FROM ref_mst_location AS table1
+			INNER JOIN (SELECT * FROM ref_mst_location WHERE STATUS='NORMAL' ) AS table2
+			ON table1.PARENT_LOCATION_ID = table2.LOCATION_ID
+			INNER JOIN (SELECT * FROM ref_sta_key_value WHERE KEY_ID='key2' AND STATUS='NORMAL') AS table3
+			ON table1.LOCATION_TYPE = table3.KEY_NAME
+			INNER JOIN (SELECT * FROM ref_sta_key_value WHERE KEY_ID='key1'AND STATUS='NORMAL') AS table4
+			ON table1.LOCATION_LEVEl = table4.KEY_NAME
+			WHERE table1.STATUS='NORMAL'
+			ORDER BY table1.ID ASC 
+			LIMIT :start, :rows
+		</content>
+		<params>
+			<param>:start</param>
+			<param>:rows</param>
+		</params>
+	</query>
+
+	<query id="MasterLocationByLocIdQuery">
+		<title>Master Locations</title>
+		<content>
+			SELECT table1.ID,table1.LOCATION_ID, table1.PARENT_LOCATION_ID,
+			table1.ADDRESS_ID, table1.LOCATION_DESC, table1.LOCATION_NAME, table2.LOCATION_NAME 'PARENT_LOCATION_NAME', table3.KEY_NAME AS 'LOCATION_TYPE', table4.VALUE_NAME AS
+			'LOCATION_LEVEl'
+			FROM ref_mst_location AS table1
+			INNER JOIN ref_mst_location AS table2
+			ON table1.PARENT_LOCATION_ID = table2.LOCATION_ID
+			INNER JOIN (SELECT * FROM ref_sta_key_value WHERE KEY_ID='key2' AND STATUS='NORMAL') AS table3
+			ON table1.LOCATION_TYPE = table3.KEY_NAME
+			INNER JOIN (SELECT * FROM ref_sta_key_value WHERE KEY_ID='key1' AND STATUS='NORMAL') AS table4
+			ON table1.LOCATION_LEVEl = table4.KEY_NAME
+			WHERE table1.LOCATION_ID = ':id' AND table1.STATUS='NORMAL'
+			ORDER BY table1.ID ASC 
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="locationInfobyIdQuery">
+		<title>Master Locations</title>
+		<content>
+			SELECT table1.ID, table1.LOCATION_ID, table1.PARENT_LOCATION_ID,
+			table1.ADDRESS_ID, table1.LOCATION_DESC, table1.LOCATION_NAME, table2.LOCATION_NAME 'PARENT_LOCATION_NAME', table3.KEY_NAME AS 'LOCATION_TYPE', table4.VALUE_NAME AS
+			'LOCATION_LEVEl'
+			FROM ref_mst_location AS table1
+			INNER JOIN ref_mst_location AS table2
+			ON table1.PARENT_LOCATION_ID = table2.LOCATION_ID
+			INNER JOIN (SELECT * FROM ref_sta_key_value WHERE KEY_ID='key2' AND STATUS='NORMAL') AS table3
+			ON table1.LOCATION_TYPE = table3.KEY_NAME
+			INNER JOIN (SELECT * FROM ref_sta_key_value WHERE KEY_ID='key1' AND STATUS='NORMAL') AS table4
+			ON table1.LOCATION_LEVEl = table4.KEY_NAME
+			WHERE table1.ID = :id AND table1.STATUS='NORMAL'
+			ORDER BY table1.ID ASC 
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="allMasterLocationQuery">
+		<title>Master Locations</title>
+		<content>
+			SELECT LOCATION_ID, PARENT_LOCATION_ID,
+			ADDRESS_ID, LOCATION_NAME, LOCATION_TYPE, LOCATION_LEVEl
+			FROM ref_mst_location WHERE STATUS='NORMAL'
+		</content>
+		<params>
+		</params>
+	</query>
+
+	<query id="allLocationsQuery">
+		<title>Master Locations</title>
+		<content>
+			SELECT LOCATION_ID
+			FROM ref_mst_location WHERE STATUS='NORMAL' AND LOCATION_ID NOT LIKE 'WORLD'
+			ORDER BY LOCATION_ID
+		</content>
+	</query>
+
+	<query id="allLocationLevelQuery">
+		<title>All Locations Levels</title>
+		<content>
+			SELECT KEY_ID, VALUE_ID, KEY_NAME, VALUE_NAME FROM ref_sta_key_value 
+			WHERE KEY_ID='key1' AND VALUE_NAME!='Level 1' AND STATUS='NORMAL'
+		</content>
+		<params></params>
+	</query>
+
+	<query id="allLocationTypeQuery">
+		<title>All Locations Types</title>
+		<content>
+			SELECT KEY_ID, VALUE_ID, KEY_NAME, VALUE_NAME FROM ref_sta_key_value 
+			WHERE KEY_ID='key2' AND VALUE_NAME!='WORLD' AND STATUS='NORMAL'
+		</content>
+		<params></params>
+	</query>
+
+	<query id="allTrnLocations">
+		<title>All Transaction Node Locations</title>
+		<content>
+			SELECT LOCATION_ID,LOCATION_NAME FROM ref_mst_location AS Loc1
+			WHERE NOT EXISTS ( SELECT PARENT_LOCATION_ID from ref_mst_location AS Loc2
+			WHERE Loc2.PARENT_LOCATION_ID=Loc1.LOCATION_ID) AND Loc1.STATUS='NORMAL'
+		</content>
+		<params></params>
+	</query>
+
+	<query id="allSchemeQuery">
+		<title>All Schemes</title>
+		<content>
+			SELECT ID, SCHEME_ID, SCHEME_NAME, SCHEME_TYPE, SCHEME_DESC, SCHEME_AMT_LIMIT, SCHEME_START_DATE, SCHEME_END_DATE 
+			FROM ref_mst_scheme WHERE STATUS='NORMAL'
+			ORDER BY UPDATE_DATE
+			LIMIT :start,:rows 
+		</content>
+		<params>
+			<param>:start</param>
+			<param>:rows</param>
+		</params>
+	</query>
+
+	<query id="allSchemeMinInfoQuery">
+		<title>All Schemes</title>
+		<content>
+			SELECT SCHEME_ID, SCHEME_NAME 
+			FROM ref_mst_scheme WHERE STATUS='NORMAL'
+		</content>
+	</query>
+
+	<query id="allGenderTypeQuery">
+		<title>All Gender Types</title>
+		<content>
+			SELECT KEY_ID, VALUE_ID, KEY_NAME, VALUE_NAME FROM ref_sta_key_value 
+			WHERE KEY_ID='Gender' AND STATUS='NORMAL'
+		</content>
+		<params></params>
+	</query>
+
+	<query id="allCustStaticValQuery">
+		<title>All Customer Static Value</title>
+		<content>
+			SELECT KEY_ID, VALUE_ID, KEY_NAME, VALUE_NAME FROM ref_sta_key_value 
+			WHERE KEY_ID='EntityType1' AND STATUS='NORMAL'
+		</content>
+		<params></params>
+	</query>
+
+	<query id="allEmpStaticValQuery">
+		<title>All Employee Static Value</title>
+		<content>
+			SELECT KEY_ID, VALUE_ID, KEY_NAME, VALUE_NAME FROM ref_sta_key_value 
+			WHERE KEY_ID='EntityType2' AND STATUS='NORMAL'
+		</content>
+		<params></params>
+	</query>
+
+	<query id="MasterLocationsBySrchQuery">
+		<title>Master Locations on the basis of search</title>
+		<content>
+			SELECT  table1.ID, table1.LOCATION_ID, table1.PARENT_LOCATION_ID,
+			table1.ADDRESS_ID, table1.LOCATION_NAME, table2.LOCATION_NAME 'PARENT_LOCATION_NAME', 
+			table3.VALUE_NAME AS 'LOCATION_TYPE', table4.VALUE_NAME AS 'LOCATION_LEVEl'
+			FROM ref_mst_location AS table1
+			INNER JOIN ( SELECT * FROM ref_mst_location WHERE STATUS='NORMAL' ) AS table2
+			ON table1.PARENT_LOCATION_ID = table2.LOCATION_ID
+			LEFT OUTER JOIN (SELECT * FROM ref_sta_key_value WHERE KEY_ID='key2' AND STATUS='NORMAL') AS table3
+			ON table1.LOCATION_TYPE = table3.KEY_NAME
+			LEFT OUTER JOIN (SELECT * FROM ref_sta_key_value WHERE KEY_ID='key1' AND STATUS='NORMAL') AS table4
+			ON table1.LOCATION_LEVEl = table4.KEY_NAME
+			WHERE table1.STATUS = 'NORMAL' AND table2.STATUS='NORMAL'
+		</content>
+		<queryparams>
+				<queryparam>table1.LOCATION_NAME</queryparam>
+				<queryparam>table2.LOCATION_NAME</queryparam>
+				<queryparam>table1.LOCATION_TYPE</queryparam>
+				<queryparam>table1.LOCATION_LEVEL</queryparam>
+		 </queryparams>
+		 <orderby>
+			<itemgroup type="ASC">
+				<item>table1.ID</item>
+			 </itemgroup>
+		 </orderby>
+	</query>
+
+	<query id="locationQuery">
+		<title>Location Name</title>
+		<content>
+			SELECT ID,LOCATION_ID,PARENT_LOCATION_ID,LOCATION_NAME,LOCATION_TYPE, LOCATION_LEVEL FROM ref_mst_location WHERE LOCATION_NAME LIKE ':loc'  AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:loc</param>
+		</params>
+	</query>
+
+	<query id="locationIdByNmQuery">
+		<title>Location Id by name</title>
+		<content>
+			SELECT LOCATION_ID FROM ref_mst_location WHERE LOCATION_NAME LIKE ':loc'  AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:loc</param>
+		</params>
+	</query>
+	
+	<query id="locationIdByLocIdQuery">
+		<title>Location Id by location id</title>
+		<content>
+			SELECT LOCATION_ID FROM ref_mst_location WHERE LOCATION_ID LIKE ':loc'  AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:loc</param>
+		</params>
+	</query>
+
+	<query id="locationNmByPrntQuery">
+		<title>Location Name on basis of parent</title>
+		<content>
+			SELECT LOCATION_NAME FROM ref_mst_location 
+			WHERE PARENT_LOCATION_ID=':prntLocId' AND LOCATION_NAME LIKE ':loc'  AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:prntLocId</param>
+			<param>:loc</param>
+		</params>
+	</query>
+
+	<query id="locationNmByPrntOnIdQuery">
+		<title>Location Name on basis of parent on a partiqual location id</title>
+		<content>
+			SELECT LOCATION_NAME FROM ref_mst_location 
+			WHERE PARENT_LOCATION_ID=':ploc' AND LOCATION_NAME LIKE ':loc' AND LOCATION_ID != ':id' AND
+			STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:ploc</param>
+			<param>:loc</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="locationNmByPrntOnIdExceptMeQuery">
+		<title>Location Name on basis of parent on a partiqual location id</title>
+		<content>
+			SELECT LOCATION_NAME FROM ref_mst_location 
+			WHERE PARENT_LOCATION_ID=':ploc' AND LOCATION_ID = ':locid' AND ID != :id AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:ploc</param>
+			<param>:locid</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="locationNameIfChildExistQuery">
+		<title>Location Name of a Location Id If Child Exists</title>
+		<content>
+			SELECT table1.LOCATION_NAME,COUNT(table1.LOCATION_NAME) AS 'TOTAL_CHILD'
+			FROM ref_mst_location AS table1
+			INNER JOIN ref_mst_location AS table2
+			ON table1.LOCATION_ID=table2.PARENT_LOCATION_ID 
+			WHERE table1.LOCATION_ID = ':locId' AND table1.STATUS='NORMAL'
+			GROUP BY table1.LOCATION_NAME
+		</content>
+		<params>
+			<param>:locId</param>
+		</params>
+	</query>
+
+	<query id="divisionsByStateQuery">
+		<title>Division names of a state</title>
+		<content>
+			SELECT LOCATION_NAME, ADDRESS_ID FROM ref_mst_location
+			WHERE PARENT_LOCATION_ID = 
+			(SELECT LOCATION_ID FROM ref_mst_location WHERE LOCATION_NAME LIKE ':parentLoc'  AND STATUS='NORMAL')
+		</content>
+		<params>
+			<param>:parentLoc</param>
+		</params>
+	</query>
+
+	<query id="schemeInfoByIdQuery">
+		<title>Scheme Information by id</title>
+		<content>
+			SELECT ID, SCHEME_ID, SCHEME_NAME, SCHEME_TYPE, SCHEME_DESC, LOAN_INVESTMENT_SCHEME, SCHEME_START_DATE, SCHEME_END_DATE, SCHEME_AMT_LIMIT, SCHEME_PAY_FREQ, SCHEME_CCY_ID, SCHEDULE_TYPE, SCHEDULE_WEEK, SCHEDULE_DAY, SCHEDULE_MONTH, MAX_DAY_DEALY_ALLOW, DAY_INTERVAL FROM ref_mst_scheme WHERE ID=':id'
+			AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="allEntityQuery">
+		<title>All Entity Id</title>
+		<content>
+			SELECT ENTITY_ID  FROM ref_mst_entity 
+		</content>
+		<params>
+		</params>
+	</query>
+
+	<query id="entityMaxIdQuery">
+		<title>Entity Max Id</title>
+		<content>
+			SELECT MAX(ID) AS ID FROM ref_mst_entity 
+		</content>
+	</query>
+
+	<query id="entityMaxIdOnSchemeQuery">
+		<title>Entity Max Id on Scheme</title>
+		<content>
+			SELECT MAX(CAST(SUBSTRING(CUSTOMER_ID,
+			CHAR_LENGTH(':schm')+1) AS UNSIGNED)) AS ID , 
+			'SCHEME_CUSTOMER' AS SCHEME_CUSTOMER
+			FROM ref_mst_entity
+			WHERE CUSTOMER_ID REGEXP '^(:schm)[0-9]'
+			GROUP BY SCHEME_CUSTOMER
+		</content>
+		<params>
+			<param>:schm</param>
+		</params>	
+	</query>
+
+	<query id="collectorMaxIdQuery">
+		<title>Collector Max Id</title>
+		<content>
+			SELECT MAX(ID) AS ID FROM ref_mst_collector
+		</content>
+	</query>
+
+	<query id="locationMaxIdQuery">
+		<title>Max Id value of location</title>
+		<content>
+			SELECT MAX(ID) AS ID FROM ref_mst_location
+		</content>
+	</query>
+
+	<query id="schemeMaxIdQuery">
+		<title>Max Id value of scheme table</title>
+		<content>
+			SELECT MAX(ID) AS ID FROM ref_mst_scheme
+		</content>
+	</query>
+
+	<query id="EntityIdQuery">
+		<title>Employee Entity Id</title>
+		<content>
+			SELECT ENTITY_ID  FROM ref_mst_entity WHERE  ENTITY_ID LIKE ':entId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:entId</param>
+		</params>
+	</query>
+
+	<query id="collectorIdQuery">
+		<title>Employee Entity Id</title>
+		<content>
+			SELECT ENTITY_ID  FROM ref_mst_collector WHERE  ENTITY_ID LIKE ':entId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:entId</param>
+		</params>
+	</query>
+	
+	<query id="AllEmployeeQuery">
+		<title>All Employee</title>
+		<content>
+			SELECT ENTITY_ID, ENTITY_TYPE, ENTITY_NAME, NAME, AGE, SEX, EMPLOYEE_ID, 
+			EMPLOYEE_JOIN_DATE, EMPLOYEE_EXIT_DATE, EMPLOYEE_DESIGNATION,
+			ADDRESS_ID, PERMANENT_ADDRESS_ID, MAIL_ADDRESS_ID,
+			STATUS FROM ref_mst_collector WHERE ENTITY_TYPE = ':type'
+		</content>
+		<params>
+			<param>:type</param>
+		</params>
+	</query>
+
+	<query id="AllEmployeesInfoQuery">
+		<title>All Employees Information</title>
+		<content>
+			SELECT MstE.ID, MstE.EMPLOYEE_ID, MstE.NAME, MstE.AGE, MstE.SEX, MstA.ADDRESS, MstA.COUNTRY,
+			MstE.ENTITY_DESC,  MstE.EMPLOYEE_DESIGNATION, MstE.EMPLOYEE_JOIN_DATE, MstE.IMAGE 
+			FROM ref_mst_collector As MstE
+			LEFT OUTER JOIN ref_mst_address As MstA 
+			ON MstE.ADDRESS_ID=MstA.ADDRESS_ID 
+			WHERE MstE.ENTITY_TYPE = 'COLLECTOR' AND MstE.STATUS='NORMAL'
+			ORDER BY MstE.ID DESC
+			LIMIT :start,:limit
+		</content>
+		<params>
+			<param>:start</param>
+			<param>:limit</param>
+		</params>
+	</query>
+
+	<query id="AllEmployeesInfoCountQuery">
+		<title>All Employees Information</title>
+		<content>
+			SELECT COUNT(ID) AS TOTAL
+			FROM ref_mst_collector WHERE ENTITY_TYPE = 'COLLECTOR' AND STATUS='NORMAL'
+		</content>
+	</query>
+
+	<query id="employeeInfoByIdQuery">
+		<title>All Employees Information By Employee Id</title>
+		<content>
+			SELECT MstE.ID, MstE.PARENT_ENTITY_ID, MstE.EMPLOYEE_ID, MstE.NAME, MstE.AGE, MstE.SEX, MstA.ADDRESS, 
+			MstE.ENTITY_DESC, MstE.EMPLOYEE_DESIGNATION, MstE.EMPLOYEE_JOIN_DATE,MstE.IMAGE
+			FROM ref_mst_collector As MstE
+			LEFT OUTER JOIN ref_mst_address As MstA 
+			ON MstE.ADDRESS_ID=MstA.ADDRESS_ID 
+			WHERE MstE.ENTITY_TYPE = 'COLLECTOR' AND MstE.ID =:id
+			AND MstE.STATUS ='NORMAL'
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+
+
+	<query id="AllEmployeesInfoBySrchQuery1">
+		<title>All Employees Information By Searching</title>
+		<content>
+			SELECT MstE.ID, MstE.EMPLOYEE_ID, MstE.NAME, MstE.AGE, MstE.SEX, MstA.ADDRESS, MstA.COUNTRY,
+			MstE.ENTITY_DESC,  MstE.EMPLOYEE_DESIGNATION, MstE.EMPLOYEE_JOIN_DATE, MstE.IMAGE 
+			FROM ref_mst_collector As MstE
+			LEFT OUTER JOIN ref_mst_address As MstA 
+			ON MstE.ADDRESS_ID=MstA.ADDRESS_ID  
+			WHERE MstE.ENTITY_TYPE = 'COLLECTOR' AND MstE.NAME LIKE ':eNm%' AND MstE.EMPLOYEE_ID LIKE ':eId%' AND MstE.SEX LIKE ':sex%' AND IFNULL(MstE.EMPLOYEE_JOIN_DATE , CURDATE()) LIKE ':joinDt%' AND MstE.STATUS='NORMAL'
+			LIMIT :start,:limit
+		</content>
+		<params>
+			<param>:eNm</param>
+			<param>:eId</param>
+			<param>:sex</param>
+			<param>:joinDt</param>
+			<param>:start</param>
+			<param>:limit</param>
+		</params>
+	</query>
+
+	<query id="AllEmployeesInfoBySrchQuery">
+		<title>All Employees Information By Searching</title>
+		 <content>
+			SELECT MstE.ID, MstE.EMPLOYEE_ID, MstE.NAME, MstE.AGE, MstE.SEX, MstA.ADDRESS, MstA.COUNTRY,
+			MstE.ENTITY_DESC,  MstE.EMPLOYEE_DESIGNATION, MstE.EMPLOYEE_JOIN_DATE, MstE.IMAGE 
+			FROM ref_mst_collector As MstE
+			LEFT OUTER JOIN ref_mst_address As MstA 
+			ON MstE.ADDRESS_ID=MstA.ADDRESS_ID  
+			WHERE MstE.ENTITY_TYPE = 'COLLECTOR' AND MstE.STATUS='NORMAL'
+		 </content>
+		 <queryparams>
+				<queryparam>MstE.NAME</queryparam>
+				<queryparam>MstE.EMPLOYEE_ID</queryparam>
+				<queryparam>MstE.SEX</queryparam>
+				<queryparam>IFNULL(MstE.EMPLOYEE_JOIN_DATE , CURDATE())</queryparam>
+		 </queryparams>
+	</query>
+
+	<query id="AllEmployeesInfoBySrchCountQuery">
+		<title>All Employees Information By Searching</title>
+		<content>
+			SELECT count(MstE.ID) AS TOTAL
+			FROM ref_mst_collector As MstE, ref_mst_address As MstA 
+			WHERE MstE.ADDRESS_ID=MstA.ADDRESS_ID AND MstE.ENTITY_TYPE = 'COLLECTOR' AND MstE.NAME LIKE ':eNm%' AND MstE.EMPLOYEE_ID LIKE ':eId%' AND MstE.AGE BETWEEN :strtAge AND :endAge AND MstE.SEX LIKE ':sex%'
+			AND IFNULL(MstE.EMPLOYEE_JOIN_DATE , CURDATE()) LIKE ':joinDt%' AND MstE.STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:eNm</param>
+			<param>:eId</param>
+			<param>:strtAge</param>
+			<param>:endAge</param>
+			<param>:sex</param>
+			<param>:joinDt</param>
+		</params>
+	</query>
+
+	<query id="customersInfoByIdQuery">
+		<title>Customer Information</title>
+		<content>
+			SELECT  MstrE.ID, MstrE.ENTITY_ID, 
+			MstrE.ENTITY_TYPE, 
+			MstrE.PARENT_ENTITY_ID 'EMPLOYEE_ID',
+			MstrE2.NAME 'EMPLOYEE_NAME', 
+			MstrE.ENTITY_NAME, 
+			MstrE.NAME, MstrE.AGE, 
+			MstrE.SEX, 
+			MstrE.ENTITY_DESC, 
+			MstrE.CUSTOMER_ID, 
+			MsrtA.ADDRESS, 
+			MstrE.CUSTOMER_APPLN_ID, 
+			MstrE.CUSTOMER_UNIQUE_ID, 
+			MstrE.CUSTOMER_ENTRY_DATE,
+			MstrE.SCHEME_ID,
+			MstrE.LOCATION_ID,
+			MstrE.ADDRESS_ID, 
+			MstrE.PERMANENT_ADDRESS_ID, 
+			MstrE.MAIL_ADDRESS_ID, 
+			MstrE.STATUS, 
+			MstrE.IMAGE
+			FROM ref_mst_entity AS MstrE 
+			LEFT OUTER JOIN ref_mst_address AS MsrtA
+			ON MstrE.ADDRESS_ID = MsrtA.ADDRESS_ID 
+			LEFT OUTER JOIN ( SELECT ENTITY_ID,NAME FROM ref_mst_collector where ENTITY_TYPE = 'COLLECTOR' ) AS MstrE2
+			ON MstrE2.ENTITY_ID = MstrE.PARENT_ENTITY_ID
+			WHERE MstrE.ENTITY_TYPE = 'Customer' AND MstrE.ID=':id' AND MstrE.STATUS = 'NORMAL'
+		</content>
+		<params>
+			<param>:id</param>
+		</params>
+	</query>
+	<query id="customersInfoByCustIdQuery">
+		<title>Customer Information</title>
+		<content>
+			SELECT  MstrE.ID, MstrE.ENTITY_ID, 
+			MstrE.ENTITY_TYPE, 
+			MstrE.PARENT_ENTITY_ID 'EMPLOYEE_ID',
+			MstrE2.NAME 'EMPLOYEE_NAME', 
+			MstrE.ENTITY_NAME, 
+			MstrE.NAME, MstrE.AGE, 
+			MstrE.SEX, 
+			MstrE.ENTITY_DESC, 
+			MstrE.CUSTOMER_ID, 
+			MsrtA.ADDRESS, 
+			MstrE.CUSTOMER_APPLN_ID, 
+			MstrE.CUSTOMER_UNIQUE_ID, 
+			MstrE.CUSTOMER_ENTRY_DATE,
+			MstrE.SCHEME_ID,
+			MstrE.LOCATION_ID,
+			MstrE.ADDRESS_ID, 
+			MstrE.PERMANENT_ADDRESS_ID, 
+			MstrE.MAIL_ADDRESS_ID, 
+			MstrE.STATUS, 
+			MstrE.IMAGE
+			FROM ref_mst_entity AS MstrE 
+			LEFT OUTER JOIN ref_mst_address AS MsrtA
+			ON MstrE.ADDRESS_ID = MsrtA.ADDRESS_ID 
+			LEFT OUTER JOIN ( SELECT ENTITY_ID,NAME FROM ref_mst_collector where ENTITY_TYPE = 'COLLECTOR' ) AS MstrE2
+			ON MstrE2.ENTITY_ID = MstrE.PARENT_ENTITY_ID
+			WHERE MstrE.ENTITY_TYPE = 'Customer' AND MstrE.ENTITY_ID=':custid' AND MstrE.STATUS = 'NORMAL'
+		</content>
+		<params>
+			<param>:custid</param>
+		</params>
+	</query>
+
+	<query id="custAddrIdQuery">
+		<title>All Customer Address id Information</title>
+		<content>
+			SELECT ADDRESS_ID FROM ref_mst_entity 
+			WHERE ENTITY_ID IN (:custIds) AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:custIds</param>
+		</params>
+	</query>
+
+	<query id="empAddrIdQuery">
+		<title>All Employee Address id Information</title>
+		<content>
+			SELECT ADDRESS_ID FROM ref_mst_collector
+			WHERE ENTITY_ID IN (:empIds) AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:empIds</param>
+		</params>
+	</query>
+
+	<query id="AllCustomersInfoQuery">
+		<title>All Customer Information</title>
+		<content>
+			SELECT MstE.ID, MstE.CUSTOMER_ID, 
+			MstE.ENTITY_NAME, 
+			MstE.AGE, 
+			MstE.SEX, 
+			MstE.ENTITY_DESC, 
+			entAddr.ADDRESS,
+			MstE.CUSTOMER_ENTRY_DATE , 
+			MstE.LOCATION_ID , 
+			MstEmp.NAME 'EMPLOYEE_NAME', 
+			MstEmp.ENTITY_ID 'EMPLOYEE_CODE', 
+			MstE.IMAGE
+			FROM ref_mst_entity As MstE USE INDEX (I_RME_ENTITY_ID, I_RME_ADDRESS_ID)
+			INNER JOIN (SELECT ENTITY_ID, NAME FROM ref_mst_collector USE INDEX (I_RMC_ENTITY_ID)
+                        where ENTITY_TYPE = 'COLLECTOR' AND STATUS='NORMAL') AS MstEmp
+			ON MstE.PARENT_ENTITY_ID = MstEmp.ENTITY_ID 
+			INNER JOIN (SELECT ADDRESS_ID,ADDRESS,COUNTRY FROM ref_mst_address USE INDEX
+                        (I_RMA_ADDRESS_ID)
+                        WHERE STATUS='NORMAL') as entAddr
+			ON entAddr.ADDRESS_ID=MstE.ADDRESS_ID
+			WHERE  MstE.ENTITY_TYPE = 'Customer' AND MstE.STATUS='NORMAL'
+			ORDER BY MstE.ID DESC
+			LIMIT :start , :limit
+		</content>
+		<params>
+			<param>:start</param>
+			<param>:limit</param>
+		</params>
+	</query>
+
+	<query id="AllCustomersInfoCountQuery">
+		<title>Count All Customer Information</title>
+		<content>
+			SELECT MAX(ID) AS TOTAL
+			FROM ref_mst_entity 
+		</content>
+	</query>
+
+	<query id="AllCustomersQuery">
+		<title>All Customer Information</title>
+		<content>
+			SELECT MstE.CUSTOMER_ID, MstE.NAME, MstE.AGE, MstE.SEX, MstA.ADDRESS, MstA.COUNTRY,
+			MstE.ENTITY_DESC, MstE.CUSTOMER_ENTRY_DATE FROM ref_mst_entity As MstE, ref_mst_address 
+			As MstA WHERE MstE.ADDRESS_ID=MstA.ADDRESS_ID AND MstE.ENTITY_TYPE = 'Customer'
+		</content>
+		<params>
+		</params>
+	</query>
+	<query id="AllCustomersInfoByCIdQuery">
+		<title>All Customer Information By Customer Id</title>
+		<content>
+			SELECT MstE.CUSTOMER_ID, 
+			       MstE.NAME, 
+				   MstE.AGE, 
+				   MstE.SEX, 
+				   MstA.ADDRESS, 
+				   MstA.COUNTRY,
+			       MstE.ENTITY_DESC, 
+				   MstE.CUSTOMER_ENTRY_DATE 
+			FROM   ref_mst_entity As MstE, 
+			       ref_mst_address As MstA 
+			WHERE MstE.ADDRESS_ID = MstA.ADDRESS_ID 
+			AND MstE.ENTITY_TYPE = 'Customer' 
+			AND MstE.CUSTOMER_ID=':cId' 
+			AND MstE.STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:cId</param>
+		</params>
+	</query>
+	<query id="AllCustomersInfoByCNmQuery">
+		<title>All Customer Information By Customer Name</title>
+		<content>
+			SELECT MstE.CUSTOMER_ID, MstE.NAME, MstE.AGE, MstE.SEX, MstA.ADDRESS, MstA.COUNTRY,
+			MstE.ENTITY_DESC, MstE.CUSTOMER_ENTRY_DATE FROM ref_mst_entity As MstE, ref_mst_address 
+			As MstA WHERE MstE.ADDRESS_ID=MstA.ADDRESS_ID AND MstE.ENTITY_TYPE = 'Customer' AND MstE.NAME LIKE ':cNm%' AND MstE.STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:cNm</param>
+		</params>
+	</query>
+
+	<query id="allCustInfoBySrchQuery">
+		<title>All Customer Information By Customer By Searching</title>
+		<content>
+			SELECT MstE.ID, MstE.CUSTOMER_ID, 
+			MstE.ENTITY_NAME, 
+			MstE.AGE, 
+			MstE.SEX, 
+			MstE.ENTITY_DESC, 
+			entAddr.ADDRESS,
+			MstE.CUSTOMER_ENTRY_DATE , 
+			MstE.LOCATION_ID , 
+			MstEmp.NAME 'EMPLOYEE_NAME', 
+			MstEmp.ENTITY_ID 'EMPLOYEE_CODE', 
+			MstE.IMAGE
+			FROM ref_mst_entity As MstE USE INDEX (I_RME_ENTITY_ID,
+                        I_RME_ADDRESS_ID)
+			LEFT OUTER JOIN (SELECT ENTITY_ID, NAME FROM ref_mst_collector
+                        USE INDEX (I_RMC_ENTITY_ID)
+                        where ENTITY_TYPE = 'COLLECTOR' AND STATUS='NORMAL') AS MstEmp
+			ON MstE.PARENT_ENTITY_ID = MstEmp.ENTITY_ID 
+			INNER JOIN (SELECT ADDRESS_ID,ADDRESS,COUNTRY FROM ref_mst_address
+                        USE INDEX (I_RMA_ADDRESS_ID)
+                        WHERE STATUS='NORMAL') as entAddr
+			ON entAddr.ADDRESS_ID=MstE.ADDRESS_ID
+			WHERE  MstE.ENTITY_TYPE = 'Customer' AND MstE.STATUS='NORMAL'
+		</content>
+		<queryparams>
+			<queryparam>MstE.ENTITY_ID</queryparam>
+			<queryparam>MstE.ENTITY_NAME</queryparam>
+			<queryparam>SEX</queryparam>
+			<queryparam>IFNULL(CUSTOMER_ENTRY_DATE, CURDATE())</queryparam>
+			<queryparam>IFNULL(MstE.LOCATION_ID,'X')</queryparam>
+			<queryparam>MstEmp.ENTITY_ID</queryparam>
+		</queryparams>
+		<groupby>
+			<itemgroup type="DESC">
+				<item>MstE.ID</item>
+			</itemgroup>
+		</groupby>
+	</query>
+
+	<query id="allCustInfoBySrchCountQuery">
+		<title>All Customer Information By Customer By Searching</title>
+		<content>
+			SELECT COUNT(MstE.ID) AS TOTAL
+			FROM ref_mst_entity As MstE 
+			INNER JOIN ref_mst_address As MstA 
+			ON MstE.ADDRESS_ID=MstA.ADDRESS_ID
+			LEFT OUTER JOIN (SELECT ENTITY_ID, NAME FROM ref_mst_collector where ENTITY_TYPE = 'COLLECTOR') AS MstEmp
+			ON MstE.PARENT_ENTITY_ID = MstEmp.ENTITY_ID 
+			LEFT OUTER JOIN (SELECT LOCATION_ID , LOCATION_NAME FROM ref_mst_location ) AS MstL
+			ON MstE.LOCATION_ID = MstL.LOCATION_ID 
+			WHERE  MstE.ENTITY_TYPE = 'Customer' AND MstE.STATUS='NORMAL' AND MstE.CUSTOMER_ID LIKE ':cId%'
+			AND MstE.NAME LIKE ':cNm%' AND IFNULL(MstE.AGE,40) BETWEEN :strtAge AND :endAge AND SEX LIKE ':sex%' 
+			AND IFNULL(CUSTOMER_ENTRY_DATE, CURDATE()) LIKE ':entryDt%' AND IFNULL(MstL.LOCATION_ID,'X') LIKE ':locId%'
+		</content>
+		<params>
+			<param>:cId</param>
+			<param>:cNm</param>
+			<param>:strtAge</param>
+			<param>:endAge</param>
+			<param>:sex</param>
+			<param>:entryDt</param>
+			<param>:locId</param>
+		</params>
+	</query>
+
+	<query id="allSchemeInfoBySrchQuery">
+		<title>All Scheme Information By Searching parameters</title>
+		<content>
+			SELECT ID, SCHEME_ID, SCHEME_NAME, SCHEME_DESC, SCHEME_TYPE, LOAN_INVESTMENT_SCHEME, SCHEME_START_DATE, 
+			SCHEME_END_DATE, SCHEME_AMT_LIMIT, SCHEME_PAY_FREQ, SCHEME_CCY_ID, SCHEDULE_TYPE, SCHEDULE_WEEK, 
+			SCHEDULE_DAY, SCHEDULE_MONTH, MAX_DAY_DEALY_ALLOW, DAY_INTERVAL FROM ref_mst_scheme
+			WHERE STATUS='NORMAL'
+		</content>
+		<queryparams>
+			<queryparam>SCHEME_ID</queryparam>
+			<queryparam>SCHEME_NAME</queryparam>
+			<queryparam>SCHEME_TYPE</queryparam>
+			<queryparam>SCHEME_START_DATE</queryparam>
+			<queryparam>SCHEME_END_DATE</queryparam>
+		</queryparams>
+	</query>
+
+	<query id="allSchemeInIdQuery">
+		<title>All selected scheme id </title>
+		<content>
+			SELECT ID FROM ref_mst_scheme WHERE ID IN ( :ids ) AND STATUS='NORMAL' 
+		</content>
+		<params>
+			<param>:ids</param>
+		</params>
+	</query>
+
+	<query id="SuggestCustomersNmQuery">
+		<title>Select Customers Name</title>
+		<content>
+			SELECT NAME FROM ref_mst_entity 
+			WHERE ENTITY_TYPE = 'Customer' AND NAME LIKE ':cNm%' AND STATUS='NORMAL' LIMIT 20
+		</content>
+		<params>
+			<param>:cNm</param>
+		</params>
+	</query>
+
+	<query id="SuggestEmployeesNmQuery">
+		<title>Select Employees Name</title>
+		<content>
+			SELECT NAME FROM ref_mst_collector 
+			WHERE ENTITY_TYPE = 'COLLECTOR' AND NAME LIKE ':eNm%' AND STATUS='NORMAL' LIMIT 20
+		</content>
+		<params>
+			<param>:eNm</param>
+		</params>
+	</query>
+
+	<query id="SuggestCustomersIdQuery">
+		<title>Select Customers Id</title>
+		<content>
+			SELECT CUSTOMER_ID FROM ref_mst_entity 
+			WHERE ENTITY_TYPE = 'Customer' AND CUSTOMER_ID LIKE ':cId%' AND STATUS='NORMAL' LIMIT 20
+		</content>
+		<params>
+			<param>:cId</param>
+		</params>
+	</query>
+
+	<query id="SuggestEmployeesIdQuery">
+		<title>Select Employees Id</title>
+		<content>
+			SELECT EMPLOYEE_ID FROM ref_mst_collector 
+			WHERE ENTITY_TYPE = 'COLLECTOR' AND EMPLOYEE_ID LIKE ':eId%' AND STATUS='NORMAL' LIMIT 15
+		</content>
+		<params>
+			<param>:eId</param>
+		</params>
+	</query>
+
+	<query id="SuggestEmployeeEntityIdQuery">
+		<title>Select Employee Entity Id</title>
+		<content>
+			SELECT ENTITY_ID , NAME FROM ref_mst_collector 
+			WHERE ENTITY_TYPE = 'COLLECTOR' AND ( NAME LIKE ':emp%' OR  ENTITY_ID LIKE ':emp%' )
+			AND STATUS='NORMAL' LIMIT 15
+		</content>
+		<params>
+			<param>:emp</param>
+		</params>
+	</query>
+
+	<query id="SuggestEntityQuery">
+		<title>Select Entities Name and id</title>
+		<content>
+			SELECT ENTITY_ID, NAME FROM ref_mst_entity 
+			WHERE NAME LIKE ':Nm%' AND STATUS='NORMAL' LIMIT 15
+		</content>
+		<params>
+			<param>:Nm</param>
+		</params>
+	</query>
+
+	<query id="SuggestEntityCssIdQuery">
+		<title>Select Entities css id</title>
+		<content>
+			SELECT CUSTOMER_UNIQUE_ID FROM ref_mst_entity 
+			WHERE CUSTOMER_UNIQUE_ID LIKE ':cssId%' AND STATUS='NORMAL' LIMIT 15
+		</content>
+		<params>
+			<param>:cssId</param>
+		</params>
+	</query>
+
+	<query id="SuggestSchemeQuery">
+		<title>Scheme Information</title>
+		<content>
+			SELECT SCHEME_ID,SCHEME_NAME,SCHEME_AMT_LIMIT FROM ref_mst_scheme WHERE SCHEME_NAME LIKE ':schmNm%' AND STATUS='NORMAL' LIMIT 15
+		</content>
+		<params>
+			<param>:schmNm</param>
+		</params>
+	</query>
+
+	<query id="SuggestCountryQuery">
+		<title>State Information</title>
+		<content>
+			SELECT LOCATION_NAME FROM ref_mst_location WHERE PARENT_LOCATION_ID=1 AND LOCATION_NAME LIKE ':country%' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:country</param>
+		</params>
+	</query>
+
+
+	<query id="SuggestStateQuery">
+		<title>State Information</title>
+		<content>
+			SELECT LOCATION_NAME FROM ref_mst_location WHERE PARENT_LOCATION_ID=2 AND LOCATION_NAME LIKE ':state%' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:state</param>
+		</params>
+	</query>
+
+	<query id="SuggestLocQuery">
+		<title>State Information</title>
+		<content>
+			SELECT LOCATION_ID, LOCATION_NAME FROM ref_mst_location 
+			WHERE LOCATION_ID LIKE ':locNm%' AND STATUS='NORMAL' LIMIT 15
+		</content>
+		<params>
+			<param>:locNm</param>
+		</params>
+	</query>
+
+	<query id="SuggestLoc1Query">
+		<title>State Information</title>
+		<content>
+			SELECT LOCATION_ID, LOCATION_NAME FROM ref_mst_location 
+			WHERE LOCATION_ID LIKE ':locNm%' AND STATUS='NORMAL' AND LOCATION_ID!='WORLD' LIMIT 15
+		</content>
+		<params>
+			<param>:locNm</param>
+		</params>
+	</query>
+
+	<query id="SuggestSchmNmQuery">
+		<title>Scheme Names</title>
+		<content>
+			SELECT SCHEME_NAME FROM ref_mst_scheme
+			WHERE SCHEME_NAME LIKE ':schmNm%' LIMIT 15			
+		</content>
+		<params>
+			<param>:schmNm</param>
+		</params>
+	</query>
+
+	<query id="SuggestSchmIdQuery">
+		<title>Scheme Names</title>
+		<content>
+			SELECT SCHEME_ID FROM ref_mst_scheme
+			WHERE SCHEME_ID LIKE ':schmId%'	LIMIT 15	 	
+		</content>
+		<params>
+			<param>:schmId</param>
+		</params>
+	</query>
+
+	<query id="insertEntityAddressQuery">
+		<title>Add Customer Entity Address</title>
+		<content>
+			INSERT INTO ref_mst_address ( ADDRESS_ID, ADDRESS ) VALUES
+			( ':loc', ':addr' )
+		</content>
+		<params>
+			<param>:loc</param>
+			<param>:addr</param>
+		</params>
+	</query>
+
+	<query id="insertRowInEntityTblDML">
+		<title>Insert a blank row to entity table</title>
+		<content>
+			INSERT INTO ref_mst_entity SET ENTITY_ID=null
+		</content>
+	</query>
+
+	<query id="insertRowInCollectorTblDML">
+		<title>Insert a blank row to collector table</title>
+		<content>
+			INSERT INTO ref_mst_collector SET ENTITY_ID=null
+		</content>
+	</query>
+
+	<query id="insertRowInLocationTblDML">
+		<title>Insert a blank row to location table</title>
+		<content>
+			INSERT INTO ref_mst_location SET LOCATION_ID=null
+		</content>
+	</query>
+
+	<query id="insertRowInSchemeTblDML">
+		<title>Insert a blank row to scheme table</title>
+		<content>
+			INSERT INTO ref_mst_scheme SET SCHEME_ID=null
+		</content>
+	</query>
+
+	<query id="insertEmpLocInfoDML">
+		<title>Insert Employee Location Information</title>
+		<content>
+			INSERT INTO ref_join_entity_location(ENTITY_ID, LOCATION_ID)
+			VALUES(':entId', ':locId')
+		</content>
+		<params>
+			<param>:entId</param>
+			<param>:locId</param>
+		</params>
+	</query>
+
+	<query id="updateTotalActiveRowsDML">
+		<title>Update Active rows and deactive roes of a table</title>
+		<content>
+			UPDATE ref_mst_tbl_rows_count 
+			SET TOTAL_ACTIVE_ROWS = :tRows 
+			WHERE SECTION_ID = ':secId'
+		</content>
+		<params>
+			<param>:tRows</param>
+			<param>:secId</param>
+		</params>
+	</query>
+
+	<query id="updateInsertedCustomerDML">
+		<title>Add Customer Entity Information Through Update</title>
+		<content>
+			UPDATE ref_mst_entity 
+			SET ENTITY_ID=':eId', ENTITY_TYPE=':eType', PARENT_ENTITY_ID=':pEtype', ENTITY_NAME=':nm', 
+			ENTITY_DESC=':eDesc', NAME=':nm', AGE=:age , SEX=':sex', CUSTOMER_ID=':cId', 
+			ENTITY_UNIQUE_ID=':entQId', CUSTOMER_ENTRY_DATE=':cEtrDt', LOCATION_ID=':locId', 
+			ADDRESS_ID=':addrId', CREATION_DATE=':creatDt', IMAGE=':img', CUSTOMER_UNIQUE_ID=':cssId',
+			SCHEME_ID=':schmId' WHERE ID=:id
+		</content>
+		<params>
+			<param>:eId</param>
+			<param>:eType</param>
+			<param>:pEtype</param>
+			<param>:eDesc</param>
+			<param>:nm</param>
+			<param>:age</param>
+			<param>:sex</param>
+			<param>:cId</param>
+			<param>:entQId</param>
+			<param>:cEtrDt</param>
+			<param>:locId</param>
+			<param>:addrId</param>
+			<param>:creatDt</param>
+			<param>:img</param>
+			<param>:cssId</param>
+			<param>:schmId</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="updateInsertedEmployeeDML">
+		<title>Add Employee Entity Information Through Update</title>
+		<content>
+			UPDATE ref_mst_collector 
+			SET ENTITY_ID=':eId', ENTITY_UNIQUE_ID=':entQId', ENTITY_TYPE=':eType', ENTITY_NAME=':nm', 
+			ENTITY_DESC=':eDesc', NAME=':nm', AGE=:age, SEX=':sex', EMPLOYEE_ID=':empId', 
+			EMPLOYEE_JOIN_DATE=':joinDt', EMPLOYEE_DESIGNATION=':empDsg' , ADDRESS_ID=':addrId', IMAGE=':img' 
+			WHERE ID=:id
+		</content>
+		<params>
+			<param>:eId</param>
+			<param>:entQId</param>
+			<param>:eType</param>
+			<param>:eDesc</param>
+			<param>:nm</param>
+			<param>:age</param>
+			<param>:sex</param>
+			<param>:empId</param>
+			<param>:joinDt</param>
+			<param>:empDsg</param>
+			<param>:addrId</param>
+			<param>:img</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="updateInsertedSchemeDML">
+		<title>Add Scheme Information Through Update</title>
+		<content>
+			UPDATE ref_mst_scheme
+			SET SCHEME_ID=':schmId', SCHEME_NAME=':schmNm', SCHEME_TYPE=':schmTyp', SCHEME_DESC=':schmDesc', 
+			SCHEME_AMT_LIMIT=:schmAounmt, SCHEME_START_DATE=':srartDt', SCHEME_END_DATE=':endDt'
+			WHERE ID=:id AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:schmId</param>
+			<param>:schmNm</param>
+			<param>:schmTyp</param>
+			<param>:schmDesc</param>
+			<param>:schmAounmt</param>
+			<param>:srartDt</param>
+			<param>:endDt</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="updateInsertedLocationDML">
+		<title>Add Location Information Through Update</title>
+		<content>
+			UPDATE ref_mst_location 
+			SET LOCATION_ID=':locID', LOCATION_NAME=':locNm', PARENT_LOCATION_ID=':pLocId', LOCATION_NAME=':locNm', 
+			LOCATION_DESC = ':locDesc', LOCATION_TYPE = ':locType', LOCATION_LEVEL = ':locLevel', 
+			ADDRESS_ID=':addId'
+			WHERE ID = :id AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:locID</param>
+			<param>:locNm</param>
+			<param>:pLocId</param>
+			<param>:locNm</param>
+			<param>:locDesc</param>
+			<param>:locType</param>
+			<param>:locLevel</param>
+			<param>:addId</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="updateCustomerDML">
+		<title>Update Master Customer Information</title>
+		<content>
+			UPDATE ref_mst_entity
+			SET ENTITY_ID=':custid', CUSTOMER_ID=':custid', PARENT_ENTITY_ID=':empId', ENTITY_DESC=':desc',ENTITY_NAME=':nm',
+			NAME=':nm', AGE=':age', SEX=':sex', CUSTOMER_ENTRY_DATE=':dt', ENTITY_DESC=':desc', LOCATION_ID=':locId', IMAGE=':img', CUSTOMER_UNIQUE_ID=':cssId',
+			SCHEME_ID=':schmId'
+			WHERE ID=:custId AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:custid</param>
+			<param>:empId</param>
+			<param>:desc</param>
+			<param>:nm</param>
+			<param>:age</param>
+			<param>:sex</param>
+			<param>:dt</param>
+			<param>:desc</param>
+			<param>:locId</param>
+			<param>:img</param>
+			<param>:cssId</param>
+			<param>:schmId</param>
+			<param>:custId</param>
+		</params>
+	</query>
+
+	<query id="updateCustomerAddrDML">
+		<title>Update Master Customer Address Information</title>
+		<content>
+			UPDATE ref_mst_address
+			SET ADDRESS=':addr'
+			WHERE ADDRESS_ID=(SELECT ADDRESS_ID FROM ref_mst_entity WHERE CUSTOMER_ID=':custId') AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:addr</param>
+			<param>:custId</param>
+		</params>
+	</query>
+
+	<query id="updateEmployeeDML">
+		<title>Update Master Employee Information</title>
+		<content>
+			UPDATE ref_mst_collector
+			SET ENTITY_ID=':eId',  EMPLOYEE_ID=':eId', 
+			ENTITY_NAME=':nm', NAME=':nm', AGE=':age', SEX=':sex', EMPLOYEE_JOIN_DATE=':jnDt', EMPLOYEE_DESIGNATION=':dsg', ENTITY_DESC=':desc',IMAGE=':img'
+			WHERE ID=:id AND STATUS='NORMAL'
+		</content>
+		<params>
+		    <param>:eId</param>
+			<param>:nm</param>
+			<param>:age</param>
+			<param>:sex</param>
+			<param>:jnDt</param>
+			<param>:dsg</param>
+			<param>:desc</param>
+			<param>:img</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="updateEmployeeAddrDML">
+		<title>Update Master Customer Address Information</title>
+		<content>
+			UPDATE ref_mst_address
+			SET ADDRESS=':addr'
+			WHERE ADDRESS_ID=(SELECT ADDRESS_ID FROM ref_mst_collector WHERE EMPLOYEE_ID=':empId' AND STATUS='NORMAL') AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:addr</param>
+			<param>:empId</param>
+		</params>
+	</query>
+
+	<query id="updateLocationDML">
+		<title>Update Master location Information</title>
+		<content>
+			UPDATE ref_mst_location
+			SET  LOCATION_ID=':locId', LOCATION_NAME=':locNm', PARENT_LOCATION_ID=':prntId', LOCATION_DESC=':desc',
+			LOCATION_TYPE=:locTyp, LOCATION_LEVEL=:locLvl
+			WHERE ID = :id AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:locId</param>
+			<param>:locNm</param>
+			<param>:prntId</param>
+			<param>:desc</param>
+			<param>:locTyp</param>
+			<param>:locLvl</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+	<query id="updateSchemeDML">
+		<title>Undate Master Scheme Information</title>
+		<content>
+			UPDATE ref_mst_scheme
+			SET SCHEME_ID=':sid' , SCHEME_NAME=':snm', SCHEME_TYPE=':stype', SCHEME_DESC=':sdesc',  SCHEME_AMT_LIMIT=:amnt, SCHEME_START_DATE=':sdt', SCHEME_END_DATE=':edt' 
+			WHERE ID=:id
+		</content>
+		<params>
+			<param>:sid</param>
+			<param>:snm</param>
+			<param>:stype</param>
+			<param>:sdesc</param>
+			<param>:amnt</param>
+			<param>:sdt</param>
+			<param>:edt</param>
+			<param>:id</param>
+		</params>
+	</query>
+
+
+	<query id="cancelLocationDML">
+		<title>Delete Master location Information</title>
+		<content>
+			UPDATE  ref_mst_location 
+			SET STATUS='CANCEL' WHERE LOCATION_ID IN (:locIds) AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:locIds</param>
+		</params>
+	</query>
+
+	<query id="cancelCustDML">
+		<title>Cancel Master Customer Address Information</title>
+		<content>
+			UPDATE ref_mst_entity
+			SET STATUS='CANCEL'
+			WHERE CUSTOMER_ID IN (:datas) AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:datas</param>
+		</params>
+	</query>
+
+	<query id="cancelEntityAddrDML">
+		<title>Cancel Entity Address  Information</title>
+		<content>
+			UPDATE ref_mst_address
+			SET STATUS='CANCEL'
+			WHERE ADDRESS_ID IN ( :datas )  AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:datas</param>
+		</params>
+	</query>
+
+	<query id="cancelEmpDML">
+		<title>Cancel Master Employee Address Information</title>
+		<content>
+			UPDATE ref_mst_collector
+			SET STATUS='CANCEL'
+			WHERE EMPLOYEE_ID IN (:datas) AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:datas</param>
+		</params>
+	</query>
+
+	<query id="cancelSchemeInIdDML">
+		<title>Cancel Master Scheme Information</title>
+		<content>
+			UPDATE ref_mst_scheme
+			SET STATUS='CANCEL'
+			WHERE ID IN (:ids) AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:ids</param>
+		</params>
+	</query>
+
+	<query id="deleteEmpLocInEntidDML">
+		<title>Delete Employee Location Information</title>
+		<content>
+			DELETE FROM ref_join_entity_location
+			WHERE ENTITY_ID=':entId' AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:entId</param>
+		</params>
+	</query>
+
+	<query id="customersForXlsQuery">
+		<title>Customer Information</title>
+		<content>
+			SELECT Ent.CUSTOMER_ID, Ent.PARENT_ENTITY_ID, Ent.NAME, 
+				   Ent.SEX, Ent.LOCATION_ID, Ent.AGE, 
+				   Addr.ADDRESS, Ent.CUSTOMER_ENTRY_DATE, Ent.ENTITY_DESC
+			FROM   ref_mst_entity AS Ent
+			LEFT OUTER JOIN ref_mst_address AS Addr
+			ON    Addr.ADDRESS_ID = Ent.ADDRESS_ID
+			WHERE ENTITY_TYPE='Customer' 
+			AND   Ent.STATUS='NORMAL' 
+			AND   Ent.CUSTOMER_ID LIKE ':custId%' 
+			AND   (Ent.PARENT_ENTITY_ID LIKE ':empId%' OR ISNULL(Ent.PARENT_ENTITY_ID))
+			AND   (Ent.LOCATION_ID LIKE ':location%' OR ISNULL(Ent.LOCATION_ID))
+			AND   (Ent.SEX LIKE ':sex%' OR ISNULL(Ent.CUSTOMER_ENTRY_DATE))
+			AND   (Ent.CUSTOMER_ENTRY_DATE LIKE ':entryDt%' OR ISNULL(Ent.CUSTOMER_ENTRY_DATE))
+			ORDER BY Ent.CUSTOMER_ENTRY_DATE  DESC 
+			LIMIT :start, :rows
+		</content>
+		<params>
+			<param>:custId</param>
+			<param>:empId</param>
+			<param>:location</param>
+			<param>:sex</param>
+			<param>:entryDt</param>
+			<param>:start</param>
+			<param>:rows</param>
+		</params>
+	</query>
+
+</querylibrary>

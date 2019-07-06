@@ -1,0 +1,144 @@
+<?php
+$this->showXlsDownloadSection($this->xlsResults);
+?>
+
+<script type="text/javascript">
+	$( function(){ 
+$("table.zebra tr:even").addClass("even"); 
+$("table.zebra tr:odd").addClass("odd"); 
+});
+
+$( function(){ 
+$("table.zebra3 tr:even").addClass("even"); 
+$("table.zebra3 tr:odd").addClass("odd"); 
+});
+
+$().ready(function() {
+
+
+	$('#pick-date').datepicker({
+			changeMonth: true,
+			changeYear: true,
+			dateFormat:"yy-mm-dd",
+			beforeShow: function() {$('#ui-datepicker-div').maxZIndex(); },
+			showOn: 'button',
+			buttonImage: '/../images/icons/calendar.gif',
+			buttonImageOnly: true,
+			buttonText:'Date Picker'
+		});
+	
+	$("#customer_id").autocomplete("/ref/customer/suggestcustid", {
+		width: 170,
+		matchContains: true,
+		//mustMatch: true,
+		minChars: 0,
+		//multiple: true,
+		//highlight: false,
+		//multipleSeparator: ",",
+		selectFirst: false
+	});
+
+	$("#location").autocomplete("/ref/location/suggestloc", {
+		width: 260,
+		matchContains: true,
+		//mustMatch: true,
+		minChars: 0,
+		//multiple: true,
+		//highlight: false,
+		//multipleSeparator: ",",
+		selectFirst: false
+	});
+
+	$("#employee_id").autocomplete("/ref/employee/suggestempid", {
+		width: 170,
+		matchContains: true,
+		//mustMatch: true,
+		minChars: 0,
+		//multiple: true,
+		//highlight: false,
+		//multipleSeparator: ",",
+		selectFirst: false
+	});
+	
+});
+
+</script>
+
+
+<div class="entry-section">
+	<fieldset>
+	<legend>
+		<img src="/../images/icons/search.png" class="icons" > 
+		<?=  $this->viewLabels['search']; ?> 
+	</legend>
+	<form name="customer" method="POST">
+		<input type="hidden" name="REQUEST" value="search" >
+		<table class="zebra">
+			<tr>
+				<td><b><?=  $this->formLabels['custId']; ?></b></td>
+				<td><input type="text" name="custId" value="" id="customer_id"></td>
+				<td><b><?=  $this->formLabels['empId']; ?></b></td>
+				<td><input type="text" name="empId" value="" id="employee_id" ></td>
+			</tr>
+			<tr>
+				<td><b><?=  $this->formLabels['location']; ?></b></td>
+				<td><input type="text" name="loc" value="" id="location"></td>
+				<td><b><?=  $this->formLabels['sex']; ?>  </td>
+				<td><?=  $this->sex; ?></td>
+			</tr>
+			<tr>
+				<td><b><?=  $this->formLabels['entryDt']; ?></b></td>
+				<td colspan=3><input type="text" name="entryDt" value="" id="pick-date" ></td>
+				
+			</tr>
+			<tr>
+				<td colspan=3></td>
+				<td><input type="submit" value="<?=  $this->formLabels['search']; ?>" id="submit"/></td>
+			</tr>
+		</table>
+	</form>
+	</fieldset>
+</div>
+
+<fieldset>
+<div class="table-section">
+<?php
+if($this->result){ 
+?>
+	<fieldset class="export_section">
+	<legend><?=  $this->viewLabels['export']; ?></legend>
+	<form method="POST">
+		<input type="hidden" name="REQUEST" value="export" />
+		<?php
+			$strPattern=new Bloomfi_App_Ulibrary_StrPattern;
+			$strPattern->clearPattern();
+			$strPattern->setPattern(null,'/');
+			foreach($this->params as $param)
+			   $strPattern->insertDataToPattern($param);
+		?>
+		<input type="hidden" name="params" value="<?= $strPattern->getPatternString()?>" />
+		<input type="submit" id="xlss" name="export" value="" />
+		<?php unset($strPattern);?>
+	</form>
+	</fieldset>
+
+<?php
+}
+if($this->result){ 
+?>
+	<div class="pagination"><?php echo $this->paginationControl($this->result['paginator'],
+										'Sliding',
+										'/partials/my_pagination_control.phtml',$this->pagiParams ); ?></div>
+<?php } 
+
+ $table=new Bloomfi_QueryFramework_GenerateTable;
+ echo $table->generateDataTable($this->tableHeader,$this->result['data'],'zebra');
+ 
+
+if($this->result){ ?>
+	<div class="pagination"><?php echo $this->paginationControl($this->result['paginator'],
+										'Sliding',
+										'/partials/my_pagination_control.phtml',$this->pagiParams); ?></div>
+<?php } ?>
+</fieldset>
+</div>

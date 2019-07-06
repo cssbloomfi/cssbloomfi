@@ -1,0 +1,14 @@
+
+<?php
+
+$header=array($this->tableHeader['custId'], $this->tableHeader['empId'], $this->tableHeader['custName'], 
+$this->tableHeader['sex'], $this->tableHeader['location'], $this->tableHeader['age'], $this->tableHeader['address'], 
+$this->tableHeader['entryDt'],$this->tableHeader['desc']);
+
+$order=array('CUSTOMER_CODE', 'EMPLOYEE_CODE', 'CUSTOMER_NAME', 'GENDER', 'LOCATION', 'AGE', 
+'ADDRESS', 'CUSTOMER_ENTRY_DATE', 'DESCRIPTION');
+
+$filename="customerreport".$this->fileno;
+$this->createExcelReport($filename,$header,$this->reports,$order);
+
+?>

@@ -1,0 +1,71 @@
+
+<div class="entry-section">
+<?php
+if($this->textSuccess)
+{
+    echo "<div class='successbox'>";
+	 $this->successMessage($this->textSuccess);
+    echo "</div>";
+}
+if($this->textErrors ){
+ echo "<div class='errorbox'>";
+	echo "<b>".$this->viewlabels['termination']."</b><br><br>";
+	if($this->textErrors)
+		$this->textMessage($this->textErrors);
+	
+echo '</div>'; }
+?>
+
+	   
+<div class="add-section">
+	<img src="<?= $this->images['addScheme']; ?>" class="icons" > &nbsp;&nbsp;<?php echo $this->addFormLabel['addSectionLabel'] ?>
+</div>
+
+	<table class="zebra">
+	<form  method="POST">
+	<tr>
+		<td><b><?php echo $this->addFormLabel['name']; ?></b></td>
+		<td><input type="text" name="schm_nm" value="<?php echo $this->name; ?>" ></td>
+	</tr>
+
+	<tr>
+		<td><b><?php echo $this->addFormLabel['id']; ?></b></td>
+		<td><input type="text" name="schm_id" id="schmId" value="<?php echo $this->sid; ?>" class="element-text" ><div id='checkschm'></div></td>
+	</tr>
+
+	<tr>
+		<td><b><?php echo $this->addFormLabel['type']; ?></b></td>
+		<td><?php echo $this->schemeTypes; ?></td>
+	</tr>
+
+	<tr>
+		<td><b><?php echo $this->addFormLabel['desc']; ?></b></td>
+		<td><textarea name="schm_desc" rows='4' cols='30'><?php echo $this->desc; ?></textarea></td>
+	</tr>
+
+	<tr>
+		<td><b><?php echo $this->addFormLabel['amount']; ?></b></td>
+		<td><input type="text" name="schm_amount" value="<?php echo $this->amount; ?>" ></td>
+	</tr>
+
+	<tr>
+		<td><b><?php echo $this->addFormLabel['startDt']; ?></b></td>
+		<td><input type="text" name="start_dt" value="<?php echo $this->startDt; ?>" class="pick-date"></td>
+	</tr>
+
+	<tr>
+		<td><b><?php echo $this->addFormLabel['endDt']; ?></b></td>
+		<td><input type="text" name="end_dt" value="<?php echo $this->endDt; ?>" class="pick-date" ></td>
+	</tr>
+
+	<tr>
+		<td></td>
+		<td>
+		<input type="submit" name="submit" value=<?php echo $this->addFormLabel['submit']; ?> id="submit"/>
+		<input type="reset" name="reset" value=<?php echo $this->addFormLabel['reset']; ?> id="submit"/>
+		<input type="button" name="submit" value=<?php echo $this->addFormLabel['cancel']; ?> id="submit" onclick="cancel();"/>
+		</td>
+	</tr>
+	</form>
+	</table>
+</div>

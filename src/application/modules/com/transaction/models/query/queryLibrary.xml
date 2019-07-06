@@ -1,0 +1,512 @@
+<?xml version="1.0"?>
+<querylibrary>
+
+	<query id="schemewiseCustPaymentOfYearQuery">
+		<title>Scheme-wise customer payment of current year</title>
+		<content>
+			SELECT COUNT(CUSTOMER_ID) AS CUSTOMERS , SCHEME_ID
+			FROM ltr_trn_summary 
+			WHERE YEAR(CURRENT_DATE)=YEAR(START_DATE) AND STATUS='NORMAL'
+			GROUP BY SCHEME_ID
+		</content>
+		<params>
+			<param>:lebel</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="weekwiseCustPaymentOfYearQuery">
+		<title>Week-wise customer payment of current year</title>
+		<content>
+			SELECT COUNT(CUSTOMER_ID) AS CUSTOMERS, START_DATE
+			FROM ltr_trn_summary 
+			WHERE WEEK(current_date)=WEEK(START_DATE) AND STATUS='NORMAL'
+			GROUP BY START_DATE
+		</content>
+		<params>
+			<param>:lebel</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="paymentReceiptInDiffTypesQuery">
+		<title>Payment and Receipt In Different Types</title>
+		<content>
+			SELECT IFNULL(PAYMENT_TYPE,RECEIPT_TYPE) AS PAYMENT_RECEIPT_TYPE ,
+			IF(PAYMENT_TOTAL=0,RECEIPT_TOTAL,PAYMENT_TOTAL) AS PAYMENT_RECEIPT_TOTAL 
+			FROM (
+			SELECT PAYMENT_TYPE AS PAYMENT_TYPE ,
+				   SUM(PAYMENT_AMOUNT) AS PAYMENT_TOTAL ,
+				   RECEIPT_TYPE AS RECEIPT_TYPE ,
+				   SUM(RECEIPT_AMOUNT) AS RECEIPT_TOTAL 
+			FROM ltr_trn_details
+			WHERE STATUS='NORMAL'
+			GROUP BY PAYMENT_TYPE,RECEIPT_TYPE
+			) OUTER_TABLE 
+		</content>
+		<params>
+			<param>:lebel</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="empAndSchmWishPayAndRecpQuery">
+		<title>Employee and Scheme Wise Total Payment and Receipt</title>
+		<content>
+			SELECT CONCAT(EMPLOYEE_ID , '-' , SCHEME_ID) EMP_SCHEME,
+				   sum(PAYMENT_AMOUNT) TOTAL_PAYMENT,
+				   sum(RECEIPT_AMOUNT) TOTAL_RECEIPT
+			FROM   ltr_trn_details lts
+			WHERE  1 = 1 AND STATUS='NORMAL'
+			GROUP BY EMP_SCHEME
+			ORDER BY EMP_SCHEME
+		</content>
+	</query>
+
+	<query id='totalTrnQuery'>
+	  <title>Total Transaction</title>
+		<content>
+				SELECT SUM(TOTAL_PAYMENT_PRINCIPAL) AS TOTAL_LOAN,SUM(TOTAL_RECEIPT_PRINCIPAL) AS TOTAL_PRINCIPAL,
+				SUM(TOTAL_RECEIPT_DONATION) AS TOTAL_DONATION,SUM(TOTAL_PAYMENT_SECURITY_DEPOSITE) AS BSD_PAID,
+				SUM(TOTAL_RECEIPT_SECURITY_DEPOSITE) AS BSD_RECEIPT
+				FROM ltr_trn_summary
+				WHERE STATUS='NORMAL'
+		</content>
+	</query>
+
+	<query id="pymtLstThreeMnthQuery">
+	  <title>Payment for last three months</title>
+	    <content>
+				SELECT if(SUM(TOTAL_PAYMENT_PRINCIPAL) is null,0,TOTAL_PAYMENT_PRINCIPAL) AS :value,
+				CONCAT(MONTHNAME(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)),'/',YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))) AS :label
+				FROM ltr_trn_summary 
+				WHERE START_DATE @LT@ DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+				AND START_DATE @GTEQ@ MONTH(CURDATE())
+				AND STATUS='NORMAL'
+				UNION
+				SELECT if(SUM(TOTAL_PAYMENT_PRINCIPAL) is null,0,TOTAL_PAYMENT_PRINCIPAL) AS :value,
+				CONCAT(MONTHNAME(DATE_SUB(CURDATE(), INTERVAL 2 MONTH)),'/',YEAR(DATE_SUB(CURDATE(), INTERVAL 2 MONTH))) AS :label
+				FROM ltr_trn_summary 
+				WHERE START_DATE @LTEQ@ DATE_SUB(CURDATE(), INTERVAL 1 MONTH) 
+				AND START_DATE  @GTEQ@ DATE_SUB(CURDATE(), INTERVAL 2 MONTH) 
+				AND STATUS='NORMAL'
+				UNION
+				SELECT if(SUM(TOTAL_PAYMENT_PRINCIPAL) is null,0,TOTAL_PAYMENT_PRINCIPAL) AS :value, 
+				CONCAT(MONTHNAME(DATE_SUB(CURDATE(), INTERVAL 3 MONTH)),'/',YEAR(DATE_SUB(CURDATE(), INTERVAL 3 MONTH))) AS :labels
+				FROM ltr_trn_summary 
+				WHERE START_DATE @LTEQ@ DATE_SUB(CURDATE(), INTERVAL 2 MONTH) 
+				AND START_DATE @GTEQ@ DATE_SUB(CURDATE(), INTERVAL 3 MONTH) 
+				AND STATUS='NORMAL'
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+
+	<query id="pymtLstThreeYrsQuery">
+	  <title>Payment for last three years</title>
+	    <content>
+				SELECT if(SUM(a.TOTAL_PAYMENT_PRINCIPAL) is null,0,
+				SUM(a.TOTAL_PAYMENT_PRINCIPAL)) AS :value , year(concat(b.FIN_YEAR_START-1,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) as :label,
+				date(concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY)) as 'YEAR_END_DATE'
+				FROM ltr_trn_summary as a
+				join
+				( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as b
+				WHERE a.START_DATE@GTEQ@date(concat(b.FIN_YEAR_START-1,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) and 
+				a.START_DATE@LTEQ@date(concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY)) 
+				AND a.STATUS='NORMAL'
+				group by 1=1
+				union
+				SELECT if(SUM(a.TOTAL_PAYMENT_PRINCIPAL) is null,0,
+				SUM(a.TOTAL_PAYMENT_PRINCIPAL)) AS :value , year(concat(b.FIN_YEAR_START-2,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) as :label,
+				date(concat(b.FIN_YEAR_START-1,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY)) as 'YEAR_END_DATE'
+				FROM ltr_trn_summary as a
+				join
+				( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as b
+				WHERE a.START_DATE@GTEQ@date(concat(b.FIN_YEAR_START-2,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) and 
+				a.START_DATE@LTEQ@date(concat(b.FIN_YEAR_START-1,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY)) 
+				AND a.STATUS='NORMAL'
+				group by 1=1
+				union
+				SELECT if(SUM(a.TOTAL_PAYMENT_PRINCIPAL) is null,0,
+				SUM(a.TOTAL_PAYMENT_PRINCIPAL)) AS :value , year(concat(b.FIN_YEAR_START-3,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) as :label,
+				date(concat(b.FIN_YEAR_START-2,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY)) as 'YEAR_END_DATE'
+				FROM ltr_trn_summary as a
+				join
+				( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as b
+				WHERE a.START_DATE@GTEQ@date(concat(b.FIN_YEAR_START-3,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) and 
+				a.START_DATE@LTEQ@date(concat(b.FIN_YEAR_START-2,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY)) 
+				AND a.STATUS='NORMAL'
+				group by 1=1
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="schmWiseTotalRecQuery">
+	  <title>Scheme Wise Total Receipt</title>
+	    <content>
+				SELECT SUM(TOTAL_RECEIPT_PRINCIPAL) AS :value, SCHEME_ID AS :label
+				FROM ltr_trn_summary
+				WHERE STATUS='NORMAL'
+				GROUP BY :label
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="schmWiseTotalDueQuery">
+	  <title>Scheme Wise Total Dues</title>
+	    <content>
+				SELECT SUM(TOTAL_RECEIPT_DUE_PRINCIPAL) AS :value, SCHEME_ID AS :label
+				FROM ltr_trn_summary
+				WHERE STATUS='NORMAL'
+				GROUP BY :label
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="topTenPymtLocQuery">
+	  <title>Top ten Payment locations</title>
+	    <content>
+				SELECT SUM(a.TOTAL_PAYMENT_PRINCIPAL) AS :value, b.LOCATION_ID as :label , 
+				concat(c.FIN_YEAR_START,'-',c.FIN_YEAR_START_MONTH,'-',c.FIN_YEAR_START_DAY) AS 'DATE_A', 
+				concat(c.FIN_YEAR_END,'-',c.FIN_YEAR_END_MONTH,'-',c.FIN_YEAR_END_DAY) AS 'DATE_B'
+				FROM ltr_trn_summary AS a
+				RIGHT OUTER JOIN ref_mst_entity AS b
+				ON a.CUSTOMER_ID=b.CUSTOMER_ID 
+				join ( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as c
+				WHERE a.STATUS='NORMAL' and c.ACTIVE_STATUS='ACTIVE'
+				and a.START_DATE@GTEQ@date(concat(c.FIN_YEAR_START,'-',c.FIN_YEAR_START_MONTH,'-',c.FIN_YEAR_START_DAY))
+				and a.START_DATE@LTEQ@date(concat(c.FIN_YEAR_END,'-',c.FIN_YEAR_END_MONTH,'-',c.FIN_YEAR_END_DAY))
+				GROUP BY :label
+				ORDER BY :value DESC
+				LIMIT 10
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="schmTypTotalLoanQuery">
+	  <title>Scheme type wise total loan</title>
+	    <content>
+				SELECT rms.SCHEME_TYPE AS :label,SUM(ltd.PAYMENT_AMOUNT) AS :value
+				FROM ref_mst_scheme AS rms
+				LEFT OUTER JOIN ltr_trn_details AS ltd
+				ON rms.SCHEME_ID=ltd.SCHEME_ID
+				WHERE ltd.STATUS='NORMAL'
+				GROUP BY :label
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="collWiseTotalPayCurrentYear">
+	  <title>Scheme type wise total loan</title>
+	    <content>
+				select a.EMPLOYEE_ID as :label,  SUM(a.TOTAL_PAYMENT_PRINCIPAL) as :value,
+				date(concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) as 'YEAR_START_DATE',
+				date(concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY)) as 'YEAR_END_DATE'
+				from ltr_trn_summary as a 
+				join ( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as b
+				where a.STATUS='NORMAL' and b.ACTIVE_STATUS='ACTIVE' and 
+				a.START_DATE@GTEQ@date(concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) and 
+				a.START_DATE@LTEQ@date(concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY))
+				group by a.EMPLOYEE_ID
+				order by :value desc 
+
+
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="payReceptDueCurrentYear">
+	  <title>Payment recept due of currnet year</title>
+	    <content>
+				select sum(a.TOTAL_PAYMENT_PRINCIPAL) AS :value, 'PAYMENT' as :label,
+				concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY) AS 'DATE_A', 
+				concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY) AS 'DATE_B'
+				from ltr_trn_summary as a 
+				join ( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as b
+				where a.STATUS='NORMAL' and b.ACTIVE_STATUS='ACTIVE'
+				and
+				a.START_DATE@GTEQ@date(concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) and 
+				a.START_DATE@LTEQ@date(concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY))
+				group by 1=1
+				union
+				select sum(a.TOTAL_RECEIPT_PRINCIPAL) AS :value, 'RECEIPT' as :label,
+				concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY) AS 'DATE_A', 
+				concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY) AS 'DATE_B'
+				from ltr_trn_summary as a 
+				join ( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as b
+				where a.STATUS='NORMAL' and b.ACTIVE_STATUS='ACTIVE'
+				and
+				a.START_DATE@GTEQ@date(concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) and 
+				a.START_DATE@LTEQ@date(concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY))
+				group by 1=1
+				union
+				select sum(a.TOTAL_RECEIPT_DUE_PRINCIPAL) AS :value, 'DUE' as :label,
+				concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY) AS 'DATE_A', 
+				concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY) AS 'DATE_B'
+				from ltr_trn_summary as a 
+				join ( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as b
+				where a.STATUS='NORMAL' and b.ACTIVE_STATUS='ACTIVE'
+				and
+				a.START_DATE@GTEQ@date(concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY)) and 
+				a.START_DATE@LTEQ@date(concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY))
+				group by 1=1
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+
+	<query id="schmTypeWiseTotalReceptCurrYear">
+	  <title>Payment recept due of currnet year</title>
+	    <content>
+				SELECT rms.SCHEME_TYPE as :label ,SUM(ltd.RECEIPT_AMOUNT) as :value,
+				concat(c.FIN_YEAR_START,'-',c.FIN_YEAR_START_MONTH,'-',c.FIN_YEAR_START_DAY) AS 'DATE_A', 
+				concat(c.FIN_YEAR_END,'-',c.FIN_YEAR_END_MONTH,'-',c.FIN_YEAR_END_DAY) AS 'DATE_B'
+				FROM ref_mst_scheme AS rms
+				LEFT OUTER JOIN ltr_trn_details AS ltd
+				ON rms.SCHEME_ID=ltd.SCHEME_ID
+				join ( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as c
+				WHERE ltd.STATUS='NORMAL' and c.ACTIVE_STATUS='ACTIVE' and
+				ltd.TRANSACTION_DATE@GTEQ@date(concat(c.FIN_YEAR_START,'-',c.FIN_YEAR_START_MONTH,'-',c.FIN_YEAR_START_DAY))
+				and ltd.TRANSACTION_DATE@LTEQ@date(concat(c.FIN_YEAR_END,'-',c.FIN_YEAR_END_MONTH,'-',c.FIN_YEAR_END_DAY))
+				GROUP BY :label
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="topTenReceptLocCurrYear">
+	  <title>Payment recept due of currnet year</title>
+	    <content>
+				SELECT SUM(a.TOTAL_RECEIPT_PRINCIPAL) AS :value, b.LOCATION_ID as :label , 
+				concat(c.FIN_YEAR_START,'-',c.FIN_YEAR_START_MONTH,'-',c.FIN_YEAR_START_DAY) AS 'DATE_A', 
+				concat(c.FIN_YEAR_END,'-',c.FIN_YEAR_END_MONTH,'-',c.FIN_YEAR_END_DAY) AS 'DATE_B'
+				FROM ltr_trn_summary AS a
+				RIGHT OUTER JOIN ref_mst_entity AS b
+				ON a.CUSTOMER_ID=b.CUSTOMER_ID 
+				join ( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as c
+				WHERE a.STATUS='NORMAL' and c.ACTIVE_STATUS='ACTIVE'
+				and a.START_DATE@GTEQ@date(concat(c.FIN_YEAR_START,'-',c.FIN_YEAR_START_MONTH,'-',c.FIN_YEAR_START_DAY))
+				and a.START_DATE@LTEQ@date(concat(c.FIN_YEAR_END,'-',c.FIN_YEAR_END_MONTH,'-',c.FIN_YEAR_END_DAY))
+				GROUP BY :label
+				ORDER BY :value DESC
+				LIMIT 10
+
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="payReceptCurrentWeek">
+	  <title>Payment and receipt of current week</title>
+	    <content>
+				select sum(PAYMENT_AMOUNT) as :value, week(current_date) as :label from ltr_trn_details
+				where STATUS='NORMAL' and week(current_date)=week(TRANSACTION_DATE)
+				union
+				select sum(RECEIPT_AMOUNT) as :value, week(current_date) as :label from ltr_trn_details
+				where STATUS='NORMAL' and week(current_date)=week(TRANSACTION_DATE)
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="topTenDueLocCurrYear">
+	  <title>Top ten location with maximum due of current year</title>
+	    <content>
+				SELECT SUM(a.TOTAL_RECEIPT_DUE_PRINCIPAL) as :value , b.LOCATION_ID as :label , 
+				concat(c.FIN_YEAR_START,'-',c.FIN_YEAR_START_MONTH,'-',c.FIN_YEAR_START_DAY) AS 'DATE_A', 
+				concat(c.FIN_YEAR_END,'-',c.FIN_YEAR_END_MONTH,'-',c.FIN_YEAR_END_DAY) AS 'DATE_B'
+				FROM ltr_trn_summary AS a
+				RIGHT OUTER JOIN ref_mst_entity AS b
+				ON a.CUSTOMER_ID=b.CUSTOMER_ID 
+				join ( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as c
+				WHERE a.STATUS='NORMAL' and c.ACTIVE_STATUS='ACTIVE'
+				and a.START_DATE@GTEQ@date(concat(c.FIN_YEAR_START,'-',c.FIN_YEAR_START_MONTH,'-',c.FIN_YEAR_START_DAY))
+				and a.START_DATE@LTEQ@date(concat(c.FIN_YEAR_END,'-',c.FIN_YEAR_END_MONTH,'-',c.FIN_YEAR_END_DAY))
+				GROUP BY  :label
+				ORDER BY :value DESC
+				LIMIT 10
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="monthWisePaymentCurrYear">
+	  <title>Month wise payment of current year</title>
+	    <content>
+				select sum(a.TOTAL_PAYMENT_PRINCIPAL) as :value, a.START_DATE,monthname(a.START_DATE) as :label ,
+				concat(c.FIN_YEAR_START,'-',c.FIN_YEAR_START_MONTH,'-',c.FIN_YEAR_START_DAY) AS 'DATE_A', 
+				concat(c.FIN_YEAR_END,'-',c.FIN_YEAR_END_MONTH,'-',c.FIN_YEAR_END_DAY) AS 'DATE_B'
+				from ltr_trn_summary as a 
+				join ( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as c
+				where a.STATUS='NORMAL' and c.ACTIVE_STATUS='ACTIVE' and 
+				a.START_DATE@GTEQ@date(concat(c.FIN_YEAR_START,'-',c.FIN_YEAR_START_MONTH,'-',c.FIN_YEAR_START_DAY))
+				and a.START_DATE@LTEQ@date(concat(c.FIN_YEAR_END,'-',c.FIN_YEAR_END_MONTH,'-',c.FIN_YEAR_END_DAY))
+				group by :label
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="monthWiseReceptCurrYear">
+	  <title>Month wise recept of current year</title>
+	    <content>
+				select sum(a.TOTAL_RECEIPT_PRINCIPAL) as :value, a.START_DATE,monthname(a.START_DATE) as :label,
+				concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY) AS 'DATE_A', 
+				concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY) AS 'DATE_B'
+				from ltr_trn_summary as a 
+				join ( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as b
+				where a.STATUS='NORMAL' and b.ACTIVE_STATUS='ACTIVE' and
+				a.START_DATE@GTEQ@date(concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY))
+				and a.START_DATE@LTEQ@date(concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY))
+				group by :label
+
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="topFiveCollRecCurrYear">
+	  <title>Top five Collector with maximum recept</title>
+	    <content>
+				select a.EMPLOYEE_ID as :label, sum(a.TOTAL_RECEIPT_PRINCIPAL) as :value ,
+				concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY) AS 'DATE_A', 
+				concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY) AS 'DATE_B'
+				from ltr_trn_summary as a 
+				join ( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as b
+				where a.STATUS='NORMAL' and b.ACTIVE_STATUS='ACTIVE' and 
+				a.START_DATE@GTEQ@date(concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY))
+				and a.START_DATE@LTEQ@date(concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY))
+				group by :label
+				order by :value desc
+				limit 5
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="schmWisePaymentCurrYear">
+	  <title>Project wise during the year total payment</title>
+	    <content>
+				select a.SCHEME_ID as :label, sum(a.TOTAL_PAYMENT_PRINCIPAL) as :value ,
+				concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY) AS 'DATE_A', 
+				concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY) AS 'DATE_B'
+				from ltr_trn_summary as a 
+				join ( SELECT * FROM ref_mst_fin_year_info WHERE ACTIVE_STATUS='ACTIVE' AND STATUS='NORMAL') as b
+				where a.STATUS='NORMAL' and b.ACTIVE_STATUS='ACTIVE' and 
+				a.START_DATE@GTEQ@date(concat(b.FIN_YEAR_START,'-',b.FIN_YEAR_START_MONTH,'-',b.FIN_YEAR_START_DAY))
+				and a.START_DATE@LTEQ@date(concat(b.FIN_YEAR_END,'-',b.FIN_YEAR_END_MONTH,'-',b.FIN_YEAR_END_DAY))
+				group by :label
+				order by :value desc
+
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="lstMnthSchmWisePayment">
+	  <title>last month project wise payment</title>
+	    <content>
+				select SCHEME_ID as :label, sum(TOTAL_PAYMENT_PRINCIPAL) as :value  
+				from ltr_trn_summary
+				where STATUS='NORMAL' and month(START_DATE)=month(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+				group by :label
+				order by :value
+
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="lstMnthCollWisePayment">
+	  <title>last month project wise payment</title>
+	    <content>
+				select EMPLOYEE_ID as :label, sum(TOTAL_PAYMENT_PRINCIPAL) as :value  
+				from ltr_trn_summary
+				where STATUS='NORMAL' and month(START_DATE)=month(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+				group by :label
+				order by :value
+
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+	<query id="lstMnthCollWiseRecept">
+	  <title>last month collector wise receipt</title>
+	    <content>
+				select EMPLOYEE_ID as :label, sum(TOTAL_RECEIPT_PRINCIPAL) as :value  
+				from ltr_trn_summary
+				where STATUS='NORMAL' and month(START_DATE)=month(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+				group by :label
+				order by :value
+
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+
+	<query id="lstMnthSchmWiseReceipt">
+	  <title>last month project wise receipt</title>
+	    <content>
+				select SCHEME_ID as :label, sum(TOTAL_RECEIPT_PRINCIPAL) as :value  
+				from ltr_trn_summary
+				where STATUS='NORMAL' and month(START_DATE)=month(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+				group by :label
+				order by :value
+
+		</content>
+		<params>
+			<param>:label</param>
+			<param>:value</param>
+		</params>
+	</query>
+
+
+</querylibrary>

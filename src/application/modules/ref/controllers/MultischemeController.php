@@ -1,0 +1,320 @@
+<?php
+class Ref_MultischemeController extends modules_ref_controllers_RefController
+{
+	protected $_lib;
+	protected $_imageWidth = 100;
+	protected $_imageHeight = 100;
+	protected $_temp;
+	protected $_session;
+	protected $_refModel;
+	protected $_refConfig;
+	protected $_maxRows=30;
+	protected $_defaultRows=10;
+	protected $_startId=1;
+	protected $_resultLabels=null;
+	protected $_fileName='Inserted-Projects';
+
+    function preDispatch(){  
+		$this->_session=$this->_initialize();
+		$this->_refModel = new modules_ref_models_refAccessQuery;
+		$this->_refConfig = new modules_ref_config_refConfig;
+		$this->view->acl=$this->_session->acl;
+		$this->_session->xlsResult=null;
+		$this->_session->xlsHeader=null;
+	}
+
+	function postDispatch(){
+		$this->_refModel->destroy();
+		unset($this->_refModel);
+	}
+
+    function insertschemeAction()
+	{ 
+		$successResults=$msg=$total_scheme_cust=$insertMsg=$msg_status=null;
+		$no=0;
+
+		$element=new Bloomfi_App_UHtmlElement;
+		$this->view->rows=$this->_defaultRows;
+		$labels=new modules_ref_labels_label;
+		$this->view->formLabels=$labels->getRefMultiSchemeFormLabels('addScheme');
+		$this->view->numRowsLabel=$labels->getRefMultiSchemeFormLabels('row_nums');
+		$this->view->statusLabels=$labels->getRefMultiSchemeFormLabels('status');
+		$message=new modules_ref_messages_message;
+		$this->insertMsg=$message->getRefMultiSchemeMessages('error');
+		$this->statusMsg=$message->getRefMultiSchemeMessages('statusMsg');
+		$this->_resultLabels=$this->view->resultLabels=$labels->getRefMultiSchemeFormLabels('result');
+		$this->view->schemeTypes=$this->_refModel->getAllSchemeTypesQuery();
+		
+		$ele=$this->getRequest()->getPost();
+          
+		if($this->getRequest()->getPost('rows') || $this->getRequest()->getPost('rows1'))
+		{
+			$row=$this->getRequest()->getPost('rows');
+			if($row>$this->_maxRows){
+				$maxRowInput=str_replace('@VAR1@',$this->_maxRows,$this->insertMsg['maxRow']);
+				$msg['error']=$maxRowInput;
+				$row=null;
+			}
+			$row1=$this->getRequest()->getPost('rows1');
+		}
+
+		if(!empty($row))
+		{
+			$this->view->rows=$row;
+		}elseif(!empty($row1))
+		{
+			$this->view->rows=$row1;
+		} 
+
+		if($this->getRequest()->getPost('save'))
+		{
+
+			for($i=0;$i<$this->view->rows;$i++)
+			{
+				//echo "[$i] => ".$this->view->rows."<br>";
+				if(isset($ele['schemeName'][$i]) && !empty($ele['schemeName'][$i]))
+					$schemeNm[$i]=$ele['schemeName'][$i];
+				else $schemeNm[$i]=null;
+				if(isset($ele['schemeId'][$i]) && !empty($ele['schemeId'][$i]))
+					$schemeId[$i]=$ele['schemeId'][$i];
+				else $schemeId[$i]=null;
+				if(isset($ele['schemeType'][$i]) && !empty($ele['schemeType'][$i]))
+					$schemeType[$i]=$ele['schemeType'][$i];
+				else $schemeType[$i]=null;
+				if(isset($ele['description'][$i]) && !empty($ele['description'][$i]))
+					$desc[$i]=$ele['description'][$i];
+				else $desc[$i]=null;
+				if(isset($ele['amount'][$i]) && !empty($ele['amount'][$i]))
+					$amount[$i]=$ele['amount'][$i];
+				else $amount[$i]=null;
+				if(isset($ele['startDate'][$i]) && !empty($ele['startDate'][$i]))
+					$startDt[$i]=$ele['startDate'][$i];
+				else $startDt[$i]=null;
+				if(isset($ele['endDate'][$i]) && !empty($ele['endDate'][$i]))
+					$endDt[$i]=$ele['endDate'][$i];
+				else $endDt[$i]=null;
+				
+				
+				$schm_nm=$schemeNm[$i];
+				$schm_id=$schemeId[$i];
+				$type=$schemeType[$i];
+				$descrip=$desc[$i];
+				$amnt=$amount[$i];
+				$stDt=$startDt[$i];
+				$enDt=$endDt[$i];
+				
+
+				$data=array('schemeName'=>$schm_nm,'schemeId'=>$schm_id,'schemeType'=>$type,'description'=>$descrip,'amount'=>$amnt,'startDate'=>$stDt,
+					'endDate'=>$enDt);
+
+				
+				$check=$this->validate($data);
+			//	print_r($check);
+				if(!$check)
+				 {
+					$this->_refModel->startTransaction();
+					$this->_refModel->insertRowInSchemeTblDML();
+					$max_id=$this->_refModel->getLastInsertedId();
+					//$this->_refModel->releaseLock('SCHEME');
+					$data=array($schm_id,$schm_nm,$type,$descrip,$amnt,$stDt,$enDt,$max_id->ID);
+					$result1=$this->_refModel->updateInsertedSchemeDML($data);
+					if($result1!=null){
+						$msg_status[$i+1]['error']['Error']=$this->statusMsg['notFound'];
+						$msg_status[$i+1]['status']=$this->statusMsg['success'];
+						$msg_status[$i+1]['skip']=false;
+						$this->_refModel->commitTransaction();
+						$successResults[$no++]=array('schemeId'=>$schm_id,'schemeName'=>$schm_nm,
+							'schemeType'=>$type,'description'=>$descrip,'amount'=>$amnt,'startDate'=>$stDt,'endDate'=>$enDt);
+
+						//$nm=$age=$addr=$astemp=$description=$sex=$loc_id=$customer_id=$cssId=null;
+					}
+					else {
+						$this->view->textErrors = $this->statusMsg['notInsert'];
+					}			
+				 }
+				else{
+					$msg_status[$i+1]['error']=$check;
+					$msg_status[$i+1]['status']=$this->statusMsg['failed'];
+					if($this->_skip==true) $msg_status[$i+1]['skip']=true;
+					else $msg_status[$i+1]['skip']=false;
+				 }
+			}
+
+			$this->view->schemeNm=$schemeNm;
+			$this->view->schemeId=$schemeId;
+			$this->view->schemeType=$schemeType;
+			$this->view->desc=$desc;
+			$this->view->amount=$amount;
+			$this->view->startDate=$startDt;
+			$this->view->endDate=$endDt;
+			
+
+			$this->view->validationMsg=$msg_status;
+			$this->view->sucsessfulEntries=$successResults;
+			$this->_session->xlsResult=$successResults;
+			$this->_session->xlsHeader=$this->_getMultiSchemeInsertedResultsHeader();
+			$this->_session->fileName=$this->_fileName;
+
+		}else{
+			$o_schmNm=$o_schmId=$o_type=$o_desc=$o_amount=$o_startDt=$o_endDt=null;
+
+			$copy=$this->getRequest()->getPost('copyRow');
+			$ele=$this->getRequest()->getPost();
+			if($copy!=$this->_maxRows)
+			{
+				if($this->view->rows==$copy)
+						$this->view->rows++;
+
+				for($i=0;$i<$this->view->rows;$i++)
+					{
+						
+						if($i!=$copy)
+						{
+							
+							if(isset($ele['schemeName'][$i]) && !empty($ele['schemeName'][$i]))
+								$schemeNm[$i]=$ele['schemeName'][$i];
+							else $schemeNm[$i]=null;
+							if(isset($ele['schemeId'][$i]) && !empty($ele['schemeId'][$i]))
+								$schemeId[$i]=$ele['schemeId'][$i];
+							else $schemeId[$i]=null;
+							if(isset($ele['schemeType'][$i]) && !empty($ele['schemeType'][$i]))
+								$schemeType[$i]=$ele['schemeType'][$i];
+							else $schemeType[$i]=null;
+							if(isset($ele['description'][$i]) && !empty($ele['description'][$i]))
+								$desc[$i]=$ele['description'][$i];
+							else $desc[$i]=null;
+							if(isset($ele['amount'][$i]) && !empty($ele['amount'][$i]))
+								$amount[$i]=$ele['amount'][$i];
+							else $amount[$i]=null;
+							if(isset($ele['startDate'][$i]) && !empty($ele['startDate'][$i]))
+								$startDt[$i]=$ele['startDate'][$i];
+							else $startDt[$i]=null;
+							if(isset($ele['endDate'][$i]) && !empty($ele['endDate'][$i]))
+								$endDt[$i]=$ele['endDate'][$i];
+							else $endDt[$i]=null;
+							
+						}else
+						{
+							$schemeNm[$i]=$o_schmNm;
+							$schemeId[$i]=$o_schmId;
+							$schemeType[$i]=$o_type;
+							$desc[$i]=$o_desc;
+							$amount[$i]=$o_amount;
+							$startDt[$i]=$o_startDt;
+							$endDt[$i]=$o_endDt;
+						}
+
+						if($i==$copy-1)
+						{
+							$o_schmNm=$schemeNm[$i];
+							$o_schmId=$schemeId[$i];
+							$o_type=$schemeType[$i];
+							$o_desc=$desc[$i];
+							$o_amount=$amount[$i];
+							$o_startDt=$startDt[$i];
+							$o_endDt=$endDt[$i];
+						}
+					}
+				$this->view->schemeNm=$schemeNm;
+				$this->view->schemeId=$schemeId;
+				$this->view->schemeType=$schemeType;
+				$this->view->desc=$desc;
+				$this->view->amount=$amount;
+				$this->view->startDate=$startDt;
+				$this->view->endDate=$endDt;
+				
+			}else{
+				$msg['error']=$this->statusMsg['notCopy'];
+			}
+		}
+
+		$this->view->textErrors = $msg;
+	}
+
+	protected function _getMultiSchemeInsertedResultsHeader()
+	{
+		$lbl=$this->_resultLabels;
+		//print_r($lbl);
+		//die;
+		$header=array($lbl['schemeName'],$lbl['schemeCode'],$lbl['type'],$lbl['desc'],$lbl['amount'], $lbl['stDate'],$lbl['endDate']);
+		return $header;
+	}
+
+	/*
+	 Scheme Validation
+	*/
+	protected function validate($data,$row=null)
+	{
+		$check=$msg=$current_row=$schmNm=$schmId=$schmTyp=$desc=$stDt=$enDt=$amnt=$insert_msg=$valMsg=null;
+
+		
+		if($row)$current_row="[Row - $row] ";
+
+		$element=new Bloomfi_App_UHtmlElement;
+		$validateMsg=new modules_ref_messages_message;
+		$this->errorMsg=$validateMsg->getRefMultiCollMessages('ValidateMsg');
+	//	print_r($this->errorMsg);
+		$this->_skip=false;
+
+	//	print_r($data);
+	//	die; 
+		if(isset($data['schemeName']))
+			$schmNm = $data['schemeName']; 
+		if(isset($data['schemeId']))
+			$schmId = $data['schemeId'];
+		if(isset($data['schemeType']))
+			$schmTyp=$data['schemeType'];
+		if(isset($data['description']))
+			$desc=$data['description'];
+		if(isset($data['amount']))
+			$amnt=$data['amount'];
+		if(isset($data['startDate']))
+			$stDt=$data['startDate'];
+		if(isset($data['endDate']))
+			$enDt = $data['endDate'];
+	
+		if ( empty($schmNm) && empty($schmId) && empty($schmTyp) && empty($desc) &&
+			empty($amnt) && empty($stDt) && empty($enDt)) {
+			//$msg_status=false;
+			$this->_skip=true;
+			return array('Error'=>true);
+		}
+		
+
+		//------------------------Employee-----------------------------
+		if($msg)$check['Project Code']=$msg;
+			$msg=$element->checkElementSpace($this->view->formLabels['schemeCode'],$schmId,10,2);
+			if($msg)$check['Project Code']=$msg;
+			else{
+				$result=$this->_refModel->getSchmQuery($schmId);
+				if($result) $check['Project Code']="<b>Project Code</b> already exists.";
+			}
+		
+
+		$msg=$element->checkElement($this->view->formLabels['schemeName'],$schmNm,30,3);
+			if($msg)$check['Project Name']=$msg;
+		
+		
+		$msg=$element->checkElementSelect('default',$this->view->formLabels['type'],$schmTyp);
+			if($msg)$check['Type']=$msg;
+
+		$msg=$element->checkElement($this->view->formLabels['desc'],$desc,20,2);
+			if($msg)$check['Description']=$msg;
+			$msg=$element->checkElementNum($this->view->formLabels['amount'],$amnt,13,1);
+			if($msg)$check['Amount']=$msg;
+			$msg=$element->checkElementDate($this->view->formLabels['stDate'],$stDt);
+			if($msg)$check['Start Date']=$msg;
+			$msg=$element->checkElementDate($this->view->formLabels['endDate'],$enDt);
+			if($msg)$check['End Date']=$msg;
+		
+		
+
+		ob_flush();
+		flush();
+			
+		
+		
+		
+		return $check;
+	}  
+}

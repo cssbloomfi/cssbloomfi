@@ -1,0 +1,194 @@
+<?php
+$this->showXlsDownloadSection($this->xlsResults);
+
+function initializeString($arr,$searchFormLabel)
+	{
+		$strObj=new Bloomfi_App_Ulibrary_StrPattern;
+		$strObj->setPattern(null, ' and ');
+		$strObj->setDataEmptyValidation();
+		if(!empty($arr['cnm']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['custname']."</b> '".$arr['cnm']."'");
+		if(!empty($arr['cid']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['custid']."</b> '".$arr['cid']."'");
+		if(!empty($arr['enm']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['empname']."</b> '".$arr['enm']."'");
+		if(!empty($arr['eid']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['empid']."</b> '".$arr['eid']."'");
+		if(!empty($arr['schm']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['schemeId']."</b> '".$arr['schm']."'");
+		if(!empty($arr['param3']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['schemeType']."</b> '".$arr['param3']."'");
+		if(!empty($arr['param1']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['memoNoStart']."</b> '".$arr['param1']."'");
+		if(!empty($arr['param2']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['memoNoEnd']."</b> '".$arr['param2']."'");
+		if(!empty($arr['strdt']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['startDate']."</b> '".$arr['strdt']."'");
+		if(!empty($arr['enddt']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['endDate']."</b> '".$arr['enddt']."'");
+		$string=$strObj->isExistPatternString();
+		if($string) $strObj->preAddToStringDirect("The Search Result is based on ");
+		else $strObj->preAddToStringDirect("The Search Result is based on no params");
+		$string=$strObj->getPatternString();
+		unset($strObj);
+		return $string;
+	}
+?>
+
+<?php 
+if($this->textErrors )
+{ 
+	echo "<div class='errorbox'>";
+	echo "<b>".$this->viewlabels['termination']."</b><br>";	
+		$this->textMessage($this->textErrors);
+	echo '</div>';
+}
+if($this->textSuccess){
+	echo "<div class='successbox'>";
+		$this->successMessage($this->textSuccess);
+	echo "</div>";
+} 
+?>
+
+<div class="entry-section">
+	<fieldset>
+	<legend> <img src="<?= $this->images['search']; ?>" class="icons" > <?php echo $this->searchForm['searchSectionHead']; ?></legend>
+	<div class="add-link-section">
+		<a href="/trn/receive/adddetails" class="btn add"><?php echo $this->links['adddetails']; ?></a>
+	</div>
+	<div class="search-section">
+		<form name="Form1" method="POST" >
+		<input type="hidden" value="Search" name="REQUEST">
+		    <table class="zebra">
+			<tr>	
+				<td><b><?php echo $this->searchForm['custname'];?></b></td>
+				<td><input type="text" name="customer_name" id="customer_name"/></td>
+				<td><b><?php echo $this->searchForm['custid']; ?></b></td>
+				<td><input type="text" name="customer_code" id="customer_id"/></td>
+			</tr>
+			<tr> 
+				<td><b><?php echo $this->searchForm['empname'];?></b></td>
+				<td><input type="text" name="employee_name" id="employee_name"/></td>
+				<td><b><?php echo $this->searchForm['empid'];?></b></td>
+				<td><input type="text" name="employee_code" id="employee_id"/></td>
+			</tr>
+			<tr> 
+				<td><b><?php echo $this->searchForm['schemeId'];?></b></td>
+				<td><input type="text" name="scheme_id" id="scheme_id"/></td>
+				<td><b><?php echo $this->searchForm['schemeType'];?></b></td>
+				<td><?=  $this->schemeTypes ?></td>
+			</tr>
+			<tr> 
+				<td><b><?php echo $this->searchForm['memoNoStart'];?></b></td>
+				<td><input type="text" name="memo_no_start" id="memo_no_start"/></td>
+				<td><b><?php echo $this->searchForm['memoNoEnd'];?></b></td>
+				<td><input type="text" name="memo_no_end" id="memo_no_end"/></td>
+			</tr>
+			<tr> 
+				<td><b><?php echo $this->searchForm['startDate']." (".$this->searchForm['dateFormat'].")";?></b></td>
+				<td><input type="text" size=17 name="startDate" class="pick-date"/></td>
+				<td><b><?php echo $this->searchForm['endDate']." (".$this->searchForm['dateFormat'].")";?></b></td>
+				<td><input type="text" size=17 name="endDate" class="pick-date"/></td>
+			</tr>
+			<tr> 
+				<td colspan=3>&nbsp;</td>
+				<td><input type="submit" value="<?php echo $this->searchForm['submit']; ?>" id="submit_1"/></td>
+			</tr>
+		    </table>
+		</form>
+	</div>
+	</fieldset>
+</div>
+
+
+<fieldset>
+<legend>
+<?php
+//echo $this->viewlabels['totalvaluepre'].' <b>' . (int)$this->escape($this->totalDetails).$this->viewlabels['totalvaluepost'] . '</b>';
+echo "</legend><br>";
+if($this->srch){
+$searchResultString=initializeString( array('cnm'=>$this->cnm,'cid'=>$this->cid,
+				          'enm'=>$this->enm,'eid'=>$this->eid,'schm'=>$this->schm,'param1'=>$this->memoStart,'param2'=>$this->memoEnd,
+					  'param3'=>$this->schmType,'strdt'=>$this->strdt,'enddt'=>$this->enddt), $this->searchForm ); ?>
+<div class="search-result-string"><img src="<?= $this->images['searchResult']; ?>" class="search-result-icons"  > <?= $searchResultString; ?></div>
+<?php
+}
+if ( $this->paginator['paginator'] )
+{  
+?>
+<div class="pagination">
+	<?php echo $this->paginationControl($this->paginator['paginator'],
+					     'Sliding',
+					     '/partials/my_pagination_control_2.phtml',
+					      array('search'=>$this->srch,'cnm'=>$this->cnm,'cid'=>$this->cid,'enm'=>$this->enm,'eid'=>$this->eid, 'schm'=>$this->schm, 'strdt'=>$this->strdt, 'enddt'=>$this->enddt, 'param1'=>$this->memoStart,'param2'=>$this->memoEnd,
+					  'param3'=>$this->schmType) ); ?>
+</div>
+<fieldset class="export_section export-align1">
+<legend><?= $this->viewlabels['excelExport'] ?></legend>
+	<form method="POST">
+		<input name="searchparams" type="hidden" value="<?php echo $this->searchparams; ?>" >
+		<input name="arrayparams" type="hidden" value="<?php echo $this->arrayparams; ?>" >
+		<input name="search" type="hidden" value=<?= $this->srch; ?>>
+		<input type="submit" id="xlss" name="export" value="" />
+	</form>
+</fieldset>
+<?php } ?>
+
+<form  name="deleteForm" METHOD="POST">
+<table class="zebra">
+
+<?php 
+
+echo '<tr>';
+echo '<th>'.$this->detailsTableHeader['memoNo'].'</th>';
+echo '<th>'.$this->detailsTableHeader['voucherNo'].'</th>';
+echo '<th>'.$this->detailsTableHeader['scheme'].'</th>';
+echo '<th>'.$this->detailsTableHeader['employee'].'</th>';
+echo '<th>'.$this->detailsTableHeader['customer'].'</th>';
+echo '<th>'.$this->detailsTableHeader['receiptAmount'].'</th>';
+echo '<th>'.$this->detailsTableHeader['receiptType'].'</th>';
+echo '<th>'.$this->detailsTableHeader['transactionDate'].'</th>';
+echo '<th>'.$this->detailsTableHeader['trns'].'</th>';
+echo '<th>'.$this->detailsTableHeader['edit'].'</th>';
+echo '<th><input type="submit" class="delete" name="delete" id="delete_icon" value=""/>'.'<input type="checkbox" name="checkall" value=0 onclick="SetAllCheckBoxes'."('deleteForm','tdid','checkall')".';"/>'.$this->detailsTableHeader['delete'].'</th>';
+echo '</tr>';
+
+if ( $this->srch ) {?>
+<input name="params" type="hidden" value=<?php echo $this->cnm."/".$this->cid."/".$this->enm."/".$this->eid."/".$this->schm."/".$this->strdt."/".$this->enddt.'/'.$this->memoStart.'/'.$this->memoEnd."/".$this->schmType."/".$this->page; ?> >
+<?php } 
+?>
+<input name="REQUEST" type="hidden" value="Delete">
+<?php
+	
+	if (count($this->paginator['data'])){
+	$i=0;
+	foreach ($this->paginator['data']  as $row )
+			{
+			   echo "<tr>";
+			   echo "<td>$row->MEMO_NO</td>";
+			   echo "<td>$row->VOUCHER_NO</td>";
+			   echo "<td>$row->SCHEME_ID (".$row->SCHEME_TYPE[0].")</td>";
+			   echo "<td>$row->EMPLOYEE_ID </td>";
+			   echo "<td>$row->CUSTOMER_NAME </td>";
+		           echo "<td class='rt'>".$this->format->numFormat($row->RECEIPT_AMOUNT)." </td>";
+			   echo "<td>$row->RECEIPT_TYPE </td>";
+			    echo "<td class='ct'>$row->TRANSACTION_DATE </td>";
+			   echo '<td><a href="/trn/receive/summarydtlid/tsid/'.$row->TRAN_SUMMARY_ID.'/tdid/'.$row->TRAN_DETAILS_ID.'" title="Summary view of '.$row->TRAN_DETAILS_ID.'" rel="facebox" id="table_icon"></a></td>';
+			   echo '<td><a href="/trn/receive/editdtl/id/'.$row->TRAN_DETAILS_ID.'" title="Edit" id="edit_icon"></a></td>'; 
+			   echo '<td class="ct"><input type="checkbox" name="tdid['.$i.']" id="tdid" value="'.$row->TRAN_DETAILS_ID.'" /></td>';
+			   echo "</tr>";
+			   $i++;
+			}}
+	
+
+echo "</table>";
+?>
+<input type="hidden" name="ttlfields" id="ttlfields" value="<?= $i;?>">
+</form>
+
+<?php
+if($this->paginator['paginator'])
+{
+?>
+ <div class="pagination">
+	<?php echo $this->paginationControl($this->paginator['paginator'],
+					     'Sliding',
+					     '/partials/my_pagination_control_2.phtml',
+					     array('search'=>$this->srch,'cnm'=>$this->cnm,'cid'=>$this->cid,'enm'=>$this->enm,'eid'=>$this->eid, 'schm'=>$this->schm,'strdt'=>$this->strdt, 'enddt'=>$this->enddt, 'param1'=>$this->memoStart,'param2'=>$this->memoEnd,
+					  'param3'=>$this->schmType)); ?>
+</div>
+<?php
+}
+unset($this->format);
+?>
+<fieldset>

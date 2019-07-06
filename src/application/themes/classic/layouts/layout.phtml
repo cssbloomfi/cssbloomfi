@@ -1,0 +1,65 @@
+	<script type="text/javascript" language="JavaScript">
+		$(function() {
+		$("#topMenuImage").click( function() {
+			if ($("#openCloseIdentifier").is(":hidden")) {
+				$("#slider").animate({ 
+					marginTop: "-172px"
+					}, 500 );
+				$("#topMenuImage").html('<img src="/../../../../images/jpg/down_pin.png" alt="open" />');
+				$("#openCloseIdentifier").show();
+			} else {
+				$("#slider").animate({ 
+					marginTop: "-20px"
+					}, 500 );
+				$("#topMenuImage").html('<img src="/../../../../images/jpg/up_pin.png" alt="close" />');
+				$("#openCloseIdentifier").hide();
+			}
+		});  
+	});
+	</script>
+	<?php
+		$videoHelpFileNm='#';	
+		$urlObj=new ZendExtend_Url;
+		$appPath=$urlObj->getAppUrlLevel();
+		$vFileNm=$appPath['module'].'_'.$appPath['controller'].'_'.$appPath['action'];
+		$vFilePath=ROOT_DIR.'/videos/';
+		$vFile=$vFilePath.$vFileNm.'.swf';
+		if(is_file($vFile))
+		  $videoHelpFileNm='/dbd/index/help/fnm/'.$vFileNm;
+		unset($urlObj);
+	?>
+        <div class="header">
+		<div class="wrapper">
+			<div class="logo"></div>
+			<?php
+			if ($this->hasIdentity){
+			?>
+			<div class="head_adminpane"><span style="color:#000066;font-weight:bold;">Welcome &nbsp;&nbsp;&nbsp;</span><span style="color:#006600;font-weight:bold;"><?php echo $this->user->USER_ID?>&nbsp;|&nbsp;</span><span style="color:#006600;font-weight:bold;"><?php echo date("Y-M-d")?>&nbsp;|&nbsp;</span>
+			<span style="color:#000066;font-weight:bold;"><a target="blank" href="<?php echo $videoHelpFileNm; ?>">Help</a> &nbsp;|&nbsp;</span>
+			<span style="color:#000066;font-weight:bold;"><a href="/auth/index/logout" class="last">Sign-Out</a></span>
+			</div>
+			<div class="version">1.0</div>
+			<?php
+			}
+			?>
+		</div>
+	</div>
+	<div id="contenttop"></div>
+	<div id="container">
+			<?php
+			if ($this->hasIdentity){
+				 require_once('menu.phtml');
+			} ?>
+			<?php
+			if ($this->hasIdentity){
+				require_once('breadcrumb.phtml');
+			} ?>
+
+		<div class="content">
+			<?= $this->layout()->content; ?>
+		</div>
+	</div>
+	<div id="contentbottom"></div>
+	
+
+

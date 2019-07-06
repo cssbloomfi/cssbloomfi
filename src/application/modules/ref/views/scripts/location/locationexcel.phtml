@@ -1,0 +1,8 @@
+<?php
+$header=array($this->locationHeader['id'],$this->locationHeader['name'],$this->locationHeader['type'],
+$this->locationHeader['parent'],$this->locationHeader['level']);
+
+$columns=array('LOCATION_ID','LOCATION_NAME','LOCATION_TYPE','PARENT_LOCATION_NAME','LOCATION_LEVEl');
+$filename="location_".$this->fileno;
+$this->createExcelReport($filename,$header,$this->xlsResult,$columns);
+?>

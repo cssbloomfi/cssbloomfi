@@ -1,0 +1,18 @@
+<div class="comp-data-section">
+	<div class="component-header">
+	Beneficiary Information
+	</div>
+	<div class="component-content">
+		<table class="clean-table extend">
+			<tr>
+				<td><img src="<?= $this->images['cust']; ?>" alt="" class='mini-img'/> Total Beneficiary</td>
+				<td><?=$this->totalCustomerResult->TOTAL_CUSTOMER ?></td>
+			</tr>
+
+			<tr>
+				<td><img src="<?= $this->images['loanCust']; ?>" alt="" class='mini-img'/> Total Loan Beneficiary</td>
+				<td><?=$this->loanCustomerResult->TOTAL_LOAN_CUSTOMER ?></td>
+			</tr>
+		</table>
+	</div>
+</div>

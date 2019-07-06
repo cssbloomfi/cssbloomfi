@@ -1,0 +1,12 @@
+<?php
+$header=array($this->tableHeader['voucherNo'],$this->tableHeader['scheme'],$this->tableHeader['schemeType'],$this->tableHeader['employee'],
+$this->tableHeader['customer'],$this->tableHeader['paymentAmount'],$this->tableHeader['paymentType'], 
+$this->tableHeader['receiptAmount'],$this->tableHeader['receiptDueAmount'], $this->tableHeader['startDate'],
+$this->tableHeader['latestDate'],$this->tableHeader['recordStatus']);
+
+$selected_col=array('VOUCHER_NO','SCHEME_ID','SCHEME_TYPE','EMPLOYEE_ID','CUSTOMER_NAME', 'TOTAL_PAYMENT_PRINCIPAL', 
+'PAYMENT_TYPE','TOTAL_RECEIPT_PRINCIPAL', 'TOTAL_RECEIPT_DUE_PRINCIPAL', 'START_DATE', 'LATEST_DATE','ACTIVE_STATUS');
+
+$filename="payment_".$this->fileno;
+$this->createExcelReport($filename,$header,$this->result,$selected_col);
+?>

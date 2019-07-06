@@ -1,0 +1,8 @@
+<?php 
+if($this->customer)
+foreach ( $this->customer as $customer ){
+	echo $customer->CUSTOMER_ID." ,  ".$customer->NAME."\n";
+} 
+else
+echo 'No Customer Matched';
+?>

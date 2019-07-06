@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="dtlTopSht">
+     <title>Detailed Top Sheet Report</title>
+     <result>
+         <tableheader>
+            <label>Project</label>
+            <label>Month</label>
+			<label>Location</label>
+			<label>Collector Code</label>
+			<label>Total Male</label>
+			<label>Total Female</label>
+            <label>Total Loan</label>
+			<label>Total Donation</label>
+			<label>Principal</label>
+         </tableheader>
+
+         <queryheader>
+             <item>SCHEME_ID</item>
+             <item>MONTH</item>
+			 <item>LOCATION_ID</item>
+			 <item>EMPLOYEE</item>
+			 <item>MALE</item>
+			 <item>FEMALE</item>
+			 <item>LOAN</item>
+			 <item>DONATION</item>
+			 <item>PRINCIPAL</item>
+         </queryheader>
+  
+         <sqlcontent>
+            SELECT dtl.SCHEME_ID, MONTHNAME(TRANSACTION_DATE) AS MONTH,ent.LOCATION_ID AS LOCATION_ID,
+			dtl.EMPLOYEE_ID AS EMPLOYEE,TRANSACTION_DATE AS DATE,
+			SUM(IF(ent.SEX='M',1,0)) AS MALE,SUM(IF(ent.SEX='F',1,0)) AS FEMALE,
+			SUM(IF(PAYMENT_AMOUNT IS NOT NULL OR PAYMENT_TYPE='CAPITAL_PAID',PAYMENT_AMOUNT,0)) AS LOAN,
+			SUM(IF(RECEIPT_TYPE='DONATION_RECEIVED',RECEIPT_AMOUNT,0)) AS DONATION,
+			(PAYMENT_AMOUNT-SUM(IF(RECEIPT_AMOUNT IS NOT NULL OR RECEIPT_TYPE='CAPITAL RECEIVED',RECEIPT_AMOUNT,0)) )
+			AS PRINCIPAL
+			FROM ltr_trn_details AS dtl, ref_mst_entity AS ent
+			WHERE dtl.STATUS='NORMAL' AND dtl.CUSTOMER_ID=ent.CUSTOMER_ID
+			GROUP BY SCHEME_ID, MONTHNAME(TRANSACTION_DATE),ent.LOCATION_ID, dtl.EMPLOYEE_ID
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>
+		 
+		    <searchitem>
+                 <searchparam>Y</searchparam>
+                 
+                 <columnvalue>LOCATION_ID</columnvalue>
+				 <name>location</name>
+				 <class>location</class>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Location</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+            
+            <searchitem>
+                 <searchparam>Y</searchparam>
+				 <name>scheme</name>
+				 <class>scheme_id</class>
+                 <columnvalue>SCHEME_ID</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Project</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			  <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>collector</name>
+				 <class>employee_id</class>
+                 <columnvalue>EMPLOYEE</columnvalue>
+                 <conditiontype>@PATTERN@</conditiontype>
+                 <label>Collector Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>3</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>startdate</name>
+                 <columnvalue>DATE</columnvalue>
+				 <class>pick-date</class>
+                 <conditiontype>@GREATEREQUAL@</conditiontype>
+                 <label>Start Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>4</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			  <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>enddate</name>
+                 <columnvalue>DATE</columnvalue>
+				 <class>pick-date</class>
+                 <conditiontype>@LESSEQUAL@</conditiontype>
+                 <label>End Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>5</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>4</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+   </query>
+   </querylibrary> 
+
+

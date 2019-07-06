@@ -1,0 +1,215 @@
+<?php
+ $rows=$this->rows;
+ $element =new Bloomfi_App_UHtmlElement;
+ $originalRows=$rows;
+ $submittedRows=0;
+ if($this->validationMsg)
+ foreach($this->validationMsg as $row){
+    if(isset($row['status']))
+	if($row['status']=='Success')
+		$submittedRows++;
+ }
+ if($submittedRows <= $rows)
+	$rows=$rows-$submittedRows;
+ ?>
+
+ <script type="text/javascript">
+
+$( function(){ 
+$("table.zebra3 tr:even").addClass("even"); 
+$("table.zebra3 tr:odd").addClass("odd"); 
+});
+</script>
+
+ <script type="text/javascript">
+
+function setThis(selectValue){
+document.addLocation.copyRow.value = selectValue;
+}
+
+$(document).ready(function() {
+	$(".parent").autocomplete("/ref/location/suggestloc", {
+		width: 260,
+		matchContains: true,
+		//mustMatch: true,
+		minChars: 0,
+		//multiple: true,
+		//highlight: false,
+		//multipleSeparator: ",",
+		selectFirst: false
+	});
+
+	$(".employee").autocomplete("/ref/employee/suggestempid", {
+		width: 260,
+		matchContains: true,
+	//	mustMatch: true,
+		minChars: 0,
+		//multiple: true,
+		//highlight: false,
+		//multipleSeparator: ",",
+		selectFirst: false
+	});
+});
+
+</script>
+<?php
+if($this->textErrors)
+{ 
+	echo "<div class='errorbox'>";		
+	$this->textMessage($this->textErrors);
+	echo '</div>';
+}
+?>
+
+    <div style="background:#B2B2B2;line-height:50px;padding:0 10px 0 10px;text-align:right;">
+    <img src="<?= $this->images['addPayment']; ?>" style="float:left;" >
+    <div style="float:left;margin-left:10px;color:#fff;font-size:18px;"><?= $this->formLabels['addSectionLabel'];  ?></div>
+	<form method="POST" name="row_nums">
+		<INPUT type="text" name="rows" value="<?= $originalRows; ?>"/>
+		<INPUT type="submit" value="<?= $this->numRowsLabel['submit']; ?>" name='row_num' id="submit_2"/>
+	</form>
+    </div>
+
+    <TABLE id="dataTable" class="zebra">
+    
+    <form name="addLocation" method="POST" id="addTran">
+    <input type="hidden" name="rows1" value="<?= $originalRows; ?>"/>
+    <input type="hidden" name="copyRow" id='copyRow' value=""/> 
+	<tr>
+		<th><?= $this->formLabels['serial']; ?></th>
+		<th><?= $this->formLabels['locationCode']; ?></th>
+		<th><?= $this->formLabels['locationName']; ?></th>
+		<th><?= $this->formLabels['type']; ?></th>
+		<th><?= $this->formLabels['parentLoc']; ?></th>
+		<th><?= $this->formLabels['desc']; ?></th>
+		<th><?= $this->formLabels['copy']; ?></th>
+	</tr>
+	<?php
+	$locId=$locNm=$type=$desc=$parentLoc=null;
+	for($i=0;$i<$originalRows;$i++)
+	{ 
+	   if($this->validationMsg[$i+1]['status']!='Success')
+	   {
+		$locId=$this->locId[$i];
+		$locNm=$this->locNm[$i];
+		$type=$this->locType[$i];
+		$parentLoc=$this->parentLoc[$i];
+		$desc=$this->desc[$i];
+	   }else{
+		$locId=null;
+		$locNm=null;
+		$type=null;
+		$parentLoc=null;
+		$desc=null;
+	   }
+	?>
+	<tr>
+		<td><?= $i+1; ?></td>
+		<td>	
+			<input type="text" name="locId[<?= $i; ?>]" value="<?= $locId; ?>" size=20>
+		</td>
+		<td>	
+			<input type="text" name="locName[<?= $i; ?>]" value="<?= $locNm; ?>"  size=20>
+		</td>
+	       <td width=10%>
+			<?= $element->createSelectDb("locType[".$i."]",$this->locationTypes,'KEY_NAME','VALUE_NAME',$type,'NOT',null, ' style="width:150px;" ');
+			?>
+		</td>
+		<td>	
+			<input type="text" name="parentLoc[<?= $i; ?>]" value="<?= $parentLoc; ?>" class="parent" size=20>
+		</td>
+		<td>
+			<input type="text" name="desc[<?= $i; ?>]" value="<?= $desc; ?>" size=30 >
+		</td>
+		<td>
+			<input type='image' src="<?= $this->images['down']; ?>"  onclick='setThis(<?=$i+1;?>)' value='Copy' class="no-border-bkcolor">
+		</td>
+	</tr>
+	<?php
+	}
+	?>
+    </TABLE>
+    <div style="background:#B2B2B2;line-height:50px;padding:0 10px 0 10px;text-align:right;"> 
+	<INPUT type="submit" value="<?= $this->formLabels['submit']; ?>" name="save" id="submit_2" />
+    </div>
+    
+    </form>
+
+<fieldset class="validation-message">
+	<legend><?= $this->statusLabels['heading']; ?></legend>
+	<br>
+	<table class="zebra">
+	    <tr>
+		<th width=10%><?= $this->statusLabels['row']; ?><?php //echo $this->logTable['errorRow']; ?></th>
+		<th width=70%><?= $this->statusLabels['error']; ?><?php //echo $this->logTable['errorMessage']; ?></th>
+		<th width=20%><?= $this->statusLabels['status']; ?><?php //echo $this->logTable['errorMessage']; ?></th>
+	    </tr>
+	 </table>
+	 <div class="table-fix-area">
+	 <table class="zebra">
+	    <?php
+	       $id=1;
+	       if( $this->validationMsg ){
+		$datas = $this->validationMsg;
+		foreach ( $datas as $key1 => $row ) {
+		if($row['skip']==false)
+		{
+		echo "<tr><td width=10%>".$key1."</td><td width=72%>";
+		if(isset($row['error']))
+		  if(is_array($row['error']))
+			{
+			   foreach ( $row['error'] as $key2 => $error ) {
+			     echo $key2." : ".$error.'<br>';
+			     $id++;
+			   }
+			}
+		  echo "</td><td>";
+		  echo $row['status'];
+		  echo "</td></tr>"; 
+		}}}
+	    ?>
+	</table>
+	</div>
+</fieldset>
+
+<fieldset class="validation-message">
+	<legend><?= $this->resultLabels['heading']; ?></legend>
+	<?php  if( $this->sucsessfulEntries ){ ?>
+	<fieldset class="export_section">
+		<legend><?= $this->resultLabels['excelExport'] ?></legend>
+		<a href="/dbd/index/xlsexprtarr" id="xlss"></a>
+	</fieldset>
+	<?php } ?>
+	<br>
+	<table class="zebra3">
+	    <tr>
+		<th width=5%><?= $this->resultLabels['serial']; ?><?php //echo $this->logTable['errorRow']; ?></th>
+		<th width=13%><?= $this->resultLabels['locationCode']; ?><?php //echo $this->logTable['errorMessage']; ?></th>
+		<th width=15%><?= $this->resultLabels['locationName']; ?><?php //echo $this->logTable['errorMessage']; ?></th>
+		<th width=10%><?= $this->resultLabels['type']; ?><?php //echo $this->logTable['errorMessage']; ?></th>
+		<th width=15%><?= $this->resultLabels['parentLoc']; ?><?php //echo $this->logTable['errorMessage']; ?></th>
+		<th width=10%><?= $this->resultLabels['desc']; ?><?php //echo $this->logTable['errorMessage']; ?></th>
+	    </tr>
+	 </table>
+	 <div class="table-fix-area">
+	 <table class="zebra3">
+	    <?php
+	       $id=1;
+	       if( $this->sucsessfulEntries ){
+			foreach ( $this->sucsessfulEntries as $row ){
+				echo '<tr>';
+				echo '<td width=5%>'.$id.'</td>';
+				echo '<td width=15%>'.$row['locId'].'</td>';
+				echo '<td width=20%>'.$row['locName'].'</td>';
+				echo '<td width=5%>'.$row['locType'].'</td>';
+				echo '<td width=10%>'.$row['parentLoc'].'</td>';
+				echo '<td width=10%>'.$row['desc'].'</td>';
+				echo '</tr>';
+				$id++;
+			}
+		   
+	       }
+	    ?>
+	</table>
+	</div>
+</fieldset>

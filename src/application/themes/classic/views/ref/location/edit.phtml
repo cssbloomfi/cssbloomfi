@@ -1,0 +1,72 @@
+
+<div class="entry-section">
+<?php
+if($this->update==2)
+ {  
+    if($this->textSuccess)
+      {
+          echo "<div class='successbox'>";
+	     $this->successMessage($this->textSuccess);
+	  echo "</div>";
+
+	  $script='<script language="JavaScript">
+		return_url="'.$this->url.'";
+		delayRedirect(return_url);
+	    </script>';
+	  echo $script;
+      }?>
+
+
+<?php }
+else {
+ if( $this->textErrors )
+{ 
+  echo "<div class='errorbox'>";
+  	echo "<b>Operation Terminated</b><br><br>";
+	if($this->optionsErrors)
+		$this->selectMessage($this->optionsErrors);	
+	if($this->textErrors )
+		$this->textMessage($this->textErrors);
+  echo '</div>';
+}
+?>
+   <form method="POST">
+	<input type="hidden" name="id" id="location_id"  value="<?php echo $this->id; ?>" >
+	<table class="zebra">
+	<tr>
+		 <td><b><?php echo $this->locationForm['locationId']; ?></b></td>
+		 <td><input type="text" name="location_id" id="locId"  value="<?php echo $this->locId; ?>" ></td>
+	</tr>
+	<tr>
+		 <td><b><?php echo $this->locationForm['locationName']; ?></b></td>
+		 <td><input type="text" name="location_name" id="location_name"  value="<?php echo $this->loc; ?>" ></td>
+	</tr>
+	<tr> 
+		<td><b><?php echo $this->locationForm['type']; ?></b></td>
+		<td><?php echo $this->location_types ?> </td> 
+	</tr>
+	<tr>
+		 <td><b><?php echo $this->locationForm['parent_location']; ?></b></td>
+		 <td><input type="text" name="parent_loc" id="parent_loc"  value="<?php echo $this->parent_loc; ?>" ></td>
+	</tr>
+	<tr>
+		<td><b><?php echo $this->locationForm['description']; ?></b></td>
+		<td><textarea id="desc" name="description" rows=7 cols=30><?php echo $this->desc; ?></textarea></td>
+	</tr>
+	<tr> 
+		<td>  </td> 
+		<td>  </td>
+	</tr>
+	<tr>
+		    <td>&nbsp;  </td>	
+		   <td>
+		   <input type="submit" value="<?php echo $this->locationForm['edit']; ?>" id="submit" >
+		   <input type="reset" value="<?php echo $this->locationForm['reset']; ?>" id="submit" >
+		    <input type="reset" value="<?php echo $this->locationForm['cancel']; ?>" id="submit" onclick="cancel()">
+		    </td>
+	</tr>
+	</table>
+  </form>
+</div>
+
+<?php } ?>

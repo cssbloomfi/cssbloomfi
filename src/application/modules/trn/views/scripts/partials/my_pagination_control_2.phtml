@@ -1,0 +1,71 @@
+<?php 
+$url=new ZendExtend_Url;
+if ($this->pageCount): 
+$params=null;
+$lib=new Bloomfi_App_Ulibrary;
+$params=$lib->mergeValueToArray(null,'search',$this->search);
+$params=$lib->mergeValueToArray($params,'cnm',$this->cnm);
+$params=$lib->mergeValueToArray($params,'cid',$this->cid);
+$params=$lib->mergeValueToArray($params,'enm',$this->enm);
+$params=$lib->mergeValueToArray($params,'eid',$this->eid);
+$params=$lib->mergeValueToArray($params,'schm',$this->schm);
+$params=$lib->mergeValueToArray($params,'dt',$this->dt);
+$params=$lib->mergeValueToArray($params,'vchr',$this->vchr);
+$params=$lib->mergeValueToArray($params,'strdt',$this->strdt);
+$params=$lib->mergeValueToArray($params,'enddt',$this->enddt);
+$params=$lib->mergeValueToArray($params,'memo',$this->memo);
+$params=$lib->mergeValueToArray($params,'param1',$this->param1);
+$params=$lib->mergeValueToArray($params,'param2',$this->param2);
+$params=$lib->mergeValueToArray($params,'param3',$this->param3);
+$params=$lib->mergeValueToArray($params,'param4',$this->param4);
+$params=$lib->mergeValueToArray($params,'param5',$this->param5);
+$params=$lib->mergeValueToArray($params,'param6',$this->param6);
+$params=$lib->mergeValueToArray($params,'param7',$this->param7);
+$params=$lib->mergeValueToArray($params,'param8',$this->param8);
+$params=$lib->mergeValueToArray($params,'param9',$this->param9);
+$params=$lib->mergeValueToArray($params,'param10',$this->param10);
+?>
+
+<div class="paginationControl">
+<!-- Previous page link -->
+<?php if (isset($this->previous)): 
+$previous=$lib->mergeValueToArray(null,'page',$this->previous);
+$previous=$lib->mergeValueToArray($previous,$params);
+?>
+  <a class="prev" href="<?php echo $url->url( $previous ); ?>">
+    &laquo;
+  </a>
+<?php else: ?>
+  <span class="prev">&laquo;</span> 
+<?php endif; ?>
+
+<!-- Numbered page links -->
+<?php foreach ($this->pagesInRange as $page): ?>
+  <?php if ($page != $this->current): 
+  $page_url=$lib->mergeValueToArray(null,'page',$page);
+  $page_url=$lib->mergeValueToArray($page_url,$params);
+  ?>
+    <a class="numbers" href="<?php echo $url->url( $page_url ); ?>">
+        <?php echo $page; ?>
+    </a> 
+  <?php else: ?>
+    <?php echo "<a class='current' >$page</a>"; ?> 
+  <?php endif; ?>
+<?php endforeach; ?>
+
+<!-- Next page link -->
+<?php if (isset($this->next)): 
+$next=$lib->mergeValueToArray(null,'page',$this->next);
+$next=$lib->mergeValueToArray($next,$params);
+?>
+  <a class="next" href="<?php echo $url->url( $next ); ?>">
+    &raquo;
+  </a>
+<?php else: ?>
+  <span class="next">&raquo;</span>
+<?php endif; ?>
+</div>
+<?php endif; ?>
+
+
+

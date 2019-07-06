@@ -1,0 +1,138 @@
+<?php
+
+if(!empty($this->customer)){ 
+$script='<script language="JavaScript">'.
+		"multiAjaxCaller(array('".$this->customer."','custtrninfo','trninfoajax'),array('".$this->customer."','trnidresult','trninfooncidajax'));
+	</script>";
+echo $script;
+}
+
+
+if($this->textInfo )
+{	
+	echo "<div class='ibox'>";	
+	$this->infoMessage($this->textInfo);
+	echo "</div>";
+}
+if($this->textErrors)
+{ 
+	echo "<div class='errorbox'>";
+	echo '<b>'.$this->viewlabels['termination'].'</b><br><br>';	
+		$this->textMessage($this->textErrors);
+	echo '</div>';
+}		
+if($this->statusMsg){ 
+echo "<div class='successbox'>";
+$this->successMessage($this->statusMsg); 
+echo "</div>";} 
+?>
+
+<div class="entry-section">
+
+<div class="add-section">
+	<img src="<?= $this->images['addReceipt']; ?>" class="icons" > &nbsp;&nbsp;<?php echo $this->receiveFormHeader['addSectionLabel'] ?>
+</div>
+
+	<fieldset>
+	<legend><?php echo $this->viewlabels['addSectionHead']; ?></legend>
+	<div id="custtrninfo"></div>
+	<div id="trnidresult"></div>
+	<form name="receive" method="POST" class="receive-form">
+	<input type="hidden" value="<?php echo $this->totalSubmits; ?>" name="totalSubmits">
+	<input type="hidden" value="Insert" name="REQUEST">
+		<table class="zebra">
+			<tr>
+			     <?php 
+				echo '<td><b>'.$this->receiveFormHeader['customer'].'</b></td>';
+				echo '<td><input type="text" name="customer" id="customer" value="'.$this->customer.'"   onBlur="'."getInfo(this.value)".'"></td>';
+				echo '<td><b>'.$this->receiveFormHeader['memo'].'</b></td>';
+				echo '<td><input type="text" class="element-text" name="memo" id="memo" value="'.$this->memo.'" ><div id="checkmemo"></div></td>';
+			     ?>
+			</tr>
+			<tr> 
+			     <?php  
+			         echo '<td><b>'.$this->receiveFormHeader['receiptAmount'].'</b></td>'; 
+				echo '<td><input type="text" name="amount" value="'.$this->amount.'" ></td>';
+				echo '<td><b>'.$this->receiveFormHeader['receiptType'].'</b></td>';
+				echo '<td>'.$this->receiveType.'</td>';
+			      ?> 
+			</tr>
+			<tr>
+			    <?php   
+				echo '<td><b>'.$this->receiveFormHeader['date'].' ('.$this->receiveFormHeader['dateFormat'].')'.'</b></td>';
+				echo '<td ><input type="text" name="date" size="20" value="'.$this->pdate.'" id="pick-date"></td>';
+				echo '<td><b>'.$this->receiveFormHeader['employee'].'</b></td>';
+				echo '<td colspan=3><input type="text" name="employee" value="'.$this->employee.'" class="employee" ></td>';	
+			    ?>
+			</tr>
+			<tr>
+			    <?php 
+				echo '<td><b>'.$this->receiveFormHeader['remarks'].'</b></td>';
+				echo '<td colspan=3><textarea name="remarks" rows="2" cols="55" id="remarks">'.$this->remarks.'</textarea></td>';
+			    ?>
+			</tr>
+			<tr>
+			    <td colspan=4> 
+			       <div style="float:right">
+				 <input type="submit" name="submit" value="<?php echo $this->receiveFormHeader['submit']; ?>" id="submit"> 
+				 <input type="button" name="cancel" value="<?php echo $this->receiveFormHeader['cancel']; ?>" id="submit" class="cancel">
+			       </div>
+			    </td>
+			</tr>
+		</table>
+	</form>
+</fieldset>
+</div>
+<br>
+<fieldset>
+
+<legend> <?php echo $this->viewlabels['recentsubmit']. "&nbsp;&nbsp;&nbsp;".count($this->result); ?></legend>
+
+<form  name="deleteForm" METHOD="POST">
+<!-- <input name="params" type="hidden" value="<?php count($this->result); ?>" > -->
+<input name="REQUEST" type="hidden" value="Delete">
+<?php
+echo '<br><table class="zebra"><tr>';
+	echo '<th>'.$this->detailsTableHeader['memoNo'].'</th>';
+	echo '<th>'.$this->detailsTableHeader['voucherNo'].'</th>';
+	echo '<th>'.$this->detailsTableHeader['scheme'].'</th>';
+	echo '<th>'.$this->detailsTableHeader['employee'].'</th>';
+	echo '<th>'.$this->detailsTableHeader['customer'].'</th>';
+	echo '<th>'.$this->detailsTableHeader['receiptAmount'].'</th>';
+	echo '<th>'.$this->detailsTableHeader['receiptType'].'</th>';
+	echo '<th>'.$this->detailsTableHeader['transactionDate'].'</th>';
+	echo '<th>'.$this->detailsTableHeader['trns'].'</th>';
+	echo '<th>'.$this->detailsTableHeader['edit'].'</th>';
+	echo '<th><input type="submit" class="delete" name="delete" id="delete_icon" value="">'.'<input type="checkbox" name="checkall" value=0 onclick="SetAllCheckBoxes'."('deleteForm','tdid','checkall')".';"/>'.$this->detailsTableHeader['delete'].'</th>';
+	echo '</tr>';
+if ( $this->result )
+{  
+?>
+<?php
+	
+	$i=0;
+	foreach ($this->result  as $row )
+			{
+			   echo "<tr>";
+			   echo "<td>$row->MEMO_NO</td>";
+			   echo "<td>$row->VOUCHER_NO</td>";
+			   echo "<td>$row->SCHEME_ID</td>";
+			   echo "<td>$row->EMPLOYEE_ID </td>";
+			   echo "<td>$row->CUSTOMER_NAME </td>";
+			   echo "<td class='rt'>".$this->format->numFormat($row->RECEIPT_AMOUNT)." </td>";
+			   echo "<td>$row->RECEIPT_TYPE </td>";
+			   echo "<td class='ct'>$row->TRANSACTION_DATE </td>";
+			   echo '<td><a href="/trn/receive/summarydtlid/tsid/'.$row->TRAN_SUMMARY_ID.'/tdid/'.$row->TRAN_DETAILS_ID.'" title="Summary view of '.$row->TRAN_DETAILS_ID.'" rel="facebox" id="table_icon"></a></td>';
+			   echo '<td><a href="/trn/receive/editdtl/id/'.$row->TRAN_DETAILS_ID.'/add/1" title="Edit" id="edit_icon"></a></td>'; 
+			   echo '<td class="ct"><input type="checkbox" name="tdid['.$i.']" id="tdid" value="'.$row->TRAN_DETAILS_ID.'" /></td>';
+			   echo "</tr>";
+			   $i++;
+			}
+}
+echo "</table>";
+unset($this->format);
+?>
+<input type="hidden" name="ttlfields" id="ttlfields" value="<?= $i;?>">
+</form>
+
+</fieldset>

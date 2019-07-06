@@ -1,0 +1,72 @@
+<?php
+$format=new Bloomfi_NumericFormat;
+if($this->transactionDetails)
+{
+        $addId='id="highlight"';
+	$total=$this->totalDetails-2;
+	echo '<img src="'.$this->images['money'].'" class="icons1" ><h2>'.$this->viewlabels['pageInfo']."</h2><br><div class='cust-payment-info-details2'>";
+	echo "<table class='clean-table'><tr><td> ".$this->detailTableHeader['customer'].' </td><td> : <font color="#000"><b>'.$this->transactionDetails[0]->CUSTOMER.'</b></font></td>';
+	echo "<td> ".$this->detailTableHeader['scheme'].' </td><td> : <font color="#000"><b>'.$this->transactionDetails[0]->SCHEME.'</b></font></td>';
+	echo "<td> ".$this->detailTableHeader['schemeType'].' </td><td> : <font color="#000"><b>'.$this->transactionDetails[0]->SCHEME_TYPE.'</b></font></td></tr>';
+	echo "<td> ".$this->detailTableHeader['totalPaymentAmount'].' </td><td> : <font color="#FF0000"><b>'.$format->numFormat($this->transactionDetails[0]->PAYMENT_AMOUNT).'</b></font></td>';
+	echo "<td> ".$this->detailTableHeader['totalReceiptAmount'].' </td><td> : <font color="#339900"><b>'.$format->numFormat($this->transactionDetails[0]->TOTAL_RECEIPT).'</b></font></td>';
+	echo "<td> ".$this->detailTableHeader['totalReceiptDueAmount'].' </td><td> : <font color="#FF9900"><b>'.$format->numFormat($this->transactionDetails[0]->DUE_AMOUNT).'</b></font></td></tr>';
+	echo "<tr><td> ".$this->detailTableHeader['totalSecurityAmountReceipt'].' </td><td> : <font color="#FF0000"><b>'.$format->numFormat($this->transactionDetails[0]->SECURITY_DEPOSITE_RECEIPT).'</b></font></td>';
+	echo "<td> ".$this->detailTableHeader['totalDonationAmount'].' </td><td> : <font color="#339900"><b>'.$format->numFormat($this->transactionDetails[0]->DONATION).'</b></font></td>';
+	echo "<td> ".$this->detailTableHeader['totalFeesAmount'].' </td><td> : <font color="#FF9900"><b>'.$format->numFormat($this->transactionDetails[0]->FEES).'</b></font></td></tr>';
+	echo "<tr><td> ".$this->detailTableHeader['totalSecurityAmountPayment'].' </td><td> : <font color="#FF0000"><b>'.$format->numFormat($this->transactionDetails[0]->SECURITY_DEPOSITE_PAYMENT).'</b></font></td>';
+	echo "<td> ".$this->detailTableHeader['recordStatus'].' </td><td> :<font color="#0066CC"><b> '.$this->transactionDetails[0]->PAYMENT_STATUS.'</b></font></td>';
+		echo "<td> ".$this->detailTableHeader['updateDate'].' </td><td rowspan=2> : '.$this->transactionDetails[0]->UPDATE_DATE.'</td></tr></table>';
+	echo "</div>";
+	echo '<br>'.$this->viewlabels['totalvaluepre'].' : ' . $total . ' </b> '.
+	$this->viewlabels['totalvaluepost'].'<br><br><table class="zebra">';
+	echo '<tr>';
+	echo '<th>'.$this->detailTableHeader['transactionDate'].'</th>';
+	echo '<th>'.$this->detailTableHeader['voucherNo'].'</th>';
+	echo '<th>'.$this->detailTableHeader['memoNo'].'</th>';
+	echo '<th>'.$this->detailTableHeader['employee'].'</th>';
+	echo '<th>'.$this->detailTableHeader['paymentAmount'].'</th>';
+	echo '<th>'.$this->detailTableHeader['paymentType'].'</th>';
+	echo '<th>'.$this->detailTableHeader['receiptAmount'].'</th>';
+	echo '<th>'.$this->detailTableHeader['receiptType'].'</th>';
+	echo '<th>'.$this->detailTableHeader['receiptDueAmount'].'</th>';
+	echo '</tr>';
+	foreach ( $this->transactionDetails as $row )
+		{
+		   $addDivStart=$addDivEnd=null;
+		   if( !empty($row->EMPLOYEE_ID)){
+		    if($row->TRAN_DETAILS_ID==$this->trns_dtl_id){
+		   $addDivStart='<div class="highlight">';
+		   $addDivEnd='</div>';}
+		   echo "<tr>";
+		   echo "<td class='ct'>$addDivStart $row->TRANSACTION_DATE $addDivEnd</td>";
+		   echo "<td>$addDivStart $row->VOUCHER_NO $addDivEnd</td>";
+		   echo "<td>$addDivStart $row->MEMO_NO $addDivEnd</td>";
+		   echo "<td>$addDivStart $row->EMPLOYEE_ID $addDivEnd</td>";
+		   echo "<td class='rt'>$addDivStart ".$format->numFormat($row->PAYMENT_AMOUNT)." $addDivEnd</td>"; 
+		   echo "<td>$addDivStart $row->PAYMENT_TYPE $addDivEnd</td>";
+		   echo "<td class='rt'>$addDivStart ".$format->numFormat($row->RECEIPT_AMOUNT)." $addDivEnd</td>";
+		   echo "<td>$addDivStart $row->RECEIPT_TYPE $addDivEnd</td>";
+		   echo "<td class='rt'>$addDivStart ".$format->numFormat($row->RECEIPT_DUE_AMOUNT)." $addDivEnd</td>";
+		   echo "</tr>";}
+		   else
+		   {
+			echo '<tr>';
+			echo "<td class='ct'><b>".$row->TRANSACTION_DATE.'</b></td>';
+			echo '<td><b>'.$row->VOUCHER_NO.'</b></td>';
+			echo '<td></td>';
+			echo '<td></td>';
+			echo '<td class="rt"><b>'.$format->numFormat($row->PAYMENT_AMOUNT).'</b></td>';
+			echo '<td></td>';
+			echo '<td class="rt"><b>'.$format->numFormat($row->RECEIPT_AMOUNT).'</b></td>';
+			echo '<td></td>';
+			echo '<td class="rt"><b>'.$format->numFormat($row->RECEIPT_DUE_AMOUNT).'</b></td>';
+			echo '</tr>';
+		   }
+		}
+
+	echo "</table>";
+}
+
+unset($format);
+?>

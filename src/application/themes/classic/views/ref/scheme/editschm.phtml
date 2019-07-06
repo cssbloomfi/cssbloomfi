@@ -1,0 +1,88 @@
+
+<div class="entry-section">
+
+<?php
+if($this->textSuccess)
+ {  
+    echo "<div class='successbox'>";
+	$this->successMessage($this->textSuccess);
+    echo "</div>";
+
+    $script='<script language="JavaScript">
+		return_url="'.$this->url.'";
+		delayRedirect(return_url);
+	    </script>';
+    echo $script;
+}
+else { ?>
+
+<?php
+if($this->textErrors ){
+ echo "<div class='errorbox'>";
+	echo "<b>".$this->viewlabels['termination']."</b><br><br>";
+	if($this->textErrors)
+		$this->textMessage($this->textErrors);
+	
+echo '</div>'; }
+?>
+
+<form name="Edit_Scheme" method="POST">
+	<input type="hidden" name="page" value="<?php echo $this->page; ?>" id="page"/>
+	<input type="hidden" name="id" value="<?php echo $this->id; ?>" id="id"/>
+	<table class="zebra">
+	<tr>
+		<td><b><?php echo $this->editFormLabel['name']; ?></b></td>
+		<td><input type="text" name="schm_nm" value="<?php echo $this->name; ?>" id="schm_nm"/></td>
+	</tr>
+
+	<tr>
+		<td><b><?php echo $this->editFormLabel['id']; ?></b></td>
+		<td><input type="text" name="schm_id" value="<?php echo $this->sid; ?>" id="schm_id" /></td>
+	</tr>
+
+	<tr>
+		<td><b><?php echo $this->editFormLabel['type']; ?></b></td>
+		<td><?php echo $this->schemeTypes; ?></td>
+	</tr>
+
+	<tr>
+		<td><b><?php echo $this->editFormLabel['desc']; ?></b></td>
+		<td><textarea name="schm_desc" rows='4' cols='30' id="schm_desc" ><?php echo $this->desc; ?></textarea></td>
+	</tr>
+
+	<tr>
+		<td><b><?php echo $this->editFormLabel['amount']; ?></b></td>
+		<td><input type="text" name="schm_amount" value="<?php echo $this->amount; ?>" id="schm_amount"/></td>
+	</tr>
+
+	<tr>
+		<td><b><?php echo $this->editFormLabel['startDt']; ?></b></td>
+		<td><input type="text" name="start_dt" value="<?php echo $this->startDt; ?>" class="pick-date" id="start_dt"/></td>
+	</tr>
+
+	<tr>
+		<td><b><?php echo $this->editFormLabel['endDt']; ?></b></td>
+		<td><input type="text" name="end_dt" value="<?php echo $this->endDt; ?>" class="pick-date" id="end_dt" /></td>
+	</tr>
+
+	<tr> 
+		<td>  </td> 
+		<td>  </td>
+	</tr>
+
+	<tr>
+		<td></td>
+		<td>
+		<input type="submit" name="submit" value=<?php echo $this->editFormLabel['edit']; ?> id="submit"/>
+		<input type="reset" name="reset" value=<?php echo $this->editFormLabel['reset']; ?> id="submit"/>
+		<input type="button" name="submit" value=<?php echo $this->editFormLabel['cancel']; ?> id="submit" onclick="cancel();"/>
+		</td>
+	</tr>
+
+	</table>
+</form>
+
+
+</div>
+
+<?php } ?>

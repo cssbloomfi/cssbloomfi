@@ -1,0 +1,11 @@
+<?php
+$totalNoOfPayments=count($this->smryInfos);
+if($totalNoOfPayments==0) $totalNoOfPayments= '<img src="/../images/icons/small_info.png" class="small-icons" ><font color="#C4F0FF"> No payment is given to the client '."'".$this->customer_id."'</font>";
+?>
+<div class="cust-payment-info" >
+<img src="/../images/icons/small_client.png" class="small-icons" > Client Code : <font color="#FFF"><b><?= $this->customer_id ?></b></font> | 
+<?php if($totalNoOfPayments>0) {?>
+Total Payment(s) : <font color="#FFF"><b>
+<?php } echo $totalNoOfPayments; ?>
+</b></font>
+</div>

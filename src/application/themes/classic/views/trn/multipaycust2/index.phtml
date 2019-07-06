@@ -1,0 +1,221 @@
+<script type="text/javascript">
+/*
+function getValueAndSend(i){
+	var sid='scheme['+i+']';
+	var divId='preCustId_'+i;
+	var scheme_id=document.getElementById(sid).value;
+	multiAjaxCaller(array(scheme_id,divId,'http://www.cssbloomfi.tld/tst/index/test'));
+	   
+}
+*/
+</script>
+
+<?php
+
+ $rows=$this->rows;
+ $element =new Bloomfi_App_UHtmlElement;
+ $originalRows=$rows;
+ $submittedRows=0;
+ if($this->validationMsg)
+ foreach($this->validationMsg as $row){
+    if(isset($row['status']))
+	if($row['status']=='Success')
+		$submittedRows++;
+ }
+ if($submittedRows <= $rows)
+	$rows=$rows-$submittedRows;
+ ?>
+
+    <div style="background:#B2B2B2;line-height:50px;padding:0 10px 0 10px;text-align:right;">
+    <img src="<?= $this->images['addPayment']; ?>" style="float:left;" >
+    <div style="float:left;margin-left:10px;color:#fff;font-size:18px;"><?= $this->formLabel['addSectionLabel']; ?></div>
+	<form method="POST" name="row_nums">
+		<INPUT type="text" name="rows" value="<?= $originalRows; ?>"/>
+		<INPUT type="submit" value="<?= $this->numRowsLabel['submit'] ?>" name='row_num' id='submit_2'/>
+	</form>
+    </div>
+    
+    <TABLE id="dataTable" class="zebra">
+    
+    <form name="addTran" method="POST" id="addTran">
+    <input type="hidden" name="rows1" value="<?= $originalRows; ?>"/>
+    <input type="hidden" name="copyRow" id='copyRow' value=""/> 
+	<tr>
+		<th><?= $this->formLabel['serial']; ?></th>
+	   <!--	<th><?php // echo $this->formLabel['customerCode']; ?></th>  -->
+		<th><?= $this->formLabel['scheme']; ?></th>
+		<th><?= $this->formLabel['customerName']; ?></th>
+		<th><?= $this->formLabel['employee']; ?></th>
+		<th><?= $this->formLabel['location']; ?></th>
+		<th><?= $this->formLabel['sex']; ?></th>
+		<th><?= $this->formLabel['age']; ?></th>
+		<th><?= $this->formLabel['date']; ?></th>
+		<th><?= $this->formLabel['amount']; ?></th>
+		<th><?= $this->formLabel['copy']; ?></th>
+	</tr>
+	<?php
+
+	for($i=0;$i<$originalRows;$i++)
+	{ 
+           if($i%2!=0) $custClass="cust-even";
+	   else $custClass="cust-odd";
+
+	   if($this->validationMsg[$i+1]['status']!='Success')
+	   {
+		$customerNm=$this->custNm[$i];
+		$gender=$this->sx[$i];
+		$location=$this->locs[$i];
+		$customer=$this->cust[$i];
+		$employee=$this->emp[$i];
+		$scheme=$this->schm[$i];
+		$type=$this->typ[$i];
+		$age=$this->age[$i];
+		$date=$this->dt[$i];
+		$amount=$this->amnt[$i];
+	   }else{
+		$customerNm=null;
+		$gender=null;
+		$location=null;
+		$customer=null;
+		$employee=null;
+		$scheme=null;
+		$type=null;
+		$date=null;
+		$amount=null;
+		$age=null;
+	   }
+	?>
+	<tr>
+		<td><?= $i+1; ?></td>
+	<!--	<td>
+			<div id='<?php // echo 'preCustId_'.$i; ?>'>
+			</div>
+		</td>  -->
+		<td>
+			<?= $element->createSelectDb("scheme[".$i."]",$this->schemes,'SCHEME_ID','SCHEME_ID',$scheme,'NOT',null, ' style="width:60px;" onChange="getValueAndSend('.$i.');" id="scheme['.$i.']"');
+			?>
+		</td>
+		<td>
+			<input type="text" name="customernm[<?= $i; ?>]" value="<?= $customerNm; ?>"  size=15>
+		</td>
+		<td>
+			<input type="text" name="employee[<?= $i; ?>]" value="<?= $employee; ?>" class="employee" size=15>
+		</td>
+		<td>
+			<?= $element->createSelectDb("location[".$i."]",$this->locations,'LOCATION_ID','LOCATION_NAME',$location,'NOT',null," style='width:100px;'");
+			?>
+		</td>
+		<td>
+			<?= $element->createSelectDb("gender[".$i."]",$this->sex,'VALUE_ID','VALUE_NAME',$gender,'NOT',null," style='width:60px;'");
+			?>
+		</td>
+		<td>
+			<input type="text" name="age[<?= $i; ?>]" value="<?= $age; ?>" size=3 >
+		</td>
+		<td>
+			<input type="text" name="date[<?= $i; ?>]" value="<?= $date; ?>" class="pick-date" size=10 >
+		</td>
+		<td>
+			<input type="text" name="amount[<?= $i; ?>]" value="<?= $amount; ?>" id="amount" size=9 >
+		</td>
+		<td>
+			<input type='image' src="<?= $this->images['down']; ?>"  onclick='setThis(<?=$i+1;?>)' value='Copy' class='no-border-bkcolor'>
+		</td>
+	</tr>
+	<?php
+	   
+	}
+	?>
+    </TABLE>
+    <div style="background:#B2B2B2;line-height:50px;padding:0 10px 0 10px;text-align:right;"> 
+	<INPUT type="submit" value="<?= $this->formLabel['submit']; ?>" name="save" id="submit_2"/>
+    </div>
+    
+    </form>
+
+   <fieldset class="validation-message">
+<legend><?= $this->statusLabel['heading']; ?></legend>
+			<br>
+			<table class="zebra">
+			    <tr>
+				<th width=10%><?php echo $this->statusLabel['row']; ?></th>
+				<th width=70%><?php echo $this->statusLabel['error']; ?></th>
+				<th width=20%><?php echo $this->statusLabel['status']; ?></th>
+                            </tr>
+			 </table>
+			 <div class="table-fix-area">
+			 <table class="zebra">
+			    <?php
+			       $id=1;
+			       if( $this->validationMsg ){
+			        $datas = $this->validationMsg;
+				foreach ( $datas as $key1 => $row ) {
+				if($row['skip']==false)
+				{
+				echo "<tr><td width=10%>".$key1."</td><td width=72%>";
+				if(isset($row['error']))
+				  if(is_array($row['error']))
+					{
+					   foreach ( $row['error'] as $key2 => $error ) {
+					     echo $key2." : ".$error.'<br>';
+					     $id++;
+					   }
+					}
+				  echo "</td><td>";
+				  echo $row['status'];
+				  echo "</td></tr>"; 
+				}}}
+			    ?>
+			</table>
+			</div>
+</fieldset>
+
+<fieldset class="validation-message">
+	<legend><?= $this->formLabel['resultHeading']; ?></legend>
+	<?php  if( $this->sucsessfulEntries ){ ?>
+	<fieldset class="export_section">
+		<legend><?= $this->formLabel['excelExport'] ?></legend>
+		<a href="/dbd/index/xlsexprtarr" id="xlss"></a>
+	</fieldset>
+	<?php } ?>
+	<br>
+	<table class="zebra3">
+	    <tr>
+		<th ><?=  $this->formLabel['serial']; ?></th>
+		<th width=16%><?= $this->formLabel['customerName']; ?></th>
+		<th width=12%><?= $this->formLabel['customerCode']; ?></th>
+		<th width=14% ><?= $this->formLabel['collectorCode']; ?></th>
+		<th width=5%><?= $this->formLabel['sex']; ?></th>
+		<th width=5%><?= $this->formLabel['age']; ?></th>
+		<th width=9%><?= $this->formLabel['scheme']; ?></th>
+		<th width=15%><?= $this->formLabel['location']; ?></th>
+		<th width=9% ><?= $this->formLabel['amount']; ?></th>
+		<th width=10%><?= $this->formLabel['date']; ?></th>
+	    </tr>
+	 </table>
+	 <div class="table-fix-area">
+	 <table class="zebra3">
+	    <?php
+	       $id=1;
+	       if( $this->sucsessfulEntries ){
+			foreach ( $this->sucsessfulEntries as $row ){
+				echo '<tr>';
+				echo '<td width=5%>'.$id.'</td>';
+				echo '<td width=18%>'.$row['custname'].'</td>';
+				echo '<td width=13%>'.$row['custcode'].'</td>';
+				echo '<td width=15%>'.$row['empcode'].'</td>';
+				echo '<td width=5%>'.$row['gender'].'</td>';
+				echo '<td width=5%>'.$row['age'].'</td>';
+				echo '<td width=10%>'.$row['project'].'</td>';
+				echo '<td width=16%>'.$row['location'].'</td>';
+				echo '<td width=10%>'.$row['amount'].'</td>';
+				echo '<td>'.$row['date'].'</td>';
+				echo '</tr>';
+				$id++;
+			}
+		   
+	       }
+	    ?>
+	</table>
+	</div>
+</fieldset>

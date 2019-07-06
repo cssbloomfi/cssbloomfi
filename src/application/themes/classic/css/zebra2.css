@@ -1,0 +1,68 @@
+/* data formats */
+.zebra2{
+	background:#F7F7F7;
+	border:4px solid #286C81;
+	border-collapse: collapse;
+	border-spacing:5px;
+	padding:5px;
+	float:left;
+	margin-top:20px;
+	margin-left:0;
+}
+.zebra2 th{
+	background:url(/images/menu_bar_bg.jpg);
+	height:28px;
+	line-height:26px;
+	text-align:left;
+	padding-left:5px;
+	border-right:1px solid #C0C0C0;
+	font-size:80%;
+}
+.zebra2 tr td{
+	height:28px;
+	line-height:26px;
+	text-align:left;
+	font-size:80%;
+}
+
+table.zebra2 tr.even td, table.zebra2 tr.even { background-color:#FFF;} 
+table.zebra2 tr.odd td { background-color:#E1E0FF; } 
+
+table.zebra2 tr.even td.rt{
+	text-align:right;
+}
+table.zebra2 tr.odd td.rt{
+	text-align:right;
+}
+table.zebra2 tr.even td.ct{
+	text-align:center;
+}
+table.zebra2 tr.odd td.ct{
+	text-align:center;
+}
+.paginationControl{
+	background:#EEEEEE;
+	border:1px solid #DDDDDD;
+	height:26px;
+	text-align:center;
+	width:98%;
+	margin-top:5px;
+	margin-bottom:5px;
+	line-height:28px;
+}
+.googlenav{
+	height:28px;
+	margin:5px;
+}
+.googlenav a{
+	text-decoration:none;
+	color:#000;
+	font-size:80%;
+}
+.current{
+	background:#DDDDDD;
+	height:28px;
+	margin:5px;
+	width:16px;
+}
+

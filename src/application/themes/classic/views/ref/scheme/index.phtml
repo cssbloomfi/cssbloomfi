@@ -1,0 +1,166 @@
+<?php
+$format=new Bloomfi_NumericFormat;
+$this->showXlsDownloadSection($this->xlsResults);
+
+function initializeString($arr,$searchFormLabel)
+	{
+		$strObj=new Bloomfi_App_Ulibrary_StrPattern;
+		$strObj->setPattern(null, ' and ');
+		$strObj->setDataEmptyValidation();
+		if(!empty($arr['snm']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['name']."</b> '".$arr['snm']."'");
+		if(!empty($arr['sid']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['id']."</b> '".$arr['sid']."'");
+		if(!empty($arr['sdt']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['startdt']."</b> '".$arr['sdt']."'");
+		if(!empty($arr['edt']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['enddt']."</b> '".$arr['edt']."'");
+		if(!empty($arr['typ']))$strObj->insertDataToPattern('<b>'.$searchFormLabel['type']."</b> '".$arr['typ']."'");
+		$string=$strObj->isExistPatternString();
+		if($string) $strObj->preAddToStringDirect("The Search Result is based on ");
+		else $strObj->preAddToStringDirect("The Search Result is based on no params");
+		$string=$strObj->getPatternString();
+		unset($strObj);
+		return $string;
+	}
+
+if($this->textSuccess)
+{
+    echo "<div class='successbox'>";
+	 $this->successMessage($this->textSuccess);
+    echo "</div>";
+}
+if( $this->textErrors )
+{ 
+  echo "<div class='errorbox'>";
+  	echo "<b>".$this->viewlabels['termination']."</b><br>";
+		$this->textMessage($this->textErrors);
+  echo '</div>';
+}
+?>
+
+
+<div class="entry-section">
+	<fieldset>
+	<legend class="icon-div"> <img src="<?= $this->images['search']; ?>" class="icons" > <?php echo $this->searchFormLabel['searchSectionHead']; ?></legend>
+	<div class="add-link-section">
+		<a href="/ref/scheme/addschm" class="btn add"><?php echo $this->links['add']; ?></a>
+	</div>
+	<div class="search-section">
+	<form method="post">
+		<input name="REQUEST" type="hidden" value="Search">
+			<table class="zebra">
+			<tr> 
+				<td> <b><?php echo $this->searchFormLabel['name']; ?></b>  </td>
+				<td> <input type="text" value="" name="scheme_name" id="scheme_name" />  </td>
+				<td> <b><?php echo $this->searchFormLabel['id']; ?></b>  </td>
+				<td> <input type="text" value="" name="scheme_id" id="scheme_id"/>  </td>
+			</tr> 
+			<tr> 
+				<td> <b><?php echo $this->searchFormLabel['startdt']; ?></b>  </td>
+				<td> <input type="text" value="" name="start_date" class="pick-date" id="start_date" /> </td> 
+				<td> <b><?php echo $this->searchFormLabel['enddt']; ?></b> </td> 
+				<td> <input type="text" value="" name="end_date" class="pick-date" id="end_date"/>  </td>
+			</tr> 
+			<tr> 
+				<td> <b><?php echo $this->searchFormLabel['type']; ?></b>  </td>
+				<td colspan=3> <?= $this->schemeTypes?> </td> 
+			</tr> 	
+
+			<tr> 
+				<td colspan=4> <input type="submit" value=" <?php echo $this->searchFormLabel['search']; ?>" id="submit_1" /></td>
+			</tr> 
+			</table>
+		</form>
+	</div>
+	</fieldset>
+</div>
+
+
+<fieldset>
+<?php
+if($this->srch){
+$searchResultString=initializeString( array('snm'=>$this->snm,'sid'=>$this->sid,'typ'=>$this->typ,
+				          'sdt'=>$this->sdt,'edt'=>$this->edt), $this->searchFormLabel ); ?>
+<div class="search-result-string"><img src="<?= $this->images['searchResult']; ?>" class="search-result-icons"  > <?= $searchResultString; ?></div>
+
+
+<?php
+}
+if($this->paginator['paginator'])
+{
+// echo $this->searchparams; 
+ //echo $this->arrayparams; 
+?>
+
+<fieldset class="export_section">
+<legend><?= $this->viewlabels['excelExport'] ?></legend>
+	<form method="POST">
+		<input name="searchparams" type="hidden" value="<?php echo $this->searchparams; ?>" >
+		<input name="arrayparams" type="hidden" value="<?php echo $this->arrayparams; ?>" >
+		<input name="search" type="hidden" value=<?= $this->srch; ?>>
+		<input type="submit" id="xlss" name="export" value="" />
+	</form>
+</fieldset>
+<div class="pagination"><?php echo $this->paginationControl($this->paginator['paginator'],
+                                    'Sliding',
+                                    '/partials/my_pagination_control.phtml',
+				     array('search'=>$this->srch,'nm'=>$this->snm,'id'=>$this->sid,'typ'=>$this->typ,
+				          'sdt'=>$this->sdt,'edt'=>$this->edt)); ?></div>
+
+<?php } ?>
+
+<form  name="deleteForm" METHOD="POST">
+<?php if ( $this->srch ) {?>
+<input name="params" type="hidden" value="<?php echo $this->snm."/".$this->sid."/".$this->typ."/".$this->sdt."/".$this->edt."/".$this->page; ?>" >
+<?php } ?>
+<input name="REQUEST" type="hidden" value="Delete"> 
+<?php
+	 $table_head ='<table class="zebra"> <tr>
+			    <th>'.$this->schemeTableHeader['id']."</th>
+			    <th>".$this->schemeTableHeader['name']."</th>
+			     <th>".$this->schemeTableHeader['type']."</th>
+			    <th>".$this->schemeTableHeader['desc']."</th>
+			    <th>".$this->schemeTableHeader['limitamount']."</th>
+			    <th>".$this->schemeTableHeader['startdt']."</th>
+			    <th>".$this->schemeTableHeader['enddt']."</th>
+			     <th>".$this->schemeTableHeader['edit']."</th>
+			    <th>".'<input type="checkbox" name="checkall" value=0 onclick="SetAllCheckBoxes'."('deleteForm','schmid','checkall')".';"/>
+			    <input type="submit" class="delete" name="delete" id="delete_icon" value="">'.$this->schemeTableHeader['delete'].'</th>
+			</tr> ';
+
+	echo $table_head;
+        $i=0;
+	if ($this->paginator['data']): 
+	foreach ( $this->paginator['data'] as $row ):
+		   echo "<tr>";
+		   echo "<td>$row->SCHEME_ID</td>";
+		   echo "<td>$row->SCHEME_NAME</td>";
+		     echo "<td>$row->SCHEME_TYPE</td>";
+		   echo "<td> $row->SCHEME_DESC </td>";
+		   echo "<td class='rt'>". $format->numFormat($row->SCHEME_AMT_LIMIT) . "</td>";
+		   echo "<td class='ct'> $row->SCHEME_START_DATE </td>";
+		   echo "<td class='ct'>$row->SCHEME_END_DATE</td>";
+		    echo '<td><a href="/ref/scheme/editschm/id/'.$row->ID.'"  id="edit_icon" ></a></td>';
+		    echo '<td class="ct"><input type="checkbox" name="schmid['.$i.']" id="schmid" value="'.$row->ID.'" /></td>';
+		   echo "</tr>";
+		   $i++;	
+	endforeach; 
+	endif;
+
+?>
+</table>
+<input type="hidden" name="ttlfields" id="ttlfields" value="<?= $i;?>">
+</form>
+
+<?php  
+if($this->paginator['paginator'])
+{
+?>
+
+<div class="pagination"><?php echo $this->paginationControl($this->paginator['paginator'],
+                                    'Sliding',
+                                    '/partials/my_pagination_control.phtml',
+				     array('search'=>$this->srch,'nm'=>$this->snm,'id'=>$this->sid,'typ'=>$this->typ,
+				          'sdt'=>$this->sage,'edt'=>$this->eage)); ?></div>
+
+<?php } 
+unset($format);
+?>
+</fieldset>

@@ -1,0 +1,426 @@
+/* Index.phtml */
+	.search-bar{
+		height:auto;
+		line-height:40px;
+		background:#fff;
+		width:98% !important;
+		width:100%;
+		margin:5px;
+		font-weight:bold;
+		padding-left:10px;
+		padding-bottom:10px;
+		float:left;
+		border: 1px solid #EFEFEF;
+	}
+	.details{
+		margin-top:10px;
+		padding:5px;
+		color:#1B99B4;
+	}
+	.left-panel{
+		float:left;
+		width:80%;
+	}
+	.right-panel{
+		float:right;
+		width:19%;
+	}
+
+	.list-container{
+		text-align:left;
+		width:100%;
+	}
+	.list-container ul{
+		list-style:none;
+		width:100%;
+		margin:5px;
+	}
+	.list-container ul li{
+		margin:0;
+		float:left;
+		width:48% !important;
+		width:49%;
+		height:100px;
+		border:1px dotted #BEBEBE;
+		margin-right:1.4% !important;
+		margin-right:1%;
+		margin-bottom:5px;
+		background:#FFF;
+		position:relative;
+	}
+	.list-container ul li:hover{
+		border:1px solid #004080;
+	}
+	.text-info{
+		float:left;
+		width:70%;
+		margin:5px;
+	}
+	.text-info p{
+		margin-top:5px;
+		font-size:90%;
+	}
+	.action-bar{
+		text-align:right;
+		position:absolute;
+		bottom:0px !important;
+		width:70% !important;
+		width:100%;
+		height:20px;
+	}
+	.action-bar a{
+		text-decoration:none;
+		font-size:80%;
+	}
+	.visual-info{
+		float:right;
+		width:27%;
+		border-left:1px dotted;
+		height:100%;
+		overflow:hidden;
+	}
+	.photo{
+		text-align:center;
+	}
+	.btn{
+		
+		height:24px;
+		text-decoration:none;
+		padding-left:24px;
+		font-size:80%;
+		line-height:24px;
+	}
+	.add{
+		background:url(/images/icons/add_icon.gif) no-repeat;
+		height:20px;
+		padding-bottom:5px;
+	}
+	a{
+		color:#004080;
+	}
+
+/* Customer form */
+	.title-bar{
+		height:30px;
+		line-height:30px;
+		background:#fff;
+		width:98% !important;
+		width:100%;
+		margin:5px;
+		border: 1px solid #EFEFEF;
+		text-align:left;
+		padding-left:5px;
+	}
+	.bloomfi-form-container{
+		text-align:left;
+		margin:5px;
+	}
+	fieldset{
+		margin-top:10px;
+		border:1px solid #E6E6E6;
+	}
+	fieldset label{
+		width:100px;
+		padding-left:5px;
+		padding-top:10px;
+	}
+	legend{
+		margin-left:10px;
+		cursor: hand;
+	}
+	.full-width{
+		width:99%;
+		margin:5px;
+		text-align:left;
+	}
+	.full-wdth{
+		border:2px solid #fff;
+		border-spacing:5px;
+		border-style:none;
+		background:#FFF;
+
+	}
+	table tr td{
+		background:#F4FCFF;
+		padding:2px;
+		border:2px solid #fff;
+		
+	}
+	.lbl{
+		width:20%;
+		border-right:1px solid #fff;
+		font-size:80%;
+	}
+	.action-panel{
+		text-align:right;
+	}
+	.btn{
+		width:80px;
+		text-align:center;
+	}
+	.focusField{   
+		border:solid 2px #73A6FF;   
+		background:#EFF5FF;   
+		color:#000;   
+	    }   
+	.idleField{   
+		background:#FFF;   
+		color: #6F6F6F;   
+		border: solid 2px #DFDFDF;   
+	    }
+	 .currency{
+		text-align:right;
+	 }
+	 .trans_entry{
+		font-weight:bold;
+		padding-left:10px;
+		padding-top:0;
+		margin:0;
+		float:left;
+	}
+	 /*----------------------------------------------------------------------------------------------------*/
+
+
+	 /* Display User Information  */
+	 .user-info-container
+	 {
+		
+	 }
+	
+	 .xls-form
+	 {
+		margin:0 10px 0 10px;
+	 }
+
+	 .xls-form-left
+	 {
+		margin:0 0 20px 0;
+		width:53%;
+		float:left;
+	 }
+
+	 .xls-form-right
+	 {
+		margin:3px 0 10px 10px;
+		width:45%;
+		float:right;
+	 }
+
+	 .xls-download
+	 {
+	 }
+
+	 .xls-download-format
+	 {
+		
+	 }
+
+	.file-list
+	{
+		margin:10px 0 0 10px;
+		padding:0 0 0 0;
+		
+	}
+
+	.file-list ul
+	{
+		margin:0;
+		padding:15px 0 0 0;
+		
+	}
+
+	.file-list ul li
+	{
+		
+		list-style:none;
+		margin:0;
+		padding:0;
+		display:block;
+		float:left;
+		text-align:left;
+	}
+
+	.file-list ul li a
+	{
+		
+		list-style:none;
+		margin:0;
+		padding:0 0 0 25px;
+		display:block;
+		height:25px;
+		line-height:25px;
+		font-size:12pt;
+		width:250px;
+		color:#003D79;
+		font-weight:bold;
+		background:url(/images/icons/list.png) no-repeat;
+		text-decoration:none;
+	}
+
+	.file-list ul li a:hover
+	{
+		color:#67C2E0;
+		text-decoration:underline;
+		
+	}
+
+	.legend-data
+	{
+		float:right;
+		line-height:50px;
+	}
+
+	.log-section
+	{
+		float:left;
+		height:300px;
+		margin:10px;
+		position:absolute;
+	}
+
+	.log-section-panel
+	{
+		height:147px;
+		background:#fff;
+		float:left;
+		width:94%;
+		text-align:center;
+		overflow:scroll;
+		margin:10px;
+	}
+
+	.log-section-full-panel
+	{
+		
+		height:300px;
+		float:left;
+		overflow:scroll;
+	}
+
+	.log-details
+	{
+		height:300px;
+		background:#F5F5F5;
+		float:left;
+		
+	}
+
+	.log-files
+	{
+		
+	}
+
+	.upload-section
+	{
+		height:200px;
+	}
+
+	.validation-log
+	{
+		margin-top:28px;
+	}
+
+	.validation-section
+	{
+		height:200px;
+	}
+
+	.validation-message
+	{
+		width:100%;
+		float:left;
+	}
+
+	.report6-left
+	{
+	}
+
+	.report6-right
+	{
+	}
+
+
+    #ui-datepicker-div
+    {
+        z-index: 9999999;
+    }
+
+	.remarks
+	{
+		font-weight:bold;
+		text-align:center;
+	}
+
+	legend
+	{
+	  font-size:15px;
+	  font-weight:bold;
+	  color:#8D8D8D;
+	}
+
+	.pagination
+	{
+		margin-left:15px;
+		float:left;
+	}
+
+	.search-icon
+	{
+	    width:30px;
+		float:left;
+		vertical-align:center;
+	}
+
+	.top-panel
+	{
+		width:50%;
+		float:right;
+		text-align:right;
+	}
+
+	.edit-data
+	{
+		width:70%;
+		float:left;
+	}
+
+	.image-data
+	{
+		width:30%;
+		float:left;
+	}
+
+	.zebra 
+	{
+		float:left;
+	}
+
+
+
+	input, textarea, select, file
+	{
+		border:1px solid #1E5CB0 ;
+		background:#EFEFF7;
+	}
+
+	input:focus, textarea:focus , select:focus, file:focus
+	{
+		border:1px solid #C40000 ;
+		background:#fff;
+	}
+
+
+
+	.no-border-bkcolor
+	{
+		border:none;
+		background:none;
+	}
+	
+	.box-1{
+		padding:20px;
+		background:#D8D8D8;
+		width:auto;
+	}
+
+	

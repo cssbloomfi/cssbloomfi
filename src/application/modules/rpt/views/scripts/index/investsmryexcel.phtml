@@ -1,0 +1,12 @@
+   
+<?php
+$header=array($this->tableHeader['schemeId'], $this->tableHeader['empId'], $this->tableHeader['custId'], 
+$this->tableHeader['transId'], $this->tableHeader['firstPayDt'], $this->tableHeader['lastPayDt'], 
+$this->tableHeader['paymentAmount'], $this->tableHeader['receiptAmount']);
+
+$order=array('SCHEME_ID', 'EMPLOYEE_ID', 'CUSTOMER_ID', 'TRANSACTION_ID', 'START_DATE', 'LATEST_DATE',
+'PAID_AMOUNT', 'RETURN_AMOUNT');
+
+ $filename="reportinvestsummary".$this->fileno;
+$this->createExcelReport($filename,$header,$this->reports,$order);
+?>

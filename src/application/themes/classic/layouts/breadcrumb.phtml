@@ -1,0 +1,38 @@
+<script type="text/javascript">
+    jQuery(document).ready(function()
+    {
+	jQuery("#breadCrumb").jBreadCrumb({easing:'swing'});
+    })
+</script>
+<?php
+	$_session=Zend_Registry::get('SQL');
+	$breadCrumb=new BinaryBl_BreadCrumb_Builder;
+	$path=$breadCrumb->currentBreadCrumbPath($_session->actionHelp,$_session->lastAction);
+	$homeUrl=$breadCrumb->getBaseURL()."/dbd";
+?>
+<div class="breadcrumb-panel">
+ <div class="breadCrumbHolder module">
+	<div id="breadCrumb" class="breadCrumb module">
+	    <ul>
+		<li>
+		    <a href="<?= $homeUrl; ?>">Home</a>
+		</li>
+		<?php 
+		$count=count($path['PATH']);
+		for($i=0;$i<$count;$i++)
+		{
+	      ?>
+		<li>
+		 <?php if($i<($count-1)){ ?>
+			<a href="<?= $path['URL'][$i];; ?>"><?= $path['PATH'][$i]; ?></a>
+		 <?php }else{ ?>
+			<?= $path['PATH'][$i]; ?>
+		</li>
+		<?php
+		}}
+		?>
+	    </ul>
+	</div>
+ </div>
+</div>
+

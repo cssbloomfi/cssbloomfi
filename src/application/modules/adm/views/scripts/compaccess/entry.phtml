@@ -1,0 +1,111 @@
+<?php
+
+if($this->textSuccess)
+{
+  echo "<div class='successbox'>";
+     $this->successMessage($this->textSuccess);
+  echo "</div>";
+}
+else
+if( $this->textErrors )
+{ 
+	 echo "<div class='errorbox'>";
+			$this->textMessage($this->textErrors);
+	 echo '</div>';
+} ?>
+
+
+<div class="add-section">
+	<?= $this->entry['mainHeading']; ?>
+</div>
+
+<?php if($this->components)
+{ ?>
+<form name='compRole' method='POST'>
+	<table class="zebra">
+		<tr>
+			<th><?= $this->entry['compGroup']; ?></th>
+			<th><?= $this->entry['appRoles']; ?></th>
+		</tr>
+		<?php
+			
+			foreach($this->components as $comp)
+			{
+				$check=null;
+				$value=$comp->COMP_DISPLAY_GROUP_ID.'/'.$comp->POSITION;
+				
+				if(isset($this->selectedComps))
+				foreach($this->selectedComps as $val)
+					if($val==$value){ 
+						$check='checked';
+						break;
+					}
+				echo "<tr><td>";
+				echo "<input type='checkbox' name='comp[]' value='".$value."' $check>";
+				echo '<b>'.$comp->DISPLAY_NAME.'</b>';
+				echo " | ";
+				echo $comp->ASSOC_SCREEN_LOCATIONS;
+				$comNm=$comp->COMP_DISPLAY_GROUP_ID."-role";
+				//print_r($this->selectedRoles);
+
+				$images=explode(',',$comp->IMAGE_PATH);
+				$new=array_chunk($images,3);
+				//print_r($new);
+				echo "<div class='compDisplaySection'>";
+				echo "<table class='compTbl'>";
+				foreach($new as $img)
+				{
+					echo "<tr>";
+					for($i=0;$i<3;$i++)
+					{
+						echo "<td>";
+						if(isset($img[$i]))
+						{
+							$comInfo=explode(':',$img[$i]);
+							echo "<img src=' /../application/modules/com/".$comInfo[0].".jpg' width=100 height=70>";
+							echo "<br>".$comInfo[1];
+						}
+						echo "</td>";
+					}
+
+				}
+				echo "</table></div>";
+				echo "</td><td><div class='comp-panel-1'>";
+					foreach($this->roles as $role){
+						$check=null;
+						$value=$role->ACCESS_ROLE_ID;
+						if(isset($this->selectedRoles[$comNm]))
+						foreach($this->selectedRoles[$comNm] as $val)
+						if($val==$value){ 
+							$check='checked';
+							break;
+						}
+						echo "<input type='checkbox' name='".$comNm."[]' value='".$value."' $check>";
+						echo $value.'<br>';
+					}
+				echo "</div>";
+				echo "</td></tr>";
+			}
+		?>
+		<tr>
+			<td></td>
+			<td>
+				<input type="submit" name="save" value="Save" id="submit">
+				<input type="button" value="Cancel" id="submit" onclick="cancel()">				
+			</td>
+		</tr>
+	</table>
+</form>
+
+<?php } 
+else {
+	echo $this->entry['compNotFundMsg'];
+}
+?>
+
+<script type="text/javascript">
+	function cancel()
+	{
+		 self.location="/adm/compaccess";
+	}
+</script>

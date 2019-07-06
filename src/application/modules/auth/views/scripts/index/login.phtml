@@ -1,0 +1,21 @@
+	<div id="dialo1">
+		<?php
+			
+			if ($this->errors)
+			{
+		?>
+		<div class="errorbox">
+		<?php
+			foreach($this->errors as $msg)
+			   echo $msg."<br>";
+		?>
+		</div>
+		<?php }?>
+		<div id="caption">
+			<h2>Please Login</h2>
+		</div>
+		
+		<div id="panel">		
+			<?= $this->form ?>
+		</div>
+	</div>

@@ -1,0 +1,95 @@
+<script type="text/javascript">
+	$(function() {
+		$("#accordion").accordion({
+			collapsible: true
+		});
+	});
+	
+	function confirmDb()
+	{
+		ans=confirm("Do you really want to create sql backup?");
+		if(ans)
+		{
+			return true;
+		}else{
+			return false;
+		}
+	}
+</script>
+
+<div class="add-section">
+		<img src="<?= $this->images['backup']; ?>" class="icons" >SQL Backup Section
+</div>
+
+<?php 
+
+if($this->textSuccess)
+{
+  echo "<div class='successbox'>";
+     $this->successMessage($this->textSuccess);
+  echo "</div>";
+}
+else
+if( $this->textErrors )
+{ 
+  echo "<div class='errorbox'>";
+  	echo "<b>".$this->viewlabels['termination']."</b><br>";
+		$this->textMessage($this->textErrors);
+  echo '</div>';
+}
+if($this->textInfo )
+{	
+	echo "<div class='ibox'>";	
+	$this->infoMessage($this->textInfo);
+	echo "</div>";
+}
+?>
+
+<div class="left-section-1">
+	
+	<div class="box-1">
+		<form name="backup" method="POST">
+			<input type="hidden" name="REQUEST" value="BACKUP"/>
+			Create backup <input type="submit" name="bkup" value="BACKUP" id="submit_2" onclick="return confirmDb();">
+		</form>
+		
+		
+	</div>
+		
+	<div id="accordion">
+		<h3><img src="<?= $this->images['log']; ?>" class="bar-icons" ><a href="#">SQL Backup file(s)</a></h3>
+		<div>
+		   <form name="custpay_validation_log" method="POST">
+		       <input type="hidden" name="REQUEST" value="SQL"/>
+			<table class="zebra">
+			 <tr>
+				<th width=10%><?php echo "File Id"; ?></th>
+				<th width=21%><?php echo "Access Time"; ?></th>
+				<th width=57%><?php echo "SQL Files"; ?></th>
+				<th><?php echo '<input type="submit" class="delete" name="delete" id="delete_icon" value="">Delete'; ?></th>
+			 </tr>
+			 </table>
+			 <div class="table-fix-area">
+			     <table class="zebra">
+				<?php
+				$id=1;
+				if($this->sqlBackups){
+				foreach($this->sqlBackups as $key => $file){
+                                 $fileName=basename($file['filename'],'.zip');
+                                 $path=ROOT_DIR.'/backup/';
+				 echo '<tr>';
+				 echo '<td width=10%>'.$id.'</td>';
+                                 echo '<td width=21%>'.$file['lstatime'].'</td>';
+				 echo '<td width=60%><a href="'.$path.$file['filename'].'" target="_blank">'.'<img src="'.$this->images['sql'].'" class="bar-icons" > '.$fileName.'</a></td>';
+				 echo '<td  ><input type="checkbox" name="appsql['.$id.']" id="appsql"  value="'.$file['filename'].'" /></td>';
+				 echo '</tr>';
+				 $id++;
+				}}
+				?>
+			     </table>
+			  </div>
+		    </form>
+		</div>
+
+	</div>
+</div>

@@ -1,0 +1,10 @@
+<?php
+$header=array($this->customerHeader['id'],$this->customerHeader['name'],$this->customerHeader['empId'],$this->customerHeader['age'],
+$this->customerHeader['sex'],$this->customerHeader['location'],$this->customerHeader['description'],
+$this->customerHeader['entrydt']);
+
+$columns=array('CUSTOMER_ID','ENTITY_NAME','EMPLOYEE_CODE','AGE','SEX','LOCATION_ID','ENTITY_DESC','CUSTOMER_ENTRY_DATE');
+
+$filename="customer_".$this->fileno;
+$this->createExcelReport($filename,$header,$this->xlsResult,$columns);
+?>

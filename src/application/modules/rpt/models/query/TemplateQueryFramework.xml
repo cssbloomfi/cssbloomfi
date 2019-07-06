@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+  <querylibrary>
+   <query id="ReportXX">
+	 <title>Beneficiary wise Report</title>
+	 <result>
+		 <tableheader>
+				<label>First Payment Date</label>
+				<label>Collector Code</label>
+				<label>Client Code</label> 
+				<label>Project Code</label>
+				<label>Payment</label>
+				<label>Receipt</label>
+				<label>Account Status</label>
+		 </tableheader>
+		 <queryheader>
+			 <item>FIRST_PAYMENT_DATE</item>
+			 <item>EMPLOYEE_ID</item>
+			 <item>CUSTOMER_ID</item>
+			 <item>SCHEME_ID</item>
+			 <item>TOTAL_PAYMENT_PRINCIPAL</item>
+			 <item>TOTAL_RECEIPT_PRINCIPAL</item>
+			 <item>ACTIVE_STATUS</item>
+		 </queryheader>
+		 <content>
+			SELECT CUSTOMER_ID , EMPLOYEE_ID , SCHEME_ID , TRAN_SUMMARY_ID TRANSACTION_ID, 
+			MIN(IF(PAYMENT_AMOUNT=0,null,TRANSACTION_DATE)) FIRST_PAYMENT_DATE, 	
+			MAX(IF(RECEIPT_AMOUNT=0,null,TRANSACTION_DATE)) LAST_RECEIPT_DATE,
+			DATEDIFF(MAX(IF(RECEIPT_AMOUNT=0,null,TRANSACTION_DATE)) , MIN(IF(PAYMENT_AMOUNT=0,null,TRANSACTION_DATE))) AGE_IN_DAYS,
+			SUM(IF(PAYMENT_AMOUNT>0,1,0)) TOTAL_PAYMENT , 
+			SUM(IF(RECEIPT_AMOUNT>0,1,0)) TOTAL_RECEIPT , 
+			SUM(PAYMENT_AMOUNT) PAYMENT_AMOUNT , 		
+			SUM(RECEIPT_AMOUNT) RECEIPT_AMOUNT , 	
+			SUM(PAYMENT_AMOUNT - RECEIPT_AMOUNT) DUE_AMOUNT 		
+			FROM ltr_trn_details 		
+			WHERE TRIM(CUSTOMER_ID) != '' 
+			GROUP BY CUSTOMER_ID,EMPLOYEE_ID,SCHEME_ID, TRAN_SUMMARY_ID
+			LIMIT :start, :limit
+		 </content>
+		 <patinatorconditions>
+				<pages>20</pages>
+				<rowsperpage>20</rowsperpage>
+		 </patinatorconditions>
+	 </result>
+
+	 <searchparams>
+
+		 <searchitem>CUSTOMER_ID
+		     <isdisplay>Y</isdisplay>
+			 <order>1</order>
+			 <datatype>CHAR</datatype>
+			 <displaytype>AUTO_COMPLETE</displaytype>
+			 <length>10</length>
+			 <sqlcontent>
+				 SELECT DISTINCT ENTITY_ID FROM ref_mst_entity 
+				 WHERE entity_type = 'Customer'
+				 AND ENTITY_ID LIKE '%:entitytype'
+			 </sqlcontent>
+			 <params>
+				<param>:entitytype</param>
+			 </params>
+		 </searchitem>
+
+		 <searchitem>EMPLOYEE_ID
+		     <isdisplay>Y</isdisplay>
+			 <order>2</order>
+			 <datatype>CHAR</datatype>
+			 <displaytype>DROPDOWN</displaytype>
+			 <length>10</length>
+			 <sqlcontent>
+				 SELECT DISTINCT ENTITY_ID FROM ref_mst_entity 
+				 WHERE entity_type = 'Officer'
+			 </sqlcontent>
+		 </searchitem>
+
+		 <searchitem>SCHEME_ID
+		     <isdisplay>Y</isdisplay>
+			 <order>3</order>
+			 <datatype>CHAR</datatype>
+			 <displaytype>LIST</displaytype>
+			 <length>10</length>
+			 <values>
+				<value>GS</value>
+				<value>AG</value>
+				<value>AH</value>
+				<value>MC</value>
+				<value>MF</value>
+				<value>SBA</value>
+			 </values>
+		 </searchitem>
+
+		 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>entity_name</name>
+                 <columnvalue>SCHEME_ID</columnvalue>
+				  <conditiontype>@EQUAL@</conditiontype>
+                 <label>Project Code</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>DROPDOWN</displaytype>
+				 <sqlbundle>
+					<sqlcontent>
+						SELECT *FROM ref_mst_scheme
+					</sqlcontent>
+					<label>SCHEME_NAME</label>
+					<value>SCHEME_ID</value>
+				 </sqlbundle>
+         </searchitem>
+
+		  <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>trns_dt</name>
+                 <columnvalue>FIRST_PAYMENT_DATE</columnvalue>
+				 <columnfilter>MONTH(@COLUMN@)</columnfilter>
+                 <conditiontype>@EQUAL@</conditiontype>
+                 <label>MONTH</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>4</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>2</length>
+            </searchitem>
+
+			 <searchitem>
+                 <isdisplay>Y</isdisplay>
+                 <order>5</order>
+                 <displaytype>BLANK</displaytype>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>trns_dt</name>
+				 <class>pick-date</class>
+				 <columnvalue>FIRST_PAYMENT_DATE</columnvalue>
+                 <conditiontype>@GREATEREQUAL@</conditiontype>
+				 <valuefilter>@VALUE@</valuefilter>
+                 <label>YEAR</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>4</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>dt</name>
+                 <label>Interval Later (Days)</label>
+				 <value>30</value>
+				 <columnvalue>FIRST_PAYMENT_DATE</columnvalue>
+                 <conditiontype>@LESSEQUAL@</conditiontype>
+				 <valuefilter>DATE_ADD('trns_dt', INTERVAL @VALUE@ DAY )</valuefilter>
+                 <isdisplay>Y</isdisplay>
+                 <order>5</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>2</length>
+             </searchitem>
+
+	 </searchparams>
+
+   </query>
+   </querylibrary> 

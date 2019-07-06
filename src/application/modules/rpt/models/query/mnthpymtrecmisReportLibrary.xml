@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+
+  <querylibrary>
+   <query id="mnthPymtRecMis">
+     <title>Month Wise Payment Receipt</title>
+     <result>
+         <tableheader>
+			 <label>Month</label>
+			 <label>Total Beneficiary</label>
+			 <label>Total Loan</label>
+			 <label>Total Receipt</label>
+			 <label>Total Donation</label>
+			 <label>Total BSD Receipt</label>
+			 <label>Total BSD Paid</label>
+         </tableheader>
+
+         <queryheader>
+             <item>MONTH</item>
+             <item>TOTAL_CUSTOMER</item>
+             <item>LOAN</item>
+			 <item>RECEIPT</item>
+			 <item>DONATION</item>
+			 <item>BSD_RECEIPT</item>
+			 <item>BSD_PAID</item>
+         </queryheader>
+
+         <sqlcontent>
+            SELECT CONCAT(YEAR(START_DATE),'/',MONTH(START_DATE)) AS MONTH_SHORT,
+			CONCAT(YEAR(START_DATE),'/',MONTHNAME(START_DATE)) AS MONTH, COUNT(CUSTOMER_ID) AS TOTAL_CUSTOMER,START_DATE, 
+			SUM(TOTAL_PAYMENT_PRINCIPAL) AS LOAN, SUM(TOTAL_RECEIPT_PRINCIPAL) AS RECEIPT, 
+			SUM(TOTAL_RECEIPT_DONATION) AS DONATION, SUM(TOTAL_RECEIPT_SECURITY_DEPOSITE) AS BSD_RECEIPT,
+			SUM(TOTAL_PAYMENT_SECURITY_DEPOSITE) AS BSD_PAID
+			FROM ltr_trn_summary
+			WHERE STATUS='NORMAL'
+			GROUP BY MONTH(START_DATE)
+			ORDER BY MONTH_SHORT DESC
+         </sqlcontent>
+         
+         <patinatorconditions>
+            <pages>20</pages>
+            <rowsperpage>20</rowsperpage>
+         </patinatorconditions>
+
+     </result>
+
+     <criteria>
+         <searchparams>  
+
+			  <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>startmonthdate</name>
+				 <class>pick-date</class>
+                  <columnvalue>START_DATE</columnvalue>
+                 <conditiontype>@GREATEREQUAL@</conditiontype>
+                 <label>Start Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>1</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			  <searchitem>
+                 <searchparam>Y</searchparam>
+                 <name>endmonthdate</name>
+				 <class>pick-date</class>
+                <columnvalue>START_DATE</columnvalue>
+				 <conditiontype>@LESSEQUAL@</conditiontype>
+                 <label>End Date</label>
+                 <isdisplay>Y</isdisplay>
+                 <order>2</order>
+                 <datatype>CHAR</datatype>
+                 <displaytype>TEXT</displaytype>
+                 <length>20</length>
+             </searchitem>
+
+			 <searchitem>
+                 <isdisplay>Y</isdisplay>
+                 <order>3</order>
+                 <displaytype>BLANK</displaytype>
+             </searchitem>
+
+             <searchitem>
+                 <name>Search</name>
+                 <isdisplay>Y</isdisplay>
+                 <order>4</order>
+                 <id>submit</id>
+                 <datatype>CHAR</datatype>
+                 <displaytype>SUBMIT</displaytype>
+                 <value>Search</value>
+             </searchitem>
+
+        </searchparams>
+     </criteria>
+
+
+   </query>
+   </querylibrary> 
+
+
