@@ -1,0 +1,7 @@
+2019-06-22T06:19:37+01:00 INFO (6): File Name -> KH  INS  20-06-2019
+2019-06-22T06:19:38+01:00 INFO (6): Transaction Table Status 'OPEN'.
+2019-06-22T06:19:38+01:00 INFO (6): Xls data uploading started.
+2019-06-22T06:33:46+01:00 INFO (6):  186 Rows are successfully checked.
+2019-06-22T06:33:46+01:00 INFO (6):  186 Rows imported successfully.
+2019-06-22T06:33:46+01:00 INFO (6):  0 Rows unable to import.
+2019-06-22T06:33:46+01:00 INFO (6): Total Consumed time for uploading process is : 848.69 Second(s)

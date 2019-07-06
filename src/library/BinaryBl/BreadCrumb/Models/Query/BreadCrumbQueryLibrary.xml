@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+ <querylibrary> 
+
+    <query id="resourceByParentIdQuery">
+     <title>Resource on the basis of parent id</title>
+     <content>
+	     SELECT ID,  RESOURCE_MASTER_ID,MODULE_ID, RESOURCE_ID, MENU_ID, PARENT_ACTION_ID, RESOURCE_NAME, RESOURCE_URL,  RESOURCE_MASTER_PARENT_ID FROM ref_mst_hierarchy_resource where RESOURCE_TYPE= 'breadcrumb' AND RESOURCE_MASTER_PARENT_ID=':pid' ORDER BY ID
+     </content>
+     <params>
+		<param>:pid</param>
+	 </params>
+   </query>
+
+    <query id="resourceByIdQuery">
+     <title>Resource on the basis of id</title>
+     <content>
+		SELECT ID, RESOURCE_MASTER_ID, RESOURCE_NAME, RESOURCE_URL, RESOURCE_MASTER_PARENT_ID FROM ref_mst_hierarchy_resource WHERE RESOURCE_TYPE= 'breadcrumb' AND RESOURCE_MASTER_ID=':id' ORDER BY ID
+     </content>
+     <params>
+		<param>:id</param>
+     </params>
+   </query>
+
+    <query id="maxResourceIdQuery">
+     <title>Get all master ids </title>
+     <content>
+		SELECT MAX(ID) AS MAX_ID FROM ref_mst_hierarchy_resource
+     </content>
+   </query>
+
+    <query id="resourceMasterIdonIdQuery">
+     <title>Get Resource Master Id of a ID</title>
+     <content>
+		SELECT RESOURCE_MASTER_ID FROM ref_mst_hierarchy_resource
+		WHERE ID = :id
+     </content>
+	 <params>
+		<param>:id</param>
+	 </params>
+   </query>
+
+  </querylibrary> 

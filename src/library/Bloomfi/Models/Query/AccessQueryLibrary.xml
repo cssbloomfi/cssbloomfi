@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+ <querylibrary> 
+
+    <query id="UserRoleQuery">
+     <title>User Role Query</title>
+     <content>
+	     select rmui.id user_num_id , rmui.user_id user_id, rmar.id access_role_num_id, 
+	     rmar.access_role_id access_role_id from ref_mst_user rmui , ref_join_access_role_user  
+	     rmur , ref_mst_access_role rmar where rmui.id = rmur.user_id and  rmar.id = rmur.access_role_id 
+     </content>
+     <params></params>
+   </query>
+
+    <query id="UserRoleAccessQuery">
+     <title>User Role Access Query</title>
+     <content>
+		SELECT
+		ref_mst_access_role.ACCESS_ROLE_ID acl_role_id, 
+		ref_mst_application_resource.MODULE_ID acl_module_name,
+		ref_mst_application_resource.RESOURCE_ID acl_resource_name,
+		ref_mst_access_privilege.PRIVILEGE_ID acl_privilege_name,
+		ref_mst_access_role.ACCESS_ROLE_ID acl_role_name,
+		ref_mst_user.ID acl_user_id,
+		ref_mst_user.USER_ID acl_user_name
+		FROM ref_mst_user
+		INNER JOIN ref_join_access_role_user
+		ON ref_join_access_role_user.USER_ID = ref_mst_user.USER_ID
+		INNER JOIN ref_mst_access_role
+		ON ref_join_access_role_user.ACCESS_ROLE_ID = ref_mst_access_role.ACCESS_ROLE_ID
+		INNER JOIN ref_join_access_role_appln_resource
+		ON ref_join_access_role_user.ACCESS_ROLE_ID = ref_join_access_role_appln_resource.ACCESS_ROLE_ID
+		INNER JOIN ref_mst_application_resource
+		ON ref_join_access_role_appln_resource.APPLICATION_RESOURCE_ID = ref_mst_application_resource.RESOURCE_MASTER_ID
+		INNER JOIN ref_mst_access_privilege
+		ON  ref_mst_access_privilege.RESOURCE_MASTER_ID = ref_mst_application_resource.RESOURCE_MASTER_ID
+     </content>
+     <params></params>
+   </query>
+
+    <query id="UserRoleIdInfoQuery">
+     <title>User Role Id Information</title>
+     <content>
+	SELECT a.ID ID, a.ACCESS_ROLE_DESC ROLE_NAME, b.USER_ID USER_ID,b.ACCESS_ROLE_ID ACCESS_ROLE_ID, 
+	c.USER_ID  USER_ID 
+	FROM ref_mst_user c,
+	ref_join_access_role_user b, 
+	ref_mst_access_role a 
+	WHERE a.ACCESS_ROLE_ID=b.ACCESS_ROLE_ID AND c.USER_ID=b.USER_ID AND c.USER_ID=':userId'
+     </content>
+     <params>
+		<param>:userId</param>
+     </params>
+   </query>
+
+    <query id="">
+     <title></title>
+     <content>
+     </content>
+     <params>
+     </params>
+   </query>
+
+  </querylibrary> 

@@ -1,0 +1,261 @@
+2019-06-22T06:00:47+01:00 INFO (6): File Name -> KH  INS  20-06-2019
+2019-06-22T06:00:48+01:00 INFO (6): Validation Started.
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 188 ] [COLUMN - CLIENT_CODE] Customer 'SB116036' is not a valid customer code
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 188 ] [COLUMN - PROJECT] Payment is not given to client 'SB116036'.
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 189 ] [COLUMN - CLIENT_CODE] Customer 'SB116037' is not a valid customer code
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 189 ] [COLUMN - PROJECT] Payment is not given to client 'SB116037'.
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 190 ] [COLUMN - CLIENT_CODE] Customer 'SB116038' is not a valid customer code
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 190 ] [COLUMN - PROJECT] Payment is not given to client 'SB116038'.
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 191 ] [COLUMN - CLIENT_CODE] Customer 'SB116039' is not a valid customer code
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 191 ] [COLUMN - PROJECT] Payment is not given to client 'SB116039'.
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 192 ] [COLUMN - CLIENT_CODE] Customer 'SB116035' is not a valid customer code
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 192 ] [COLUMN - PROJECT] Payment is not given to client 'SB116035'.
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 193 ] [COLUMN - CLIENT_CODE] Customer 'SB116040' is not a valid customer code
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 193 ] [COLUMN - PROJECT] Payment is not given to client 'SB116040'.
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 194 ] [COLUMN - CLIENT_CODE] Customer 'SB116138' is not a valid customer code
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 194 ] [COLUMN - PROJECT] Payment is not given to client 'SB116138'.
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 195 ] [COLUMN - CLIENT_CODE] Customer 'SB116139' is not a valid customer code
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 195 ] [COLUMN - PROJECT] Payment is not given to client 'SB116139'.
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 196 ] [COLUMN - CLIENT_CODE] Customer 'SB116140' is not a valid customer code
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 196 ] [COLUMN - PROJECT] Payment is not given to client 'SB116140'.
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 197 ] [COLUMN - CLIENT_CODE] Customer 'SB116141' is not a valid customer code
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 197 ] [COLUMN - PROJECT] Payment is not given to client 'SB116141'.
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 198 ] [COLUMN - CLIENT_CODE] Customer 'SB116142' is not a valid customer code
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 198 ] [COLUMN - PROJECT] Payment is not given to client 'SB116142'.
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 199 ] [COLUMN - CLIENT_CODE] Customer 'SB116143' is not a valid customer code
+2019-06-22T06:00:54+01:00 ERR (3): [ ROW - 199 ] [COLUMN - PROJECT] Payment is not given to client 'SB116143'.
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 300 ] [COLUMN - CLIENT_CODE] Customer 'SB116144' is not a valid customer code
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 300 ] [COLUMN - PROJECT] Payment is not given to client 'SB116144'.
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 301 ] [COLUMN - CLIENT_CODE] Customer 'SB116145' is not a valid customer code
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 301 ] [COLUMN - PROJECT] Payment is not given to client 'SB116145'.
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 302 ] [COLUMN - CLIENT_CODE] Customer 'SB116146' is not a valid customer code
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 302 ] [COLUMN - PROJECT] Payment is not given to client 'SB116146'.
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 303 ] [COLUMN - CLIENT_CODE] Customer 'SB116147' is not a valid customer code
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 303 ] [COLUMN - PROJECT] Payment is not given to client 'SB116147'.
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 304 ] [COLUMN - CLIENT_CODE] Customer 'SB116148' is not a valid customer code
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 304 ] [COLUMN - PROJECT] Payment is not given to client 'SB116148'.
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 305 ] [COLUMN - CLIENT_CODE] Customer 'SB116149' is not a valid customer code
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 305 ] [COLUMN - PROJECT] Payment is not given to client 'SB116149'.
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 306 ] [COLUMN - CLIENT_CODE] Customer 'SB116150' is not a valid customer code
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 306 ] [COLUMN - PROJECT] Payment is not given to client 'SB116150'.
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 307 ] [COLUMN - CLIENT_CODE] Customer 'SB116250' is not a valid customer code
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 307 ] [COLUMN - PROJECT] Payment is not given to client 'SB116250'.
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 308 ] [COLUMN - CLIENT_CODE] Customer 'SB116251' is not a valid customer code
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 308 ] [COLUMN - PROJECT] Payment is not given to client 'SB116251'.
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 309 ] [COLUMN - CLIENT_CODE] Customer 'SB116252' is not a valid customer code
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 309 ] [COLUMN - PROJECT] Payment is not given to client 'SB116252'.
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 310 ] [COLUMN - CLIENT_CODE] Customer 'SB116253' is not a valid customer code
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 310 ] [COLUMN - PROJECT] Payment is not given to client 'SB116253'.
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 311 ] [COLUMN - CLIENT_CODE] Customer 'SB116254' is not a valid customer code
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 311 ] [COLUMN - PROJECT] Payment is not given to client 'SB116254'.
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 312 ] [COLUMN - CLIENT_CODE] Customer 'SB116255' is not a valid customer code
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 312 ] [COLUMN - PROJECT] Payment is not given to client 'SB116255'.
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 313 ] [COLUMN - CLIENT_CODE] Customer 'SB116256' is not a valid customer code
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 313 ] [COLUMN - PROJECT] Payment is not given to client 'SB116256'.
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 314 ] [COLUMN - CLIENT_CODE] Customer 'SB116257' is not a valid customer code
+2019-06-22T06:00:57+01:00 ERR (3): [ ROW - 314 ] [COLUMN - PROJECT] Payment is not given to client 'SB116257'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 315 ] [COLUMN - CLIENT_CODE] Customer 'SB116258' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 315 ] [COLUMN - PROJECT] Payment is not given to client 'SB116258'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 316 ] [COLUMN - CLIENT_CODE] Customer 'SB116259' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 316 ] [COLUMN - PROJECT] Payment is not given to client 'SB116259'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 317 ] [COLUMN - CLIENT_CODE] Customer 'SB116260' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 317 ] [COLUMN - PROJECT] Payment is not given to client 'SB116260'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 318 ] [COLUMN - CLIENT_CODE] Customer 'SB116261' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 318 ] [COLUMN - PROJECT] Payment is not given to client 'SB116261'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 319 ] [COLUMN - CLIENT_CODE] Customer 'SB116262' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 319 ] [COLUMN - PROJECT] Payment is not given to client 'SB116262'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 320 ] [COLUMN - CLIENT_CODE] Customer 'SB116263' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 320 ] [COLUMN - PROJECT] Payment is not given to client 'SB116263'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 321 ] [COLUMN - CLIENT_CODE] Customer 'SB116264' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 321 ] [COLUMN - PROJECT] Payment is not given to client 'SB116264'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 322 ] [COLUMN - CLIENT_CODE] Customer 'SB116265' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 322 ] [COLUMN - PROJECT] Payment is not given to client 'SB116265'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 323 ] [COLUMN - CLIENT_CODE] Customer 'SB116266' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 323 ] [COLUMN - PROJECT] Payment is not given to client 'SB116266'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 324 ] [COLUMN - CLIENT_CODE] Customer 'SB116267' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 324 ] [COLUMN - PROJECT] Payment is not given to client 'SB116267'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 325 ] [COLUMN - CLIENT_CODE] Customer 'SB116268' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 325 ] [COLUMN - PROJECT] Payment is not given to client 'SB116268'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 326 ] [COLUMN - CLIENT_CODE] Customer 'SB116269' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 326 ] [COLUMN - PROJECT] Payment is not given to client 'SB116269'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 327 ] [COLUMN - CLIENT_CODE] Customer 'SB116270' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 327 ] [COLUMN - PROJECT] Payment is not given to client 'SB116270'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 328 ] [COLUMN - CLIENT_CODE] Customer 'SB116344' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 328 ] [COLUMN - PROJECT] Payment is not given to client 'SB116344'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 329 ] [COLUMN - CLIENT_CODE] Customer 'SB116345' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 329 ] [COLUMN - PROJECT] Payment is not given to client 'SB116345'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 330 ] [COLUMN - CLIENT_CODE] Customer 'SB116346' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 330 ] [COLUMN - PROJECT] Payment is not given to client 'SB116346'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 331 ] [COLUMN - CLIENT_CODE] Customer 'SB116347' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 331 ] [COLUMN - PROJECT] Payment is not given to client 'SB116347'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 332 ] [COLUMN - CLIENT_CODE] Customer 'SB116348' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 332 ] [COLUMN - PROJECT] Payment is not given to client 'SB116348'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 333 ] [COLUMN - CLIENT_CODE] Customer 'SB116349' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 333 ] [COLUMN - PROJECT] Payment is not given to client 'SB116349'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 334 ] [COLUMN - CLIENT_CODE] Customer 'SB116350' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 334 ] [COLUMN - PROJECT] Payment is not given to client 'SB116350'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 335 ] [COLUMN - CLIENT_CODE] Customer 'SB116351' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 335 ] [COLUMN - PROJECT] Payment is not given to client 'SB116351'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 336 ] [COLUMN - CLIENT_CODE] Customer 'SB116352' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 336 ] [COLUMN - PROJECT] Payment is not given to client 'SB116352'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 337 ] [COLUMN - CLIENT_CODE] Customer 'SB116702' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 337 ] [COLUMN - PROJECT] Payment is not given to client 'SB116702'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 338 ] [COLUMN - CLIENT_CODE] Customer 'SB116703' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 338 ] [COLUMN - PROJECT] Payment is not given to client 'SB116703'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 339 ] [COLUMN - CLIENT_CODE] Customer 'SB116704' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 339 ] [COLUMN - PROJECT] Payment is not given to client 'SB116704'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 340 ] [COLUMN - CLIENT_CODE] Customer 'SB116705' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 340 ] [COLUMN - PROJECT] Payment is not given to client 'SB116705'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 341 ] [COLUMN - CLIENT_CODE] Customer 'SB116706' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 341 ] [COLUMN - PROJECT] Payment is not given to client 'SB116706'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 342 ] [COLUMN - CLIENT_CODE] Customer 'SB116707' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 342 ] [COLUMN - PROJECT] Payment is not given to client 'SB116707'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 343 ] [COLUMN - CLIENT_CODE] Customer 'SB116708' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 343 ] [COLUMN - PROJECT] Payment is not given to client 'SB116708'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 344 ] [COLUMN - CLIENT_CODE] Customer 'SB116709' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 344 ] [COLUMN - PROJECT] Payment is not given to client 'SB116709'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 345 ] [COLUMN - CLIENT_CODE] Customer 'SB116710' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 345 ] [COLUMN - PROJECT] Payment is not given to client 'SB116710'.
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 346 ] [COLUMN - CLIENT_CODE] Customer 'SB116711' is not a valid customer code
+2019-06-22T06:00:58+01:00 ERR (3): [ ROW - 346 ] [COLUMN - PROJECT] Payment is not given to client 'SB116711'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 347 ] [COLUMN - CLIENT_CODE] Customer 'SB116712' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 347 ] [COLUMN - PROJECT] Payment is not given to client 'SB116712'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 348 ] [COLUMN - CLIENT_CODE] Customer 'SB116713' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 348 ] [COLUMN - PROJECT] Payment is not given to client 'SB116713'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 349 ] [COLUMN - CLIENT_CODE] Customer 'SB116714' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 349 ] [COLUMN - PROJECT] Payment is not given to client 'SB116714'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 350 ] [COLUMN - CLIENT_CODE] Customer 'SB116715' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 350 ] [COLUMN - PROJECT] Payment is not given to client 'SB116715'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 351 ] [COLUMN - CLIENT_CODE] Customer 'SB116716' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 351 ] [COLUMN - PROJECT] Payment is not given to client 'SB116716'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 352 ] [COLUMN - CLIENT_CODE] Customer 'SB116717' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 352 ] [COLUMN - PROJECT] Payment is not given to client 'SB116717'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 353 ] [COLUMN - CLIENT_CODE] Customer 'SB116718' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 353 ] [COLUMN - PROJECT] Payment is not given to client 'SB116718'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 354 ] [COLUMN - CLIENT_CODE] Customer 'SB116719' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 354 ] [COLUMN - PROJECT] Payment is not given to client 'SB116719'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 355 ] [COLUMN - CLIENT_CODE] Customer 'SB116720' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 355 ] [COLUMN - PROJECT] Payment is not given to client 'SB116720'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 356 ] [COLUMN - CLIENT_CODE] Customer 'SB116833' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 356 ] [COLUMN - PROJECT] Payment is not given to client 'SB116833'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 357 ] [COLUMN - CLIENT_CODE] Customer 'SB116834' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 357 ] [COLUMN - PROJECT] Payment is not given to client 'SB116834'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 358 ] [COLUMN - CLIENT_CODE] Customer 'SB116835' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 358 ] [COLUMN - PROJECT] Payment is not given to client 'SB116835'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 359 ] [COLUMN - CLIENT_CODE] Customer 'SB116836' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 359 ] [COLUMN - PROJECT] Payment is not given to client 'SB116836'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 360 ] [COLUMN - CLIENT_CODE] Customer 'SB116837' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 360 ] [COLUMN - PROJECT] Payment is not given to client 'SB116837'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 361 ] [COLUMN - CLIENT_CODE] Customer 'SB116838' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 361 ] [COLUMN - PROJECT] Payment is not given to client 'SB116838'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 362 ] [COLUMN - CLIENT_CODE] Customer 'SB116839' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 362 ] [COLUMN - PROJECT] Payment is not given to client 'SB116839'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 363 ] [COLUMN - CLIENT_CODE] Customer 'SB116840' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 363 ] [COLUMN - PROJECT] Payment is not given to client 'SB116840'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 364 ] [COLUMN - CLIENT_CODE] Customer 'SB116841' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 364 ] [COLUMN - PROJECT] Payment is not given to client 'SB116841'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 365 ] [COLUMN - CLIENT_CODE] Customer 'SB116842' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 365 ] [COLUMN - PROJECT] Payment is not given to client 'SB116842'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 366 ] [COLUMN - CLIENT_CODE] Customer 'SB116843' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 366 ] [COLUMN - PROJECT] Payment is not given to client 'SB116843'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 367 ] [COLUMN - CLIENT_CODE] Customer 'SB116844' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 367 ] [COLUMN - PROJECT] Payment is not given to client 'SB116844'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 368 ] [COLUMN - CLIENT_CODE] Customer 'SB116845' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 368 ] [COLUMN - PROJECT] Payment is not given to client 'SB116845'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 369 ] [COLUMN - CLIENT_CODE] Customer 'SB116846' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 369 ] [COLUMN - PROJECT] Payment is not given to client 'SB116846'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 370 ] [COLUMN - CLIENT_CODE] Customer 'SB116847' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 370 ] [COLUMN - PROJECT] Payment is not given to client 'SB116847'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 371 ] [COLUMN - CLIENT_CODE] Customer 'SB116912' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 371 ] [COLUMN - PROJECT] Payment is not given to client 'SB116912'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 372 ] [COLUMN - CLIENT_CODE] Customer 'SB116913' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 372 ] [COLUMN - PROJECT] Payment is not given to client 'SB116913'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 373 ] [COLUMN - CLIENT_CODE] Customer 'SB116914' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 373 ] [COLUMN - PROJECT] Payment is not given to client 'SB116914'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 374 ] [COLUMN - CLIENT_CODE] Customer 'SB116915' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 374 ] [COLUMN - PROJECT] Payment is not given to client 'SB116915'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 375 ] [COLUMN - CLIENT_CODE] Customer 'SB116916' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 375 ] [COLUMN - PROJECT] Payment is not given to client 'SB116916'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 376 ] [COLUMN - CLIENT_CODE] Customer 'SB116917' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 376 ] [COLUMN - PROJECT] Payment is not given to client 'SB116917'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 377 ] [COLUMN - CLIENT_CODE] Customer 'SB116918' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 377 ] [COLUMN - PROJECT] Payment is not given to client 'SB116918'.
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 378 ] [COLUMN - CLIENT_CODE] Customer 'SB116919' is not a valid customer code
+2019-06-22T06:00:59+01:00 ERR (3): [ ROW - 378 ] [COLUMN - PROJECT] Payment is not given to client 'SB116919'.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 379 ] [COLUMN - CLIENT_CODE] Customer 'SB116920' is not a valid customer code
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 379 ] [COLUMN - PROJECT] Payment is not given to client 'SB116920'.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 380 ] [COLUMN - CLIENT_CODE] Customer 'SB116921' is not a valid customer code
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 380 ] [COLUMN - PROJECT] Payment is not given to client 'SB116921'.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 381 ] [COLUMN - CLIENT_CODE] Customer 'SB116922' is not a valid customer code
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 381 ] [COLUMN - PROJECT] Payment is not given to client 'SB116922'.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 382 ] [COLUMN - CLIENT_CODE] Customer 'SB116923' is not a valid customer code
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 382 ] [COLUMN - PROJECT] Payment is not given to client 'SB116923'.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 383 ] [COLUMN - CLIENT_CODE] Customer 'SB116924' is not a valid customer code
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 383 ] [COLUMN - PROJECT] Payment is not given to client 'SB116924'.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 384 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 384 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 385 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 385 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 386 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 386 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 387 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 387 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 388 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 388 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 389 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 389 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 390 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 390 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 391 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 391 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 392 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 392 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 393 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 393 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 394 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 394 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 395 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 395 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 396 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 396 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 397 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 397 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 398 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 398 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 399 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 399 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 400 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 400 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 401 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 401 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 402 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 402 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 403 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 403 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 404 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 404 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 405 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 405 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 406 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 406 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 407 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 407 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 408 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 408 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 409 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 409 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 410 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 410 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 411 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 411 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 412 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 412 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 413 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 413 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 414 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 414 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 415 ] [COLUMN - CLIENT_CODE] Customer value is empty
+2019-06-22T06:01:00+01:00 ERR (3): [ ROW - 415 ] [COLUMN - PROJECT] Payment is not given to client ''.
+2019-06-22T06:01:00+01:00 INFO (6): 415 row(s) verified. 
+2019-06-22T06:01:00+01:00 INFO (6): Validation Ended.
+2019-06-22T06:01:00+01:00 INFO (6): Total Consumed time for validation process is : 13.75 Second(s)

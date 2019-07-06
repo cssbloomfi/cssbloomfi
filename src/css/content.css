@@ -1,0 +1,106 @@
+/*#container{
+	margin:0 auto;	
+	margin:5px;
+}*/
+
+#caption{
+	text-align:left;
+	background:#E1F0FF;
+	border:1px solid #A6D2FF;
+	height:30px;
+	padding-left:5px;
+}
+
+#caption h2{
+	line-height:30px;
+}
+
+.successbox{
+	text-align:left;
+	background:#E4F8E6;
+	border:1px solid #398244;
+	height:auto;
+	padding:10px;
+	margin-bottom:20px;
+}
+
+.ibox
+{
+	text-align:left;
+	background:#d3f5ff;
+	border:1px solid #1846BE;
+	height:auto;
+	padding:10px;
+}
+
+.errorbox{
+	text-align:left;
+	background:#FFF0F0;
+	border:1px solid #FF8080;
+	height:auto;
+	padding:10px;
+	z-index:1;
+	margin-bottom:20px;
+}
+#effect{
+float:right;
+position:relative;
+}
+#errorbox1{
+	text-align:left;
+	background:#FFF0F0;
+	border:1px solid #FF8080;
+	width:300px;
+	height:auto;
+	padding:10px;
+}
+.errors{
+	text-align:left;
+	background:#FFF0F0;
+	border:1px solid #FF8080;
+	margin-bottom:5px;
+	/*float:right;*/
+	overflow:hidden;
+	color:#000;
+}
+.errors li{
+	background:url(/images/icons/cross_icon.png) center left no-repeat;
+	padding-left:20px;
+	line-height:20px;
+	margin-left:5px;
+	display:inline;
+	margin-top:0px;
+	width:400px;
+	float:right;
+
+}
+.zend_form{
+	text-align:left;
+	width:100%;
+	margin-top:5px;
+}
+
+.zend_form dt{
+	height:30px;
+	float:left;
+	width:25%;
+}
+.zend_form dd{
+	height:30px;
+}
+
+.dbd-error
+{
+	padding-left: 20px;
+	height:100px;
+	background:#FFF0E8;
+	border:1px solid #CC0000;
+	line-height:100px;
+}
+
+.symbol-error
+{
+	float:left;
+	margin-top:30px;
+	margin-right:20px;
+}
